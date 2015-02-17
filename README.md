@@ -27,9 +27,11 @@ Like I said there is not a lot to the game as of right now but that is partly wh
 
 I have a few goals in mind about what I want to do with this but I am always looking for more ideas.
 
-###Short-Term
+###Completed Goals
 
-*Implent More Monster that have different stats and increase the variaty a bit
+*Implent More Monster that have different stats and increase the variaty a bit -2/17/15
+
+###Short-Term
 
 *More actions during a battle (no ideas on what)
 
