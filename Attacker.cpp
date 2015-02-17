@@ -3,23 +3,24 @@
 #include <math.h>
 #include <cstdlib>
 #include <cmath>
+#include <locale>
 
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.1a
+Current Revision: 2.3a
 Change Log------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		------------------------------------------------------------------------------------------------------
-?		 1.0a		Patrick Rye			-Original
-?		 1.1a		Patrick Rye			-Nerffered Level 7+ Monsters
+2/13/15		 1.0a		Patrick Rye			-Original
+2/14/15		 1.1a		Patrick Rye			-Nerffered Level 7+ Monsters
 											-This changes makes 7-9 monster easier but level 10 is extremely difficult.
 											-I will have to redo how the monster levels up completely, but not now.
 										-Player Stat Upgrade boosted to 10 points
 										-Player Now gets two stat upgrades every level
 										-Fixed grammar and spelling mistakes
 										
-2/17/15  2.0a		Patrick Rye			-Added Change log
+2/17/15  2.0a		Patrick Rye			-Added Change log (everything before this is just a guess and what I remember)
 										-Moved the Level Up to its own function for easier modification
 										-Moved the battle scene to its own function for easier modification
 										-Added other monster base stats, will be used in a later revision for more variety
@@ -33,6 +34,18 @@ Date	Revision	Changed By			Changes
 										-Changed Level up checker to a For loop rather than an if statement
 										-Did a general code cleaner to make it look nicer.
 										-Added Copyright License as I might put this on the internet and may as well.
+										
+2/17/15	2.2a		Patrick Rye			-Post internet release edits
+										-Added Function to change string to all upper-case
+											-I am keeping the char and string to upper case functions separated until I test if the string one works on chars.
+										-Made PlayerInitialize() as a separate function that initializes the player. 
+											-Made it its own function for later revisions, which may include a saving function.
+										-More grammar and spelling fixes (I make a lot of these mistakes).
+										-Added Random Monster Function, which generates Random Monster gets base stats and name of it
+										
+2/17/15 2.3a		Patrick Rye			-Implemented Multiple types of monsters.
+										-Went back to old method on Monster levelling up due to the new types breaking the other method.
+										
 										
 										
 
@@ -67,21 +80,41 @@ For more information, please refer to <http://unlicense.org>
 ---------------------------------------------------------------------------
 */
 
-
 using namespace std;
+
+/*
+For Stat Arrays 
+0 = STR
+1 = CONS
+2 = DEF
+3 = DEX
+4 = LUK
+*/
+//Make all the Global variables that I need
 int PlayerStats[5];
-const int MonsterBaseStats[5] = {25,25,10,25,10}; //a base array for the monsters 
+int MonsterBaseStats[5] = {25,25,10,25,10}; //a base array for the monsters 
 const int ZombieBaseStats[5] = {25,25,10,25,10};
-const int SkeletonBaseStats[5] ={20,35,15,35,5};
+const int SkeletonBaseStats[5] = {20,35,15,35,5};
 const int WitchBaseStats[5] = {15,15,20,40,30};
 const int ImpBaseStats[5] = {10,10,10,40,10};
-//Will be changed later for more monsters but for now its just a constant
+const string MonsterNames[4] = {"Zombie","Skeleton","Witch","Imp"};
+string MonsterName;
 double PlayerHealth[2]; //An Array 0 is current health 1 is max
 double MonsterHealth[2]; //An Array 0 is current health 1 is max
 int MonsterStats[5];
 int intLevel;
 //cout <<
 //cin>>
+
+std::string ConvertToUpper(std::string& str)
+{
+	//Thanks to codekiddy for his post at http://www.cplusplus.com/forum/beginner/70692/
+	std::locale settings;
+	std::string converted;
+	for(short i = 0; i < str.size(); ++i)
+		converted += (toupper(str[i], settings));
+	return converted;
+}
 
 char CaseChecker(char chrCheck)
 {
@@ -149,6 +182,7 @@ char CaseChecker(char chrCheck)
 			return chrCheck;
 	}
 }
+
 void LevelUpFunction()
 {
 	//Holds Function for levelling up
@@ -166,6 +200,7 @@ void LevelUpFunction()
 		LevelUpChoice:
 		cout<<endl<<"> ";
 		cin>>strLevelUpChoice;
+		strLevelUpChoice = ConvertToUpper(strLevelUpChoice);
 		int intLevelUpChoice;
 		if (strLevelUpChoice == "STR")
 			intLevelUpChoice = 0;
@@ -194,6 +229,7 @@ void LevelUpFunction()
     cout<<"LUK: "<<PlayerStats[4]<<endl;
 //End of Level up function
 }
+
 char BattleScene() 
 {
 	
@@ -216,25 +252,11 @@ char BattleScene()
     /*
 	Recalculate all of the stats needed
     Update Monster Stats to new Level
-	The reason for the changed level up method is that before the level 7 monster was unbeatable.
-	This change nerfs monsters over level 7 until I can figure out a better way to scale the points.
-	However, it makes level 10 monster really hard.
 	*/
-	if (intLevel < 7)
+	for (int i=0; i<5; i++)
 	{
-		for (int i=0; i<5; i++)
-		{
-			MonsterStats[i] = floor(.5 * intLevel * MonsterBaseStats[i]);
-			cout<<endl<<MonsterStats[i];
-		}
-	}
-	else
-	{
-		for(int i=0; i<5; i++)
-		{
-			MonsterStats[i]=MonsterStats[i]+5;
-			cout<<endl<<MonsterStats[i];
-		}
+		MonsterStats[i] = floor(.5 * intLevel * MonsterBaseStats[i]);
+		cout<<endl<<MonsterStats[i];
 	}
     //Recalculate Healths and re-heal them
     PlayerHealth[1] = floor((23*((5.25+0.5625*intLevel+0.00375*pow(intLevel,2))+(1+0.066*intLevel)*(PlayerStats[1]/16))));
@@ -265,7 +287,7 @@ char BattleScene()
     intPlayerDamage = floor(((2 * (intLevel/5) + 2) * ((10*intLevel)/MonsterStats[2]))*(PlayerStats[0]/8)*douPlayerDamageMuli)+5;
     intMonsterDamage = floor(((2 * (intLevel/5) + 2) * ((10*intLevel)/PlayerStats[2]))*(MonsterStats[0]/8)*douMonsterDamageMuli)+5;
     cout<<endl<<endl<<endl<<endl<<endl<<endl<<endl;
-    cout<<"You are now fighting a Level "<<intLevel<<" Zombie!";
+    cout<<"You are now fighting a Level "<<intLevel<<" "<<MonsterName<<"!";
     cout<<endl<<"It has "<<MonsterHealth[0]<<" out of "<<MonsterHealth[1]<<" HP left"<<endl;
     cout<<endl<<endl<<"You have "<<PlayerHealth[0]<<" out of "<<PlayerHealth[1]<<" HP left."<<endl;
     PlayerChoice:
@@ -377,17 +399,16 @@ char BattleScene()
 		goto BattleGoto;
 //End of Battle Scene Function
 }
-int main()
+
+char PlayerInitialize()
 {
+//Code for making a character, in its own function for later features.
 int intStr = 0;
 int intCons =0;
 int intDef = 0;
 int intDex =0;
 int intLuk = 0;
-cout<<"Welcome to the World of Attacker"<<endl<<"You objective is to kill 10 monsters to win."<<endl;
-cout<<"Each level is harder than the last do you have what it takes to win?"<<endl;
-cout<<"Good Luck!"<<endl<<endl<<endl<<endl;
-PickStats:
+
 cout<<"In this game there are five stats that effect different elements of the game.";
 cout<<endl<<"Strength (STR) - your attack strength"<<endl;
 cout<<"Constitution (CONS) - your health."<<endl;
@@ -408,7 +429,7 @@ intSkillPointsLeft = intSkillPointsLeft - intStr;
 if( intSkillPointsLeft < 4 )
 {
     cout<<"You used too many points"<<endl;
-    goto PickStats;
+    return 'F';
 }
 
 cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
@@ -421,7 +442,7 @@ intSkillPointsLeft = intSkillPointsLeft - intCons;
 if(intSkillPointsLeft < 3)
 {
     cout<<"You used too many points"<<endl;
-    goto PickStats;
+    return 'F';
 }
 cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
 do 
@@ -433,7 +454,7 @@ intSkillPointsLeft = intSkillPointsLeft - intDef;
 if(intSkillPointsLeft < 2)
 {
     cout<<"You used too many points"<<endl;
-    goto PickStats;
+    return 'F';
 }
 cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
 do 
@@ -445,24 +466,24 @@ intSkillPointsLeft = intSkillPointsLeft - intDef;
 if(intSkillPointsLeft < 1)
 {
     cout<<"You used too many points"<<endl;
-    goto PickStats;
+    return 'F';
 }
 
 cout<<endl<< intSkillPointsLeft <<" points are placed in Luck"<<endl;
 intLuk = intSkillPointsLeft;
 //Something to clear the screen but doesn't work here
-//system("clear");
+//system("cls");
 
 char strAnswer;
+AgreeWithStats:
 cout<<endl<<endl<<endl<<endl<<endl;
-cout<<"Your current stats are as follows:"<<endl<<"Strength: "<<intStr<<endl;
+cout<<"Your current stats are as follows:"<<endl;
+cout<<"Strength: "<<intStr<<endl;
 cout<<"Constitution: "<<intCons<<endl;
 cout<<"Defence: "<<intDef<<endl;
 cout<<"Dexterity: "<<intDex<<endl;
 cout<<"Luck: "<<intLuk<<endl;
 cout<<"Do you agree with these stats? Y or N"<<endl;
-
-AgreeWithStats:
 
     cout<<"Y or N? ";
     cin>>strAnswer;
@@ -470,11 +491,9 @@ AgreeWithStats:
     switch(strAnswer)
     {
     case 'Y' :
-        //Add something here
         goto RestofGame;
     case 'N' :
-        goto PickStats;
-        //Fix this later so you can go back
+        return 'F';
     default :
         cout<<endl<<"Invalid Answer"<<endl;
         goto AgreeWithStats;
@@ -487,11 +506,76 @@ PlayerStats[1]=intCons;
 PlayerStats[2]=intDef;
 PlayerStats[3]=intDex;
 PlayerStats[4]=intLuk;
+//End of Player Initialize
+return 'T';
+}
+
+void RandomMonster()
+{
+	//Generates a number 0 - 4 representing the location of a monster in the Monster Name array
+	//It then places the name and base stats of the monster appropriately. 
+	int intRandomMonsterNumber;
+	
+	intRandomMonsterNumber = rand() % 4;
+	MonsterName = MonsterNames[intRandomMonsterNumber];
+	if (MonsterName == "Witch")
+	{
+		for (int i=0; i <=4; i++)
+		{
+			MonsterStats[i]=WitchBaseStats[i];
+		}
+	}
+	else if (MonsterName == "Imp")
+	{
+		for (int i=0; i <=4; i++)
+		{
+			MonsterStats[i]=ImpBaseStats[i];
+		}
+	}
+	else if (MonsterName == "Skeleton")
+	{
+		for (int i=0; i <=4; i++)
+		{
+			MonsterStats[i]=SkeletonBaseStats[i];
+		}
+	}
+	else if (MonsterName == "Zombie")
+	{
+		for (int i=0; i <=4; i++)
+		{
+			MonsterStats[i]=ZombieBaseStats[i];
+		}
+	}
+	else
+	{
+		//In the event that the name wasn't found default to zombie
+		MonsterName = "Zombie";
+		for (int i=0; i <=4; i++)
+		{
+			MonsterStats[i]=ZombieBaseStats[i];
+		}
+	}
+}
+
+int main()
+{
+char chrPlayerMade = 'F';
+cout<<"Welcome to the World of Attacker"<<endl<<"Your objective is to kill 10 monsters to win."<<endl;
+cout<<"Each level is harder than the last do you have what it takes to win?"<<endl;
+cout<<"Good Luck!"<<endl<<endl<<endl<<endl;
+
+do 
+{
+    chrPlayerMade = PlayerInitialize();
+	//repeat the function to make player until we get a value saying that the player has been made.
+}while (chrPlayerMade != 'T');
 
 //system("cls");
+
 char charBattleSceneEnding;
 for(intLevel = 1; intLevel <= 10; intLevel++)
 {
+	RandomMonster();
     charBattleSceneEnding = BattleScene();
 	switch(charBattleSceneEnding)
 	{
@@ -507,11 +591,9 @@ for(intLevel = 1; intLevel <= 10; intLevel++)
 			cout<<endl<<"An Error has occurred in the code. The game will exit.";
 			cin>>PlayerHealth[0]; //random Input to allow system "Pause"
 	}
-    
-
 //End of For Levels    
 }
-//End of Main
-cout<<endl<<endl<<endl<<endl<<"You Win";
+cout<<endl<<endl<<endl<<endl<<"You Win!!";
 return 0;
+//End of Main
 }
