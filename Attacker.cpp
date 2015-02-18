@@ -462,28 +462,28 @@ void RandomMonster()
 	{
 		for (int i=0; i <=4; i++)
 		{
-			MonsterStats[i]=WitchBaseStats[i];
+			MonsterBaseStats[i]=WitchBaseStats[i];
 		}
 	}
 	else if (MonsterName == "Imp")
 	{
 		for (int i=0; i <=4; i++)
 		{
-			MonsterStats[i]=ImpBaseStats[i];
+			MonsterBaseStats[i]=ImpBaseStats[i];
 		}
 	}
 	else if (MonsterName == "Skeleton")
 	{
 		for (int i=0; i <=4; i++)
 		{
-			MonsterStats[i]=SkeletonBaseStats[i];
+			MonsterBaseStats[i]=SkeletonBaseStats[i];
 		}
 	}
 	else if (MonsterName == "Zombie")
 	{
 		for (int i=0; i <=4; i++)
 		{
-			MonsterStats[i]=ZombieBaseStats[i];
+			MonsterBaseStats[i]=ZombieBaseStats[i];
 		}
 	}
 	else
@@ -492,7 +492,7 @@ void RandomMonster()
 		MonsterName = "Zombie";
 		for (int i=0; i <=4; i++)
 		{
-			MonsterStats[i]=ZombieBaseStats[i];
+			MonsterBaseStats[i]=ZombieBaseStats[i];
 		}
 	}
 }
