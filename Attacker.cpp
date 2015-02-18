@@ -8,33 +8,38 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.3a
+Current Revision: 2.5a
 Change Log------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		------------------------------------------------------------------------------------------------------
-2/13/15		 1.0a		Patrick Rye			-Original
-2/14/15		 1.1a		Patrick Rye			-Nerffered Level 7+ Monsters
+2/13/15	1.0a		Patrick Rye			-Original
+===============================================================================================================================================	
+2/14/15 1.1a		Patrick Rye			-Nerffered Level 7+ Monsters
 											-This changes makes 7-9 monster easier but level 10 is extremely difficult.
 											-I will have to redo how the monster levels up completely, but not now.
 										-Player Stat Upgrade boosted to 10 points
 										-Player Now gets two stat upgrades every level
 										-Fixed grammar and spelling mistakes
-										
+===============================================================================================================================================										
 2/17/15  2.0a		Patrick Rye			-Added Change log (everything before this is just a guess and what I remember)
 										-Moved the Level Up to its own function for easier modification
 										-Moved the battle scene to its own function for easier modification
 										-Added other monster base stats, will be used in a later revision for more variety
 										-Fixed mistake that would allow player to heal above the amount they should be allowed to
 										-Added second prompt for exiting game so player doesn't enter it by mistake.
-										
+===============================================================================================================================================									
 2/17/15	2.1a		Patrick Rye			-Made function to convert lower case letters into upper case ones so that inputs are less case sensitive.
 										-More grammar and spelling fixes
 										-Added more comments to explain what is happening
 										-Fixed Bug that allowed Monster health to go below 0, causing the battle to never end (oops kind of a big issue)
 										-Changed Level up checker to a For loop rather than an if statement
-										-Did a general code cleaner to make it look nicer.
+										-Did a general code cleaning to make it look nicer.
 										-Added Copyright License as I might put this on the internet and may as well.
-										
+===============================================================================================================================================		
+---------------------------------------------------------------------------------------------------------------------------------------------------										
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Internet release~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------------------------------------------------------------------------------------------------------
+===============================================================================================================================================												
 2/17/15	2.2a		Patrick Rye			-Post internet release edits
 										-Added Function to change string to all upper-case
 											-I am keeping the char and string to upper case functions separated until I test if the string one works on chars.
@@ -42,10 +47,23 @@ Date	Revision	Changed By			Changes
 											-Made it its own function for later revisions, which may include a saving function.
 										-More grammar and spelling fixes (I make a lot of these mistakes).
 										-Added Random Monster Function, which generates Random Monster gets base stats and name of it
-										
+=========================================================================================================================================================										
 2/17/15 2.3a		Patrick Rye			-Implemented Multiple types of monsters.
-										-Went back to old method on Monster levelling up due to the new types breaking the other method.
-										
+										-Went back to old method of Monster levelling up due to the new types breaking the other method.
+==========================================================================================================================================================	
+2/17/15 2.4a		Patrick Rye			-EVEN MORE GRAMMAR AND SPELLIGN FIXES!!
+										-More comments explaining stuff
+										-Cleaned up the code some more to make it nicer
+										-Added more randomness to the crit calculator.
+										-Added Pause if you win the game. (oops)
+=============================================================================================================================================================											
+2/18/15	2.5a		Patrick Rye			-Replaced old convert to upper case function for char to a better one
+										-More grammar and spelling fixes >.<
+										-Fixed Bug that caused more points to be put in LUK than should be
+										-Added Random Monster Modifier, which adds adjectives such as "Strong", "Weak", etc...
+											-Not yet implemented have to test for balance.
+											-Not finish will finish and implement at later time.
+=============================================================================================================================================================										
 										
 										
 
@@ -98,7 +116,10 @@ const int SkeletonBaseStats[5] = {20,35,15,35,5};
 const int WitchBaseStats[5] = {15,15,20,40,30};
 const int ImpBaseStats[5] = {10,10,10,40,10};
 const string MonsterNames[4] = {"Zombie","Skeleton","Witch","Imp"};
+const string PosMonsterModifiers[7] = {"Strong","Large","Massive","Fast","Lucky","Powerful","Solid"};
+const string NegMonsterModifiers[7] = {"Weak","Small","Tiny","Slow","Unlucky"};
 string MonsterName;
+string MonsterModifier;
 double PlayerHealth[2]; //An Array 0 is current health 1 is max
 double MonsterHealth[2]; //An Array 0 is current health 1 is max
 int MonsterStats[5];
@@ -116,72 +137,15 @@ std::string ConvertToUpper(std::string& str)
 	return converted;
 }
 
-char CaseChecker(char chrCheck)
+char CharConvertToUpper(char chrCheck)
 {
-	/*
-	This function takes a char and checks if it is one of the lower case letters of the alphabet.
-	if it is it returns the upper case version of the letter. If it isn't it just returns what char it got.
-	Made to allow lower case input that would be corrected, so its not a case sensitive.
-	Should be able to modify to allow it to work on string but that will be latter.
-	*/
-	switch (chrCheck)
-	{
-		case 'a' :
-			return 'A';
-		case 'b' :
-			return 'B';
-		case 'c' :
-			return 'C';
-		case 'd' :
-			return 'D';
-		case 'e' :
-			return 'E';
-		case 'f' :
-			return 'F';
-		case 'g' :
-			return 'G';
-		case 'h' :
-			return 'H';
-		case 'i' :
-			return 'I';
-		case 'j' :
-			return 'J';
-		case 'k' :
-			return 'K';
-		case 'l' :
-			return 'L';
-		case 'm' :
-			return 'M';
-		case 'n' :
-			return 'N';
-		case 'o' :
-			return 'O';
-		case 'p' :
-			return 'P';
-		case 'q' :
-			return 'Q';
-		case 'r' :
-			return 'R';
-		case 's' :
-			return 'S';
-		case 't' :
-			return 'T';
-		case 'u' :
-			return 'U';
-		case 'v' :
-			return 'V';
-		case 'w' :
-			return 'W';
-		case 'x' :
-			return 'X';
-		case 'y' :
-			return 'Y';
-		case 'z' :
-			return 'Z';
-		default :
-			return chrCheck;
-	}
+	//Modified version of the String convert to Upper Function to work on char
+	locale settings;
+	char converted;
+	converted = (toupper(chrCheck, settings));
+	return converted;
 }
+
 
 void LevelUpFunction()
 {
@@ -223,7 +187,7 @@ void LevelUpFunction()
 	//End of for level up loop
 	}
     LevelUpEnd:
-    cout<<endl<<"Your Stats are now:"<<endl;
+    cout<<endl<<"Your stats are now:"<<endl;
     cout<<"STR: "<<PlayerStats[0]<<endl<<"CONS: "<<PlayerStats[1]<<endl;
     cout<<"DEF: "<<PlayerStats[2]<<endl<<"DEX: "<<PlayerStats[3]<<endl;
     cout<<"LUK: "<<PlayerStats[4]<<endl;
@@ -245,10 +209,7 @@ char BattleScene()
     double douPlayerHealAmount;
 	char chrPlayerBattleChoice;
     //Do a level up if not level one
-    if( intLevel != 1)
-    {
-		LevelUpFunction();
-    }
+    if( intLevel != 1) { LevelUpFunction();}
     /*
 	Recalculate all of the stats needed
     Update Monster Stats to new Level
@@ -270,9 +231,9 @@ char BattleScene()
     //system("cls");
     double douPlayerDodgeChance = ((PlayerStats[3]/4 + PlayerStats[4]/20)/25) * 100;
     double douMonsterDodgeChance = ((MonsterStats[3]/4 + MonsterStats[4]/20)/25) * 100;
-    double douPlayerCritChance = ((PlayerStats[4])/10 /*+ rand() %100*/) * 4; 
+    double douPlayerCritChance = ((PlayerStats[4])/10 + rand() %5) * 4; 
     //The rand number is commented out because I want to test it a bit to ensure it is not broken
-    double douMonsterCritChance =((MonsterStats[4])/10 /*+ rand() %100*/) * 4;
+    double douMonsterCritChance =((MonsterStats[4])/10 + rand() %5) * 4;
     double douMonsterDamageMuli = 1;
     double douPlayerDamageMuli = 1;
     int intPlayerDamage = 0;
@@ -294,7 +255,7 @@ char BattleScene()
     cout<<endl<<"What you like to do?"<<endl<<"A = Attack, H = Heal, E = Exit, Q = Help"<<endl;
     cout<<"> ";
     cin>>chrPlayerBattleChoice;
-    chrPlayerBattleChoice = CaseChecker(chrPlayerBattleChoice);
+    chrPlayerBattleChoice = CharConvertToUpper(chrPlayerBattleChoice);
     switch(chrPlayerBattleChoice)
     {
         case 'A' :
@@ -306,10 +267,7 @@ char BattleScene()
                 cout<<"You swing at the Monster for "<<intPlayerDamage<<".";
                 MonsterHealth[0] = MonsterHealth[0] - intPlayerDamage;
             }
-            else
-            {
-                cout<<"The monster dodges your attack!";
-            }
+            else { cout<<"The "<<MonsterName<<" dodges your attack!"; }
 			
             cout<<endl<<endl;
             if(intMonsterDamage !=0)
@@ -318,10 +276,7 @@ char BattleScene()
                 cout<<"The monster hit you for "<<intMonsterDamage<<".";
                 PlayerHealth[0] = PlayerHealth[0] - intMonsterDamage;
             }
-            else
-            {
-                cout<<"You dodged the monster's attack!";
-            }
+            else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
             cout<<endl<<endl;
             goto HealthCheck;
         case 'H' :
@@ -332,19 +287,10 @@ char BattleScene()
                 cout<<"The monster hit you for "<<intMonsterDamage/2<<".";
                 PlayerHealth[0] = PlayerHealth[0] - intMonsterDamage/2;
             }
-            else
-            {
-                cout<<"You Dodged the monster's attack!";
-            }
+            else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
 			
-			if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1])
-			{
-				PlayerHealth[0]=PlayerHealth[1];
-			}
-			else
-			{
-				PlayerHealth[0] = PlayerHealth[0] + douPlayerHealAmount;
-			}
+		if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
+			else {PlayerHealth[0] = PlayerHealth[0] + douPlayerHealAmount;}
             cout<<endl<<"You heal yourself for "<<douPlayerHealAmount<<" HP.";
             goto HealthCheck;
         case 'Q' :
@@ -356,19 +302,19 @@ char BattleScene()
         case 'D' : //debug code reveal some values
             cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
             cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
-            cout<<endl<<"Player Dodge chance: "<<douPlayerDodgeChance;
+            cout<<endl<<"Player dodge chance: "<<douPlayerDodgeChance;
             cout<<endl<<"Monster dodge chance: "<<douMonsterDodgeChance;
-            cout<<endl<<"Player Muli: "<<douPlayerDamageMuli;
-            cout<<endl<<"Monster Muli: "<<douMonsterDamageMuli;
-            cout<<endl<<"Player Damage: "<<intPlayerDamage;
-            cout<<endl<<"Monster Damage: "<<intMonsterDamage;
+            cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
+            cout<<endl<<"Monster muli: "<<douMonsterDamageMuli;
+            cout<<endl<<"Player damage: "<<intPlayerDamage;
+            cout<<endl<<"Monster damage: "<<intMonsterDamage;
             goto PlayerChoice;
         case 'K' : //debug code "kills" the current monster
             return 'T';
         case 'E' : //exits game
 			cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All process will be lost"<<endl<<"Y or N"<<endl<<"> ";
 			cin>>chrPlayerBattleChoice;
-			chrPlayerBattleChoice = CaseChecker(chrPlayerBattleChoice);
+			chrPlayerBattleChoice = CharConvertToUpper(chrPlayerBattleChoice);
 			switch (chrPlayerBattleChoice)
 			{
 				case 'Y' :
@@ -382,21 +328,10 @@ char BattleScene()
 		    //Check if Player Dead
     }
 	HealthCheck:
-	if (PlayerHealth[0] <= 0)
-    {
-		//Player lost
-		return 'F';
-        //system("cls");
-    }
-	
-	if (MonsterHealth[0] <= 0)
-	{
-		//Monster is Dead but not player, they win
-		return 'T';
-		//system("cls");
-	}
-		//neither player to monster is dead go back to choice again
-		goto BattleGoto;
+	if (PlayerHealth[0] <= 0) {return 'F';}	
+	if (MonsterHealth[0] <= 0) {return 'T';}
+	//neither player to monster is dead go back to choice again
+	goto BattleGoto;
 //End of Battle Scene Function
 }
 
@@ -404,23 +339,23 @@ char PlayerInitialize()
 {
 //Code for making a character, in its own function for later features.
 int intStr = 0;
-int intCons =0;
+int intCons = 0;
 int intDef = 0;
-int intDex =0;
+int intDex = 0;
 int intLuk = 0;
 
 cout<<"In this game there are five stats that effect different elements of the game.";
 cout<<endl<<"Strength (STR) - your attack strength"<<endl;
 cout<<"Constitution (CONS) - your health."<<endl;
-cout<<"Dexterity (DEX) - Effects if you move first and if you dodge."<<endl;
+cout<<"Dexterity (DEX) - Effects if you dodge."<<endl;
 cout<<"Defence (DEF) - Effects how much damage you take."<<endl;
-cout<<"Luck (LUK) - The Random chance things will go your way with dodges and crits."<<endl;
+cout<<"Luck (LUK) - The random chance things will go your way, with dodges and crits."<<endl;
 int intSkillPointsLeft = 100;
 cout<<"You have "<< intSkillPointsLeft <<" points to spend however you desire on these five stats, however each stat must have at least 1 point"<<endl;
 
 do 
 {
-    cout<<endl<<"Enter your stat for your Strength: ";
+    cout<<endl<<"Enter your stat for your STRENGTH: ";
     cin>> intStr;
 }while (intStr <=0);
 intSkillPointsLeft = intSkillPointsLeft - intStr;
@@ -435,7 +370,7 @@ if( intSkillPointsLeft < 4 )
 cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
 do 
 {
-    cout<<endl<<"Enter your stat for your Constitution: ";
+    cout<<endl<<"Enter your stat for your CONSTITUTION: ";
     cin>> intCons;
 }while (intCons <=0);
 intSkillPointsLeft = intSkillPointsLeft - intCons;
@@ -447,7 +382,7 @@ if(intSkillPointsLeft < 3)
 cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
 do 
 {
-    cout<<endl<<"Enter your stat for your Defence: ";
+    cout<<endl<<"Enter your stat for your DEFENCE: ";
     cin>> intDef;
 }while (intDef <=0);
 intSkillPointsLeft = intSkillPointsLeft - intDef;
@@ -459,24 +394,29 @@ if(intSkillPointsLeft < 2)
 cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
 do 
 {
-    cout<<endl<<"Enter your stat for your Dexterity: ";
+    cout<<endl<<"Enter your stat for your DEXTERITY: ";
     cin>> intDex;
 }while (intDex <=0);
-intSkillPointsLeft = intSkillPointsLeft - intDef;
+intSkillPointsLeft = intSkillPointsLeft - intDex;
 if(intSkillPointsLeft < 1)
 {
     cout<<"You used too many points"<<endl;
     return 'F';
 }
 
-cout<<endl<< intSkillPointsLeft <<" points are placed in Luck"<<endl;
+cout<<endl<< intSkillPointsLeft <<" points are placed in LUCK"<<endl;
 intLuk = intSkillPointsLeft;
-//Something to clear the screen but doesn't work here
+/*
+Something to clear the screen but doesn't work here
+//This is because I was using Coding Grounds On-line C++ complier to do tests,
+//But it doesn't allow system commands to be run. 
+I delete these comments dashes when I compile it with Cygwin, but otherwise I keep them commented out.
+*/
 //system("cls");
 
 char strAnswer;
-AgreeWithStats:
 cout<<endl<<endl<<endl<<endl<<endl;
+AgreeWithStats:
 cout<<"Your current stats are as follows:"<<endl;
 cout<<"Strength: "<<intStr<<endl;
 cout<<"Constitution: "<<intCons<<endl;
@@ -487,7 +427,7 @@ cout<<"Do you agree with these stats? Y or N"<<endl;
 
     cout<<"Y or N? ";
     cin>>strAnswer;
-	strAnswer = CaseChecker(strAnswer);
+	strAnswer = CharConvertToUpper(strAnswer);
     switch(strAnswer)
     {
     case 'Y' :
@@ -495,7 +435,7 @@ cout<<"Do you agree with these stats? Y or N"<<endl;
     case 'N' :
         return 'F';
     default :
-        cout<<endl<<"Invalid Answer"<<endl;
+        cout<<endl<<"Invalid choice, try again."<<endl;
         goto AgreeWithStats;
     }
 
@@ -557,6 +497,37 @@ void RandomMonster()
 	}
 }
 
+/*
+void RandomMonsterModifier()
+{
+	//Adds a Random Modifier onto a monster it can be a boost of stats or reduced
+	//Varies a bit with a player's LUK
+	//WIP CODE!!!
+	MonsterModifier = "";
+	//Two random numbers that are added onto player and monster stats
+	int intMRandomNumber;
+	int intPRandomNumber;
+	intMRandomNumber = rand() % 20;
+	intPRandomNumber = rand() % 20;
+	
+	if (MonsterStats[4] + intMRandomNumber > PlayerStats[4]+intPRandomnumber)
+	{
+		//Monster has better chance of spawning with positive effect
+	}
+	else if (MonsterStats[4] + intMRandomNumber < PlayerStats[4]+intPRandomnumber)
+	{
+		//Monster has better chance of spawning with negative effects
+	}
+	else 
+	{
+		//The two stats are equal therefore the Monster is a normal monster without any other checks
+		MonsterModifier = "";
+	}
+	
+//End of Random Monster Modifier	
+}
+*/
+
 int main()
 {
 char chrPlayerMade = 'F';
@@ -580,13 +551,13 @@ for(intLevel = 1; intLevel <= 10; intLevel++)
 	switch(charBattleSceneEnding)
 	{
 		case 'T' :
-			    cout<<"You beat the Monster!"<<endl<<"Now advancing to Level: "<<intLevel + 1;
+			    cout<<"You beat the "<<MonsterName<<endl<<"Now advancing to level: "<<intLevel + 1;
                 continue;
 		case 'F' : 
-			    cout<<"You lost"<<endl<<"You defeated "<<intLevel - 1 <<" monsters.";
-                cout<<endl<<"Press enter to close this game and try again!";
-                cin>>PlayerHealth[0]; //just some random input to "pause" the game so they can read the message before it quits
-                return 0;
+			cout<<"You lost"<<endl<<"You defeated "<<intLevel - 1 <<" monsters.";
+                	cout<<endl<<"Press enter to close this game and try again!";
+                	cin>>PlayerHealth[0]; //just some random input to "pause" the game so they can read the message before it quits
+                	return 0;
 		default :
 			cout<<endl<<"An Error has occurred in the code. The game will exit.";
 			cin>>PlayerHealth[0]; //random Input to allow system "Pause"
@@ -594,6 +565,7 @@ for(intLevel = 1; intLevel <= 10; intLevel++)
 //End of For Levels    
 }
 cout<<endl<<endl<<endl<<endl<<"You Win!!";
+cin>>PlayerHealth[1];
 return 0;
 //End of Main
 }
