@@ -31,7 +31,11 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 *Implent More Monster that have different stats and increase the variaty a bit -2/17/15
 
+*Implented more variety in monster with random modifiers -2/19/15
+
 ###Short-Term
+
+*Something that allows the monster or player to move first and chance to stun.
 
 *More actions during a battle (no ideas on what)
 
