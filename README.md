@@ -1,4 +1,4 @@
-# Attcker-The Game
+# Attacker-The Game
 A game I am working on as a way to teach myself c++ putting it here mainly to have a version in a central location, but also to get feedback and help if I get any.
 
 This game is super simple, and as I said I am mostly just using it as a way to improve my understnad of c++. I will more than any tips or ideas for improvements that someone might provide.
