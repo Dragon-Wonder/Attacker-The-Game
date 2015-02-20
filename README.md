@@ -33,6 +33,8 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 *Implented more variety in monster with random modifiers -2/19/15
 
+*Chnage level ups to be you can place any amount of points in any stat. -2/20/15
+
 ###Short-Term
 
 *Something that allows the monster or player to move first and chance to stun.
@@ -43,8 +45,6 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
   ~Might need to also redo entirely the damage and health calculation depending on what I end up changing
   
-*Chnage level ups to be you can place any amount of points in any stat.
-
 *Implenment a walking action betwene fight.
 
   ~Random chnace to run into moster
