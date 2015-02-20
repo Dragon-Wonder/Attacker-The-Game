@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 3.1a
+Current Revision: 4.0a
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -103,6 +103,11 @@ Date	Revision	Changed By			Changes
 										-Moved the 4 functions that changed the case of stuff to a header.
 											-To test the functionality of headers and because these functions shouldn't be modified often
 =============================================================================================================================================================
+2/20/15	4.0a		Patrick Rye			-Redid player levelling up system to allow for 20 points to be placed in any arrangement of stats.
+										-Redid dodge chance calculator.
+										-Redid monster levelling up system. It still may need some work.
+										-Added a "test.h" a header to place some code for debugging and testing purposes later.
+=============================================================================================================================================================
 */
 
 
@@ -113,6 +118,7 @@ Date	Revision	Changed By			Changes
 #include <cmath>
 #include <locale>
 #include "casechanger.h"
+//#include "test.h" //A header to put test code if desired.
 using namespace std;
 
 /*
@@ -145,41 +151,65 @@ int intLevel;
 void LevelUpFunction()
 {
 	//Holds function for levelling up
-	int intPlayerStatUpgradeAmount;
-	intPlayerStatUpgradeAmount = 0; //Keeps track of how many times the player levels up a stat, player only gets two
-		
-	StatUpgrade:
-	for (int intPlayerStatUpgradeAmount=1; intPlayerStatUpgradeAmount<=2; intPlayerStatUpgradeAmount++)
+	int intPlayerStatPoints = 20; //Player gets 20 skill points to spend how they would like.
+	int intLevelUpChoice;
+	int intLevelUpAmount;
+	string strLevelUpChoice;
+	cout<<endl<<"LEVEL UP!"<<endl<<"You can put 20 points in any way you wish."<<endl;
+	
+	do
 	{
-		string strLevelUpChoice;
-		cout<<endl<<"LEVEL UP!"<<endl<<"You can put 10 points in two stats, which ones would you like?"<<endl;
+		
+		cout<<"You have "<<intPlayerStatPoints<<" left to spend."<<endl<<endl;
 		cout<<"STR: "<<PlayerStats[0]<<endl<<"CONS: "<<PlayerStats[1]<<endl;
 		cout<<"DEF: "<<PlayerStats[2]<<endl<<"DEX: "<<PlayerStats[3]<<endl;
-		cout<<"LUK: "<<PlayerStats[4]<<endl<<"NONE to not use upgrade";
+		cout<<"LUK: "<<PlayerStats[4]<<endl<<"NONE to not use any points.";
+		cout<<endl<<"Enter the stat you wish to improve."<<endl;
 		LevelUpChoice:
-		cout<<endl<<"> ";
+		cout<<"> ";
+		
 		cin>>strLevelUpChoice;
-		strLevelUpChoice = ConvertToUpper(strLevelUpChoice);
-		int intLevelUpChoice;
+		strLevelUpChoice = ConvertToUpper(strLevelUpChoice); //capitalize all letters in the string.
+		
 		if (strLevelUpChoice == "STR") {intLevelUpChoice = 0;}
 		else if (strLevelUpChoice == "CONS") {intLevelUpChoice = 1;}
 		else if (strLevelUpChoice == "DEF") {intLevelUpChoice = 2;}
 		else if (strLevelUpChoice == "DEX") {intLevelUpChoice = 3;}
 		else if (strLevelUpChoice == "LUK") {intLevelUpChoice = 4;}
-		else if (strLevelUpChoice == "NONE") {continue; /*Do next for loop if player does not want to use a stat upgrade.*/}
+		else if (strLevelUpChoice == "NONE") {intLevelUpChoice = 9999;}
 		else 
 		{
-			cout<<endl<<"Invalid choice, try again.";
+			cout<<endl<<"Invalid choice, try again."<<endl;
 			goto LevelUpChoice;
 		}
-		PlayerStats[intLevelUpChoice] = PlayerStats[intLevelUpChoice]+ 10;
-	//End of for level up loop
-	}
-    LevelUpEnd:
-    cout<<endl<<"Your stats are now:"<<endl;
-    cout<<"STR: "<<PlayerStats[0]<<endl<<"CONS: "<<PlayerStats[1]<<endl;
-    cout<<"DEF: "<<PlayerStats[2]<<endl<<"DEX: "<<PlayerStats[3]<<endl;
-    cout<<"LUK: "<<PlayerStats[4]<<endl;
+		
+		if (strLevelUpChoice != "NONE")
+		{
+			LevelUpAmount:
+			cout<<endl<<"You have chosen to upgrade "<<strLevelUpChoice<<" please enter the points you wish to add."<<endl;
+			cout<<"You have "<<intPlayerStatPoints<<" left to spend."<<endl;
+			cout<<"If you chose the wrong stat just enter 0 to not give it any points."<<endl<<endl;
+			cout<<"> ";
+			cin>>intLevelUpAmount;
+		
+			if (intLevelUpAmount > intPlayerStatPoints) 
+			{
+				cout<<endl<<"You have entered too many points, please try again with less points.";
+				goto LevelUpAmount;
+			}
+		
+			if (intLevelUpAmount < 0)
+			{
+				cout<<endl<<"You have entered an invalid number, please try again.";
+				goto LevelUpAmount;
+			}
+			
+			PlayerStats[intLevelUpChoice] = PlayerStats[intLevelUpChoice] + intLevelUpAmount;
+			intPlayerStatPoints = intPlayerStatPoints - intLevelUpAmount;
+		}
+		else {intPlayerStatPoints = 0;} //Player chose not to use rest of points so just cause the loop to end.
+		
+	} while (intPlayerStatPoints > 0);
 //End of Level up function
 }
 
@@ -203,7 +233,7 @@ char BattleScene()
 	Recalculate all of the stats needed
     Update monster stats to new Level
 	*/
-	for (int i=0; i<5; i++) {MonsterStats[i] = floor(.5 * intLevel * MonsterBaseStats[i]);/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
+	for (int i=0; i<5; i++) {MonsterStats[i] = floor((intLevel*4)+MonsterBaseStats[i]);/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
     //Recalculate healths and re-heal them
     PlayerHealth[1] = floor((23*((5.25+0.5625*intLevel+0.00375*pow(intLevel,2))+(1+0.066*intLevel)*(PlayerStats[1]/16))));
     PlayerHealth[0] = PlayerHealth[1];
@@ -214,8 +244,12 @@ char BattleScene()
     //system("cls");
     BattleGoto:
     //system("cls");
-    double douPlayerDodgeChance = ((PlayerStats[3]/4 + PlayerStats[4]/20)/25) * 100;
-    double douMonsterDodgeChance = ((MonsterStats[3]/4 + MonsterStats[4]/20)/25) * 100;
+	/*
+	The way I worked out this dodge calc is that if the Dex and Luk both equal 150 (which isn't possible under the current levelling up system),
+	then they have a 50% chance to dodge. I also wanted Dex to factor into 75% of the chance and Luk only 25%
+	*/
+    double douPlayerDodgeChance = ((PlayerStats[3]/2)+(PlayerStats[4]/6)/2);
+    double douMonsterDodgeChance = ((MonsterStats[3]/2)+(MonsterStats[4]/6)/2);
     double douPlayerCritChance = ((PlayerStats[4])/10 + rand() %5) * 4; 
     double douMonsterCritChance =((MonsterStats[4])/10 + rand() %5) * 4;
     double douMonsterDamageMuli = 1;
@@ -542,7 +576,7 @@ void RandomMonsterModifier()
 		}
 		else {/*This shouldn't happen but just in case.*/MonsterModifier="";}
 	}
-	else {/*The two stats are equal therefore the Monster is a normal monster without any other checks*/MonsterModifier = "";}
+	else {/*The two stats are equal therefore the monster is a normal monster without any other checks*/MonsterModifier = "";}
 //End of random monster modifier	
 }
 
