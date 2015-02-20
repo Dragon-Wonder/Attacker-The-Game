@@ -42,7 +42,14 @@ I have a few goals in mind about what I want to do with this but I am always loo
 *Redo the Monster Leveling up system (a bit wonky right now)
 
   ~Might need to also redo entirely the damage and health calculation depending on what I end up changing
+  
+*Chnage level ups to be you can place any amount of points in any stat.
 
+*Implenment a walking action betwene fight.
+
+  ~Random chnace to run into moster
+
+*Redo leveling system to work off of experience rather then monster killed.
 
 ###Long-term
 
