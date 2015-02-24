@@ -29,98 +29,21 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 5.0a
+Current Revision: 1.0b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================	
-2/13/15	1.0a		Patrick Rye			-Original
-=============================================================================================================================================================		
-2/14/15 1.1a		Patrick Rye			-Nerffered Level 7+ monsters
-											-This change makes 7-9 monster easier but level 10 is extremely difficult.
-											-I will have to redo how the monster levels up completely, but not now.
-										-Player stat upgrade boosted to 10 points.
-										-Player now gets two stat upgrades every level.
-										-Fixed grammar and spelling mistakes.
-=============================================================================================================================================================											
-2/17/15 2.0a		Patrick Rye			-Added change log (everything before this is just a guess and what I remember).
-										-Moved the level up to its own function for easier modification.
-										-Moved the battle scene to its own function for easier modification.
-										-Added other monster base stats, will be used in a later revision for more variety.
-										-Fixed mistake that would allow player to heal above the amount they should be allowed to.
-										-Added second prompt for exiting game so player doesn't enter it by mistake.
-=============================================================================================================================================================										
-2/17/15	2.1a		Patrick Rye			-Made function to convert lower case letters into upper case ones so that inputs are less case sensitive.
-										-More grammar and spelling fixes.
-										-Added more comments to explain what is happening.
-										-Fixed bug that allowed monster health to go below 0, causing the battles to never end (oops kind of a big issue).
-										-Changed level up checker to a for loop rather than an if statement.
-										-Did a general code cleaning to make it look nicer.
-										-Added Copyright License as I might put this on the internet and may as well.
 =============================================================================================================================================================			
 -------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Internet release~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM ALPHA TO BETA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================													
-2/17/15	2.2a		Patrick Rye			-Post internet release edits
-										-Added function to change string to all upper-case.
-											-I am keeping the char and string to upper case functions separated until I test if the string one works on chars.
-										-Made player initialize as a separate function that initializes the player. 
-											-Made it its own function for later revisions, which may include a saving function.
-										-More grammar and spelling fixes (I make a lot of these mistakes).
-										-Added random monster function, which changes which monster you fight each battle.
-=============================================================================================================================================================											
-2/17/15 2.3a		Patrick Rye			-Implemented multiple types of monsters.
-										-Went back to old method of monster levelling up due to the new way not working properly with new monsters.
+=============================================================================================================================================================	
+2/24/15	1.0b		Patrick Rye			-Moved from V5.0-alpha to V1.0-beta
+										-Fixed level up so it happens when you get to a new level.
+										-Allowed exit on map.
+										-Fixed opening text to reflect recent changes in the game.
+										-Grammar and spelling fixes (yay, made it several revisions without having to do this. :) ).
 =============================================================================================================================================================		
-2/17/15 2.4a		Patrick Rye			-EVEN MORE GRAMMAR AND SPELLIGN FIXES!!
-										-More comments explaining stuff.
-										-Cleaned up the code some more to make it nicer.
-										-Added more randomness to the crit calculator.
-										-Added pause if you win the game. (oops)
-=============================================================================================================================================================											
-2/18/15	2.5a		Patrick Rye			-Replaced old convert to upper case function for char to a better one.
-										-More grammar and spelling fixes. >.<
-										-Fixed bug that caused more points to be put in LUK than should be.
-										-Added random monster modifier, which adds adjectives such as "Strong", "Weak", etc....
-											-Not yet implemented have to test for balance.
-											-Not yet finished will finish and implement at later time.
-=============================================================================================================================================================
-2/18/15	2.5.1a		Patrick Rye			-Quick fix for the random monster generator not properly changing monster stats.
-=============================================================================================================================================================										
-2/18/15	3.0a		Patrick Rye			-Finished random monster modifier and implemented it.
-										-Moved license to be first, followed by change log, and then the code.
-											-This way the license is the first thing seen, and the code isn't split up by the change log.
-										-Even more gosh dang spelling and grammar fixes. Focused more on comments and the change log then anything.
-										-Cleaned up old code some more.
-										-Added function to lower case a word.
-										-Added function to lower case a word then capitalize the first letter.
-											-For grammatical purposes.
-=============================================================================================================================================================
-2/19/15	3.1a		Patrick Rye			-Spelling and grammar fixes. (I swear every time I turn around 3 more mistakes appear).
-										-More code clean up.
-										-Changed damage calculator to be add 5 then multiply by crit.
-										-Moved the 4 functions that changed the case of stuff to a header.
-											-To test the functionality of headers and because these functions shouldn't be modified often
-=============================================================================================================================================================
-2/20/15	4.0a		Patrick Rye			-Redid player levelling up system to allow for 20 points to be placed in any arrangement of stats.
-										-Redid dodge chance calculator.
-										-Redid monster levelling up system. It still may need some work.
-										-Added a "test.h" a header to place some code for debugging and testing purposes later.
-=============================================================================================================================================================
-2/20/15	4.1a		Patrick Rye			-Moved around a lot of word sections, and added system clears and system pauses.
-										-More grammar and spelling fixes.
-										-Added header that contains functions to generate random rooms.
-										-Got rid of test.h as I can just make another one later.
-										-New dungeon generates with each level.
-											-At the moment this does nothing but once I figure out how to allow the player to move, a lot of things will change.
-=============================================================================================================================================================
-2/23/15	5.0a		Patrick Rye			-Player movement system implemented.
-										-Moved battle related stuff to its own header.
-										-Levelling up and player initializing also moved to battle header.
-										-Replaced system("cls") with cout << string(50, '\n');
-										-General code clean up.
-=============================================================================================================================================================
 */
 
 /*********************************************************************************************************/
@@ -169,16 +92,18 @@ int main()
 	int intPlayerNewX;
 	int intPlayerNewY;
 	
-	cout<<"Welcome to the World of Attacker"<<endl<<"Your objective is to kill 10 monsters to win."<<endl;
-	cout<<"Each level is harder than the last do you have what it takes to win?"<<endl;
+	cout<<"Welcome to the World of Attacker"<<endl<<"Your is to go through 10 randomly generated dungeons."<<endl;
+	cout<<"You are looking for the stairs down (>). While you are represented by †"<<endl;
+	cout<<"Every brings you closer to your goal, but there might be a monster there as well."<<endl;
+	cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
 	cout<<"Good luck!"<<endl<<endl<<endl<<endl;
 
-	do {chrPlayerMade = PlayerInitialize();}while (chrPlayerMade != 'T');
-
+	do {chrPlayerMade = PlayerInitialize();}while (chrPlayerMade != 'T'); //Repeat initialization until player is made.
 	//cout << string(50, '\n');
-
 	for(intMainLevel = 1; intMainLevel <= 10; intMainLevel++)
 	{
+		//Do level up if not first level.
+		if( intMainLevel != 1) { LevelUpFunction();}
 		charExitFind = 'F';
 		cout<<endl;
 		Dungeon d;//generates dungeon.
@@ -195,12 +120,12 @@ int main()
 		PostPlayerFind:
 		do
 		{
+			PickDirection:
 			cout << string(50, '\n');
 			d.showDungeon();
 			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
 			//cout<<endl<<"("<<intPlayerX<<","<<intPlayerY<<")"<<endl;
-			PickDirection:
-			cout<<"Please enter a direction you would like to go (N,E,S,W)."<<endl;
+			cout<<"Please enter a direction you would like to go (N,E,S,W)."<<endl<<"Enter X to exit."<<endl;
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
@@ -223,6 +148,33 @@ int main()
 			{
 				intPlayerNewX = intPlayerX - 1;
 				intPlayerNewY = intPlayerY;
+			}
+			/*else if (charPlayerDirection == 'D')
+			{
+				//Debug code that moves player directly to down stairs.
+				for (int y = 0; y < 25; y++){
+					for (int x = 0; x < 80; x++){
+						if (d.getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
+						{
+							intPlayerNewX = x;
+							intPlayerNewY = y;
+						};
+					}
+				}
+			}*/
+			else if (charPlayerDirection == 'X')
+			{
+				cout << string(50, '\n');
+				cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost"<<endl<<"Y or N"<<endl<<"> ";
+				cin>>charPlayerDirection;
+				charPlayerDirection = CharConvertToUpper(charPlayerDirection);
+				switch (charPlayerDirection)
+				{
+					case 'Y' :
+						return 0;
+					default :
+						goto PickDirection;
+				}
 			}
 			else
 			{
@@ -249,7 +201,8 @@ int main()
 			}
 		}while (charExitFind != 'T');
 	}
-	cout<<endl<<endl<<endl<<endl<<"You win!!";
+	cout << string(50, '\n');
+	cout<<"You win!!";
 	system("pause");
 	return 0;
 //End of main
