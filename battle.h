@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.1
+Current Revision: 1.2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -11,6 +11,12 @@ Date	Revision	Changed By			Changes
 2/23/15	1.0			Patrick Rye			-Original
 =============================================================================================================================================================
 2/24/15	1.1			Patrick Rye			-Changed system("cls") to cout << string(50, '\n');
+=============================================================================================================================================================
+2/24/15	1.2			Patrick Rye			-Moved level up to happen when you change levels.
+										-Fixed bug that would cause endless loop is you entered non integer numbers for starting stats
+											-Bug has been there since the start I just didn't know how to fix it till now.
+										-Fixed bug where player could enter values below 1 for stats.
+										-Fixed bug where player could enter decimal places for stats.
 =============================================================================================================================================================
 */
 
@@ -194,8 +200,13 @@ void LevelUpFunction()
 			cout<<"You have "<<intPlayerStatPoints<<" left to spend."<<endl;
 			cout<<"If you chose the wrong stat just enter 0 to not give it any points."<<endl<<endl;
 			cout<<"> ";
-			cin>>intBattleLevelUpAmount;
-		
+			if ( !(cin >> intBattleLevelUpAmount) ) //Checks that value entered is correct
+			{
+				cin.clear();
+				cin.ignore();
+				cout <<endl<< "Incorrect entry. Try again: ";
+			}
+			intBattleLevelUpAmount = floor(intBattleLevelUpAmount);
 			if (intBattleLevelUpAmount > intPlayerStatPoints) 
 			{
 				cout << string(50, '\n');
@@ -233,8 +244,6 @@ char BattleScene()
 	
     double douPlayerHealAmount;
 	char chrPlayerBattleChoice;
-    //Do a level up if not level one
-    if( intBattleLevel != 1) { LevelUpFunction();}
 	//Recalculate all of the stats needed
     //Update monster stats to new Level
 	for (int i=0; i<5; i++) {MonsterStats[i] = floor((intBattleLevel*4)+MonsterBaseStats[i]);/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
@@ -382,8 +391,14 @@ cout<<"You have "<< intSkillPointsLeft <<" points to spend however you desire on
 do 
 {
     cout<<endl<<"Enter your stat for your STRENGTH: ";
-    cin>> intStr;
-}while (intStr <=0);
+    if ( !(cin >> intStr) ) //Checks that value entered is correct
+    {
+		cin.clear();
+		cin.ignore();
+		cout << "Incorrect entry. Try again: ";
+    }
+	intStr = floor(intStr);
+}while (intStr < 1);
 intSkillPointsLeft = intSkillPointsLeft - intStr;
 //A check to see if they put too many points into a stat
 //Since each stat must have at least 1 point
@@ -397,8 +412,14 @@ cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend.";
 do 
 {
     cout<<endl<<"Enter your stat for your CONSTITUTION: ";
-    cin>> intCons;
-}while (intCons <=0);
+    if ( !(cin >> intCons) ) //Checks that value entered is correct
+    {
+		cin.clear();
+		cin.ignore();
+		cout << "Incorrect entry. Try again: ";
+    }
+	intCons = floor(intCons);
+}while (intCons <1);
 intSkillPointsLeft = intSkillPointsLeft - intCons;
 if(intSkillPointsLeft < 3)
 {
@@ -409,8 +430,14 @@ cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
 do 
 {
     cout<<endl<<"Enter your stat for your DEFENCE: ";
-    cin>> intDef;
-}while (intDef <=0);
+    if ( !(cin >> intDef) ) //Checks that value entered is correct
+    {
+		cin.clear();
+		cin.ignore();
+		cout << "Incorrect entry. Try again: ";
+    }
+	intDef = floor(intDef);
+}while (intDef <1);
 intSkillPointsLeft = intSkillPointsLeft - intDef;
 if(intSkillPointsLeft < 2)
 {
@@ -421,8 +448,14 @@ cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
 do 
 {
     cout<<endl<<"Enter your stat for your DEXTERITY: ";
-    cin>> intDex;
-}while (intDex <=0);
+    if ( !(cin >> intDex) ) //Checks that value entered is correct
+    {
+		cin.clear();
+		cin.ignore();
+		cout << "Incorrect entry. Try again: ";
+    }
+	intDex = floor(intDex);
+}while (intDex < 1);
 intSkillPointsLeft = intSkillPointsLeft - intDex;
 if(intSkillPointsLeft < 1)
 {
