@@ -17,7 +17,7 @@ Luck (LUK) - The Random chance things will go your way with dodges and crits.
 
 
 
-There are 10 "levels" where you fight a zombie of increasing strength and if you kill it you advance to the next level.
+You must go through 10 randomly generated dungeons fighting monsters along the way.
 
 During each battle you may Attack in which case you and the monster both trade blows. You can heal for 10% of you maxium health and the monster does less damage or exit the game.
 
@@ -35,6 +35,10 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 *Chnage level ups to be you can place any amount of points in any stat. -2/20/15
 
+*Implenment a walking action betwene fight. -2/24/15
+
+  ~Random chnace to run into moster -2/24/15
+
 ###Short-Term
 
 *Something that allows the monster or player to move first and chance to stun.
@@ -44,12 +48,12 @@ I have a few goals in mind about what I want to do with this but I am always loo
 *Redo the Monster Leveling up system (a bit wonky right now)
 
   ~Might need to also redo entirely the damage and health calculation depending on what I end up changing
-  
-*Implenment a walking action betwene fight.
-
-  ~Random chnace to run into moster
 
 *Redo leveling system to work off of experience rather then monster killed.
+
+*Change healing to be done between monster fights rather than during
+
+  ~Health will then be carried between battles.
 
 ###Long-term
 
