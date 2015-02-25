@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.2
+Current Revision: 1.3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -18,6 +18,11 @@ Date	Revision	Changed By			Changes
 										-Fixed bug where player could enter values below 1 for stats.
 										-Fixed bug where player could enter decimal places for stats.
 =============================================================================================================================================================
+2/25/15	1.3			Patrick Rye			-Improved look of the code by adding separators.
+										-Reduced chance for dodges and crits (cut by half).
+										-Grammar and spelling fixes. (Whelp back to the old grim I guess).
+										-Added breaks to case switches (kinda surprised it worked before).
+=============================================================================================================================================================		
 */
 
 /*
@@ -28,22 +33,27 @@ For Stat Arrays
 3 = DEX
 4 = LUK
 */
-
+/*********************************************************************************************************/
 int MonsterBaseStats[5] = {25,25,10,25,10}; //A base array for the monsters 
 const int ZombieBaseStats[5] = {25,25,10,25,10};
 const int SkeletonBaseStats[5] = {20,35,15,35,6};
 const int WitchBaseStats[5] = {15,15,20,40,30};
 const int ImpBaseStats[5] = {10,10,10,40,10};
+/*********************************************************************************************************/
 const string MonsterNames[4] = {"Zombie","Skeleton","Witch","Imp"};
 const string PosMonsterModifiers[7] = {"Strong","Large","Massive","Fast","Lucky","Powerful","Solid"};
 const string NegMonsterModifiers[5] = {"Weak","Small","Tiny","Slow","Unlucky"};
+/*********************************************************************************************************/
 string MonsterName;
 string MonsterModifier;
+/*********************************************************************************************************/
 double PlayerHealth[2]; //An array 0 is current health 1 is max
 double MonsterHealth[2]; //An array 0 is current health 1 is max
 int MonsterStats[5];
 int PlayerStats[5];
+/*********************************************************************************************************/
 int intBattleLevel;
+/*********************************************************************************************************/
 
 void RandomMonster()
 {
@@ -67,9 +77,8 @@ void RandomMonster()
 
 void RandomMonsterModifier()
 {
-	//Adds a Random Modifier onto a monster it can be a boost of stats or reduced
+	//Adds a random modifier onto a monster it can boost or reduce the stats of the monster.
 	//Varies a bit with a player's LUK
-	//I call a LUK of 20 average, therefore it should have 
 	MonsterModifier = "";
 	//Two random numbers that are added onto player and monster stats
 	int intMRandomNumber;
@@ -83,7 +92,7 @@ void RandomMonsterModifier()
 	
 	if (MonsterStats[4] + intMRandomNumber > PlayerStats[4]+intPRandomNumber)
 	{
-		//Monster has better chance of spawning with positive effect
+		//Monster has better chance of spawning with a positive effect
 		if (intRandomNumber < 60){MonsterModifier = "";}
 		else if (intRandomNumber < 90)
 		{
@@ -118,7 +127,7 @@ void RandomMonsterModifier()
 	}
 	else if (MonsterStats[4] + intMRandomNumber < PlayerStats[4]+intPRandomNumber)
 	{
-		//Monster has better chance of spawning with positive effect
+		//Monster has better chance of spawning with a negative effect
 		if (intRandomNumber < 60) {MonsterModifier = "";}
 		else if (intRandomNumber < 90)
 		{
@@ -152,7 +161,7 @@ void RandomMonsterModifier()
 		else {/*This shouldn't happen but just in case.*/MonsterModifier="";}
 	}
 	else {/*The two stats are equal therefore the monster is a normal monster without any other checks*/MonsterModifier = "";}
-//End of random monster modifier	
+//End of random monster modifier.	
 }
 
 void LevelUpFunction()
@@ -177,7 +186,7 @@ void LevelUpFunction()
 		cout<<"> ";
 		
 		cin>>strLevelUpChoice;
-		strLevelUpChoice = ConvertToUpper(strLevelUpChoice); //capitalize all letters in the string.
+		strLevelUpChoice = ConvertToUpper(strLevelUpChoice); //Capitalize all letters in the string.
 		
 		if (strLevelUpChoice == "STR") {intBattleLevelUpChoice = 0;}
 		else if (strLevelUpChoice == "CONS") {intBattleLevelUpChoice = 1;}
@@ -227,7 +236,7 @@ void LevelUpFunction()
 		else {intPlayerStatPoints = 0;} //Player chose not to use rest of points so just cause the loop to end.
 		
 	} while (intPlayerStatPoints > 0);
-//End of Level up function
+//End of level up function
 }
 
 char BattleScene() 
@@ -245,7 +254,7 @@ char BattleScene()
     double douPlayerHealAmount;
 	char chrPlayerBattleChoice;
 	//Recalculate all of the stats needed
-    //Update monster stats to new Level
+    //Update monster stats to new level
 	for (int i=0; i<5; i++) {MonsterStats[i] = floor((intBattleLevel*4)+MonsterBaseStats[i]);/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
     //Recalculate healths and re-heal them
     PlayerHealth[1] = floor((23*((5.25+0.5625*intBattleLevel+0.00375*pow(intBattleLevel,2))+(1+0.066*intBattleLevel)*(PlayerStats[1]/16))));
@@ -257,23 +266,23 @@ char BattleScene()
     BattleGoto:
 	cout << string(10, '\n');
 	//The way I worked out this dodge calc is that if the Dex and Luk both equal 150 (which isn't possible under the current levelling up system),
-	//then they have a 50% chance to dodge. I also wanted Dex to factor into 75% of the chance and Luk only 25%
-    double douPlayerDodgeChance = ((PlayerStats[3]/2)+(PlayerStats[4]/6)/2);
-    double douMonsterDodgeChance = ((MonsterStats[3]/2)+(MonsterStats[4]/6)/2);
-    double douPlayerCritChance = ((PlayerStats[4])/10 + rand() %5) * 4; 
-    double douMonsterCritChance =((MonsterStats[4])/10 + rand() %5) * 4;
+	//then they have a 25% chance to dodge. I also wanted Dex to factor into 75% of the chance and Luk only 25%
+    double douPlayerDodgeChance = ((PlayerStats[3]/2)+(PlayerStats[4]/6)/4);
+    double douMonsterDodgeChance = ((MonsterStats[3]/2)+(MonsterStats[4]/6)/4);
+    double douPlayerCritChance = ((PlayerStats[4])/20 + rand() %3) * 4; 
+    double douMonsterCritChance =((MonsterStats[4])/20 + rand() %3) * 4;
     double douMonsterDamageMuli = 1;
     double douPlayerDamageMuli = 1;
     int intPlayerDamage = 0;
     int intMonsterDamage = 0;
-    //Check both monster and Player to see if they get a crit this round
+    //Check both monster and player to see if they get a crit this round
 	//Rand() % 101 generates a random number between 0 and 100.
     if (rand() % 101 <= douPlayerCritChance) {douPlayerDamageMuli = 1.375;}
     if (rand() % 101 <= douMonsterCritChance) {douMonsterDamageMuli = 1.375;}
     //Check to see if Monster or Player dodges
-    if(rand() % 101 <= douPlayerDodgeChance) {douMonsterDamageMuli = 0;} //Player dodges set Monster Damage to 0
-    if(rand() % 101 <= douMonsterDodgeChance) {douPlayerDamageMuli = 0;} // Monster Dodges
-    //Calculate Damage Done
+    if(rand() % 101 <= douPlayerDodgeChance) {douMonsterDamageMuli = 0;} //Player dodges set monster damage to 0
+    if(rand() % 101 <= douMonsterDodgeChance) {douPlayerDamageMuli = 0;} // Monster dodges
+    //Calculate damage done
     intPlayerDamage = floor(((((2 * (intBattleLevel/5) + 2) * ((10*intBattleLevel)/MonsterStats[2]))*(PlayerStats[0]/8))+5)*douPlayerDamageMuli);
     intMonsterDamage = floor(((((2 * (intBattleLevel/5) + 2) * ((10*intBattleLevel)/PlayerStats[2]))*(MonsterStats[0]/8))+5)*douMonsterDamageMuli);
     cout<<"You are now fighting a level "<<intBattleLevel<<" "<<MonsterName<<"!";
@@ -308,8 +317,9 @@ char BattleScene()
 
             cout<<endl;
             goto HealthCheck;
+			break;
         case 'H' :
-            //Code for Player Healing
+            //Code for player healing
 			cout << string(10, '\n');
             if(intMonsterDamage !=0)
             {
@@ -323,14 +333,16 @@ char BattleScene()
 			else {PlayerHealth[0] = PlayerHealth[0] + douPlayerHealAmount;}
             cout<<endl<<"You heal yourself for "<<douPlayerHealAmount<<" HP.";
             goto HealthCheck;
+			break;
         case 'Q' :
 			cout << string(2, '\n');
             cout<<endl<<"Attacking means that you attack the monster and you both deal damage to each other assuming no one dodges";
             cout<<endl<<"Healing means that you heal for 10% of your maximum health, "<< douPlayerHealAmount<<" HP. While healing you also take less damage.";
 			cout<<endl<<"Exit will leave the game and lose all progress.";
-            cout<<endl<<"Help brings up this menu"<<endl;
+            cout<<endl<<"Help brings up this menu."<<endl;
             goto PlayerChoice;
-        case 'D' : //debug code reveal some values
+			break;
+        case 'D' : //Debug code reveal some values
 			cout << string(2, '\n');
             cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
             cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
@@ -341,27 +353,33 @@ char BattleScene()
             cout<<endl<<"Player damage: "<<intPlayerDamage;
             cout<<endl<<"Monster damage: "<<intMonsterDamage;
             goto PlayerChoice;
-        case 'K' : //debug code "kills" the current monster
+			break;
+        case 'K' : //Debug code "kills" the current monster
 			cout << string(50, '\n');
             return 'T';
+			break;
         case 'E' : //exits game
 			cout << string(50, '\n');
-			cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost"<<endl<<"Y or N"<<endl<<"> ";
+			cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
 			cin>>chrPlayerBattleChoice;
 			chrPlayerBattleChoice = CharConvertToUpper(chrPlayerBattleChoice);
 			switch (chrPlayerBattleChoice)
 			{
 				case 'Y' :
 					return 'F';
+					break;
 				default :
 					goto PlayerChoice;
+					break;
 			}
+			break;
         default :
             cout<<endl<<"Invalid choice, try again";
             goto PlayerChoice;
+			break;
 	
     }
-	//Check if Player Dead
+	//Check if player is dead
 	HealthCheck:
 	if (PlayerHealth[0] <= 0) {return 'F';}	
 	if (MonsterHealth[0] <= 0) {return 'T';}
@@ -408,7 +426,7 @@ if( intSkillPointsLeft < 4 )
     return 'F';
 }
 
-cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend.";
+cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend.";
 do 
 {
     cout<<endl<<"Enter your stat for your CONSTITUTION: ";
@@ -426,7 +444,7 @@ if(intSkillPointsLeft < 3)
     cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
     return 'F';
 }
-cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
+cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend";
 do 
 {
     cout<<endl<<"Enter your stat for your DEFENCE: ";
@@ -444,7 +462,7 @@ if(intSkillPointsLeft < 2)
     cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
     return 'F';
 }
-cout<<endl<<"You have "<< intSkillPointsLeft <<" Points Left to spend";
+cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend";
 do 
 {
     cout<<endl<<"Enter your stat for your DEXTERITY: ";
@@ -484,14 +502,17 @@ cout<<"Do you agree with these stats? Y or N"<<endl;
     {
     case 'Y' :
         goto RestofGame;
+		break;
     case 'N' :
         return 'F';
+		break;
     default :
         cout<<endl<<"Invalid choice, try again."<<endl;
         goto AgreeWithStats;
+		break;
     }
 
-//Make an Array of the Player's Stats for easier referencing of them later
+//Make an array of the player's Stats for easier referencing of them later
 RestofGame:
 PlayerStats[0]=intStr;
 PlayerStats[1]=intCons;
@@ -499,7 +520,7 @@ PlayerStats[2]=intDef;
 PlayerStats[3]=intDex;
 PlayerStats[4]=intLuk;
 cout << string(50, '\n');
-//End of Player Initialize
+//End of player initialize
 return 'T';
 }
 
@@ -515,19 +536,22 @@ char startbattle(int intsLevel)
 	switch(charBattleSceneEnding)
 	{
 		case 'T' :
-				cout << string(50, '\n');
-			    cout<<"You beat the "<<MonsterName<<endl<<"Now advancing to level: "<<intBattleLevel + 1;
-                return 'T';
+			cout << string(50, '\n');
+			cout<<"You beat the "<<MonsterName<<endl<<"Now advancing to level: "<<intBattleLevel + 1;
+            return 'T';
+			break;
 		case 'F' : 
-				cout << string(50, '\n');
-			    cout<<"You lost..."<<endl<<" You defeated "<<intBattleLevel - 1 <<" monsters.";
-                cout<<endl<<"Press enter to close this game and try again!";
-                system("pause");
-                return 'F';
+			cout << string(50, '\n');
+			cout<<"You lost..."<<endl<<" You defeated "<<intBattleLevel - 1 <<" monsters.";
+            cout<<endl<<"Press enter to close this game and try again!";
+            system("pause");
+            return 'F';
+			break;
 		default :
 			cout<<endl<<"An error has occurred in the code. Sorry :( The game will exit.";
 			system("pause");
 			return 'F';
+			break;
 	}
 }
 
