@@ -74,3 +74,5 @@ I have a few goals in mind about what I want to do with this but I am always loo
 - [ ] Save System
 
   - If I make the game longer I will likely want to look into this.
+
+- [ ] Line of sight, which causes the dungeon to be loaded as you see it.
