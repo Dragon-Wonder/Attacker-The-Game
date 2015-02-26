@@ -29,48 +29,48 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 ###Completed Goals
 
-* Implent More Monster that have different stats and increase the variaty a bit -2/17/15
+- [x] Implent More Monster that have different stats and increase the variaty a bit -2/17/15
 
-* Implented more variety in monster with random modifiers -2/19/15
+- [x] Implented more variety in monster with random modifiers -2/19/15
 
-* Change level ups to be you can place any amount of points in any stat. -2/20/15
+- [x] Change level ups to be you can place any amount of points in any stat. -2/20/15
 
-* Implenment a walking action betwene fight. -2/24/15
+- [x] Implenment a walking action betwene fight. -2/24/15
 
-  - Random chance to run into moster -2/24/15
+- [x] Random chance to run into moster -2/24/15
 
 ###Short-Term
 
-* Something that allows the monster or player to move first and chance to stun.
+- [ ] Something that allows the monster or player to move first and chance to stun.
 
-* More actions during a battle (no ideas on what)
+- [ ] More actions during a battle (no ideas on what)
 
-* Redo the Monster Leveling up system (a bit wonky right now)
+- [ ] Redo the Monster Leveling up system (a bit wonky right now)
 
   - Might need to also redo entirely the damage and health calculation depending on what I end up changing
 
-* Redo leveling system to work off of experience rather then monster killed.
+- [ ] Redo leveling system to work off of experience rather then monster killed.
 
-* Change healing to be done between monster fights rather than during
+- [ ] Change healing to be done between monster fights rather than during
 
   - Health will then be carried between battles.
 
 ###Long-term
 
-* Add Pictures 
+- [ ] Add Pictures 
 
   - This is a real long term goal and will take a bit of work
   
   - Monsters, move onto health bars then finally do the player.
 
-* A Looting system(?) 
+- [ ] A Looting system(?) 
 
   - Unsure of this one but I think it would be a cool idea
   
-* MORE LEVELS
+- [ ] MORE LEVELS
 
   - Of course if I am going to add all this stuff I will need to extend the game to make it worth while
   
-* Save System
+- [ ] Save System
 
   - If I make the game longer I will likely want to look into this.
