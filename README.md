@@ -55,6 +55,12 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
   - Health will then be carried between battles.
 
+- [ ] Doors are more than just a thing you can walk through.
+
+  - Can smash door down, find key or pick the lock.
+  
+  - Some doors are locked, but not always, random chance.
+
 ###Long-term
 
 - [ ] Add Pictures 
