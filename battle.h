@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.4
+Current Revision: 1.5
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -26,9 +26,10 @@ Date	Revision	Changed By			Changes
 2/26/15	1.4			Patrick Rye			-General code improvement.
 										-Fixed losing message to better represent changes to objectives.
 										-Grammar and spelling fixes.
-											(┬──┬ ノ( ゜-゜ノ))
-											((╯°□°)╯︵ ┻━┻)
-=============================================================================================================================================================		
+=============================================================================================================================================================
+2/27/15	1.5			Patrick Rye			-Added function that saves needed values.
+										-Changed health arrays from doubles to integers.
+=============================================================================================================================================================				
 */
 
 /*
@@ -53,8 +54,8 @@ const string NegMonsterModifiers[5] = {"Weak","Small","Tiny","Slow","Unlucky"};
 string MonsterName;
 string MonsterModifier;
 /*********************************************************************************************************/
-double PlayerHealth[2]; //An array 0 is current health 1 is max
-double MonsterHealth[2]; //An array 0 is current health 1 is max
+int PlayerHealth[2] = {0,300}; //An array 0 is current health 1 is max
+int MonsterHealth[2]; //An array 0 is current health 1 is max
 int MonsterStats[5];
 int PlayerStats[5];
 /*********************************************************************************************************/
@@ -63,7 +64,7 @@ int intBattleLevel;
 
 void RandomMonster()
 {
-	//Generates a number 0 - 4 representing the location of a monster in the Monster Name array
+	//Generates a number 0 - 4 representing the location of a monster in the monster name array
 	//It then places the name and base stats of the monster appropriately. 
 	int intRandomMonsterNumber;
 	
@@ -562,5 +563,23 @@ char startbattle(int intsLevel)
 	}
 }
 
+int savebattle(int intvalue)
+{
+	if (intvalue < 0) {return 0;}
+	else if (intvalue < 5) {return PlayerStats[intvalue];}
+	else if (intvalue == 6) {return PlayerHealth[0];}
+	else if (intvalue == 7) {return PlayerHealth[1];}
+	else {return 0;}
+}
+
+int loadbattle(int intlocation, int intvalue)
+{
+	if (intlocation < 0) {return 0;}
+	else if (intlocation < 5) {PlayerStats[intlocation] = intvalue;}
+	else if (intlocation == 6) {PlayerHealth[0] = intvalue;}
+	else if (intlocation == 7) {PlayerHealth[1] = intvalue;}
+	else {return 0;}
+	return 1;
+}
 
 #endif
