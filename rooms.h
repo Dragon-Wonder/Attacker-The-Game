@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.2
+Current Revision: 1.3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -17,14 +17,16 @@ Date	Revision	Changed By			Changes
 										-Made getcell, setcell, showDungeon all public so I can access them from the main code.
 =============================================================================================================================================================
 2/26/15	1.2			Patrick Rye			-Moved player movement function here.
-=============================================================================================================================================================			
+=============================================================================================================================================================
+2/27/15	1.3			Patrick Rye			-Added option to save on map.
+=============================================================================================================================================================				
 */
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
 int intPlayerNewX; //Player position in X and Y.
 int intPlayerNewY;
  
-int intTempTile; //Value to hold what the cell that the player is moving into is.
+int intTempTile = 6; //Value to hold what the cell that the player is moving into is.
  
  
 class Dungeon
@@ -496,6 +498,8 @@ class Dungeon
 					if (ways == 0){
 					//we're in state 0, let's place a Player from where they came down the stairs.
 						setCell(newx, newy, tilePlayer);
+						intPlayerX = newx;
+						intPlayerY = newy;
 						state = 1;
 						break;
 					}
@@ -522,7 +526,7 @@ class Dungeon
     int* make_dungeon()
     {
         int x = 80;
-        int y = 25;
+        int y = 20;
         int dungeon_objects = 100;
         dungeon_map = new int[x * y];
         //for(;;)
@@ -537,12 +541,18 @@ class Dungeon
 	void cmain()
     {
         int x = 80;
-        int y = 25;
+        int y = 20;
         int dungeon_objects = 100;
         dungeon_map = new int[x * y];
 
         if(createDungeon(x, y, dungeon_objects)) {showDungeon();}
-		for (int y2 = 0; y2 < 25; y2++)
+		playerfind();
+	//PostPlayerFind:
+    }
+	public:
+	void playerfind()
+	{
+		for (int y2 = 0; y2 < 20; y2++)
 		{
 			for (int x2 = 0; x2 < 80; x2++)
 			{
@@ -554,8 +564,7 @@ class Dungeon
 				}
 			}
 		}
-	//PostPlayerFind:
-    }
+	}
 	public:
 	char PlayerMovement(char chrPlayerDirection)
 	{
@@ -578,7 +587,7 @@ class Dungeon
 				intPlayerNewY = intPlayerY;
 				break;
 			case '&' :
-				for (int y = 0; y < 25; y++){
+				for (int y = 0; y < 20; y++){
 					for (int x = 0; x < 80; x++){
 						if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
 						{
@@ -603,6 +612,9 @@ class Dungeon
 						return 'F';
 						break;
 				}
+				break;
+			case 'P' : 
+				return 'S';
 				break;
 			default : 
 				cout<<endl<<"Invalid direction, please try again."<<endl;
