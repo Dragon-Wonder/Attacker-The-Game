@@ -39,7 +39,7 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 - [x] Implenment a dungeon scene as main objective. -2/24/15
 
-- [x] Random chance to run into moster. -2/24/15
+- [x] Random chance to run into monsters. -2/24/15
 
 ###Short-Term
 
