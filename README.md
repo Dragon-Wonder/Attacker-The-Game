@@ -51,7 +51,8 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
   - Might need to also redo entirely the damage and health calculation depending on what I end up changing.
 
-- [ ] Redo leveling system to work off of experience rather then monster killed.
+- [ ] Redo leveling system to work off of experience, rather than dungeons completed.
+  - So if I do this, the player would need a way to go back to fight weaker monsters if they find that they moved to the next dungeon too quickly.
 
 - [ ] Change healing to be done between monster fights rather than during.
 
