@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.3b
+Current Revision: 2.0b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -55,10 +55,15 @@ Date	Revision	Changed By			Changes
 =============================================================================================================================================================
 2/26/15	1.3b		Patrick Rye			-Moved player movement to the room.h
 =============================================================================================================================================================
+2/27/15	2.0b		Patrick Rye			-Added a save function, for testing purposes.
+										-Added load function.
+										-Added function to see if file exists.
+=============================================================================================================================================================
 */
 
 /*********************************************************************************************************/
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <math.h>
 #include <cstdlib>
@@ -72,46 +77,168 @@ Date	Revision	Changed By			Changes
 #include "battle.h" //Functions that deal with battling, levelling up and making a player.
 /*********************************************************************************************************/
 using namespace std;
+Dungeon d;
 /*********************************************************************************************************/
 //Make all the global variables that I need.
 int intMainLevel;
+int intLevelStart;
 /*********************************************************************************************************/
+
+bool saveexists()
+{
+  ifstream ifile("save.bif");
+  return ifile;
+}
+
+char savefunction()
+{
+	/*
+	Testing a possible save function.
+	2 Return values possible.
+	T = True, save succeeded.
+	F = False, save failed.
+	*/
+	int intCheckSum = 0;
+	int arrbattlesave[7];
+	int arrmainsave[1] = {intMainLevel};
+	int arrroomsave[80][20];
+	for (int i = 0; i < 6; i++) {arrbattlesave[i] = savebattle(i);}
+	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}}
+	ofstream savefile;
+	savefile.open ("save.bif");
+	for (int i = 0; i < 7; i++) {savefile << arrbattlesave[i] << "\n";}
+	//savefile << "\n";
+	for (int i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
+	//savefile << "\n";
+	for (int y = 0; y < 20; y++)
+	{
+		for (int x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}
+		//savefile << " ";
+	}
+	savefile.close();
+	//Save will now attempt to "load" the save it just made and compare it to the data available.
+	//Checks to see if save is correct or not.
+	ifstream loadfile("save.bif");
+	int arrloadnumbers[1608];
+	int x;
+	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
+	loadfile.close();
+	for (int i = 0; i < 8; i++)
+	{
+		if(i<7) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
+		else if (i == 7) {if (arrloadnumbers[i]==intMainLevel) {intCheckSum++;}}
+	}
+	int num = 7;
+	for (int y = 0; y < 20; y++)
+	{
+		for (int x = 0; x < 80; x++)
+		{
+			num ++;
+			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
+		}
+	}
+	cout<<endl<<endl<<intCheckSum;
+	if(intCheckSum >= 1608) {return 'T';}
+	else {return 'F';}
+}
+
+
+bool loadfunction()
+{
+	ifstream loadfile("save.bif");
+	int arrloadnumbers[1608];
+	int x;
+	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
+	loadfile.close();
+	for (int i = 0; i < 8; i++)
+	{
+		if(i<7) {x = loadbattle(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
+		else if (i == 7) {intLevelStart = arrloadnumbers[i];/*cout<<intLevelStart<<endl;*/}
+	}
+	int num = 7;
+	for (int y = 0; y < 20; y++)
+	{
+		for (int x = 0; x < 80; x++)
+		{
+			num ++;
+			d.setCell(x,y,arrloadnumbers[num]);
+			//cout<<arrloadnumbers[num];
+		}
+	}
+	//d.showDungeon();
+	return true;
+}
+
 
 int main()
 {
 
+	cout << string(48, '\n');
 	char chrPlayerMade = 'F';
 	char charPlayerDirection;
 	char charBattleEnding;
 	char charExitFind;
-
-	cout<<"Welcome to the World of Attacker"<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
-	cout<<"You are looking for the stairs down ( > ). While you are represented by †"<<endl;
-	cout<<"Every step brings you closer to your goal, but there might be a monster there as well."<<endl;
-	cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
-	cout<<"Good luck!"<<endl<<endl<<endl<<endl;
-
-	do {chrPlayerMade = PlayerInitialize();}while (chrPlayerMade != 'T'); //Repeat initialization until player is made.
-	//cout << string(50, '\n');
-	for(intMainLevel = 1; intMainLevel <= 10; intMainLevel++)
+	bool blLoadSuccess = false;
+	bool blOldSave = false;
+	char chrSaveSuccess = 'N'; //N means that save has not been run.
+	intLevelStart = 1;
+	if (saveexists())
 	{
-		//Do level up if not first level.
-		if( intMainLevel != 1) { LevelUpFunction();}
+		blLoadSuccess = loadfunction();
+		if (blLoadSuccess) 
+		{
+			chrPlayerMade = 'T';
+			blOldSave = true; 
+		}
+		else {cout<<"There is a save present, but game is unable to load it."<<endl<<"Save is possibly corrupted."<<endl<<endl<<endl;}
+	}
+	
+	
+	if(!blOldSave) //If it is not an old save show welcome message.
+	{
+		NewGame:
+		cout<<"Welcome to the World of Attacker"<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
+		cout<<"You are looking for the stairs down ( > ). While you are represented by †"<<endl;
+		cout<<"Every step brings you closer to your goal, but there might be a monster there as well."<<endl;
+		cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
+		cout<<"Good luck!"<<endl<<endl<<endl<<endl;
+		while (chrPlayerMade != 'T') {chrPlayerMade = PlayerInitialize();}; //Repeat initialization until player is made.
+	}
+
+	for(intMainLevel = intLevelStart; intMainLevel <= 10; intMainLevel++)
+	{
+		//Do level up if new level.
+		if (intMainLevel > intLevelStart) {LevelUpFunction();}
 		charExitFind = 'F';
 		cout<<endl;
-		Dungeon d;//Generates dungeon.
-
+		if (blOldSave && intMainLevel == intLevelStart) {d.playerfind(); d.showDungeon();} //If Old save and the level of that save, just load old dungeon.
+		else {Dungeon d;/*Generates dungeon.*/} //If it is not old game OR a different level of old game, make new dungeon.
+		
 		do
 		{
 			cout << string(50, '\n');
 			d.showDungeon();
 			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
-			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter X to exit."<<endl;
+			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter X to exit, or P to save."<<endl;
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
 			charExitFind = d.PlayerMovement(charPlayerDirection);
 			if (charExitFind == 'E') {return 0;} //If we get an error exit program.
+			if (charExitFind == 'S') {chrSaveSuccess = savefunction();} //Save the game.
+			switch (chrSaveSuccess)
+			{
+				case 'T' :
+					cout<<endl<<"Save succeeded."<<endl;
+					system("pause");
+					chrSaveSuccess = 'N';
+					break;
+				case 'F' :
+					cout<<endl<<"Save failed!"<<endl;
+					system("pause");
+					chrSaveSuccess = 'N';
+					break;
+			}
 			if(rand() % 101 <= 10) //Random chance to encounter monster.
 			{
 				cout << string(50, '\n');
@@ -122,7 +249,7 @@ int main()
 	}
 	cout << string(50, '\n');
 	cout<<"You win!!";
-	system("PAUSE");
+	system("pause");
 	return 0;
 //End of main
 }
