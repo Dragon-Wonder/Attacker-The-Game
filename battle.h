@@ -1,9 +1,9 @@
-#ifndef _BATTLE_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again
+#ifndef _BATTLE_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
 #define _BATTLE_H_INCLUDED__
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.3
+Current Revision: 1.4
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -22,6 +22,12 @@ Date	Revision	Changed By			Changes
 										-Reduced chance for dodges and crits (cut by half).
 										-Grammar and spelling fixes. (Whelp back to the old grim I guess).
 										-Added breaks to case switches (kinda surprised it worked before).
+=============================================================================================================================================================
+2/26/15	1.4			Patrick Rye			-General code improvement.
+										-Fixed losing message to better represent changes to objectives.
+										-Grammar and spelling fixes.
+											(┬──┬ ノ( ゜-゜ノ))
+											((╯°□°)╯︵ ┻━┻)
 =============================================================================================================================================================		
 */
 
@@ -261,7 +267,7 @@ char BattleScene()
     PlayerHealth[0] = PlayerHealth[1];
     MonsterHealth[1] = floor((23*((5.25+0.5625*intBattleLevel+0.00375*pow(intBattleLevel,2))+(1+0.066*intBattleLevel)*(MonsterStats[1]/16))/3));
     MonsterHealth[0] = MonsterHealth[1];
-    //Recalculate amount Player heals for
+    //Recalculate amount player heals for
     douPlayerHealAmount = floor(PlayerHealth[1]/10);
     BattleGoto:
 	cout << string(10, '\n');
@@ -390,138 +396,139 @@ char BattleScene()
 
 char PlayerInitialize()
 {
-//Code for making a character, in its own function for later features.
-int intStr = 0;
-int intCons = 0;
-int intDef = 0;
-int intDex = 0;
-int intLuk = 0;
+	//Code for making a character, in its own function for later features.
+	int intStr = 0;
+	int intCons = 0;
+	int intDef = 0;
+	int intDex = 0;
+	int intLuk = 0;
 
-cout<<"In this game there are five stats that effect different elements of the game.";
-cout<<endl<<"Strength (STR) - Effects how much damage you do when you attack."<<endl;
-cout<<"Constitution (CONS) - Effects how much health you have."<<endl;
-cout<<"Dexterity (DEX) - Effects if your chance to dodge."<<endl;
-cout<<"Defence (DEF) - Effects how much damage you take."<<endl;
-cout<<"Luck (LUK) - The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters."<<endl;
-int intSkillPointsLeft = 100;
-cout<<"You have "<< intSkillPointsLeft <<" points to spend however you desire on these five stats, however each stat must have at least 1 point."<<endl;
+	cout<<"In this game there are five stats that effect different elements of the game.";
+	cout<<endl<<"Strength (STR) - Effects how much damage you do when you attack."<<endl;
+	cout<<"Constitution (CONS) - Effects how much health you have."<<endl;
+	cout<<"Dexterity (DEX) - Effects if your chance to dodge."<<endl;
+	cout<<"Defence (DEF) - Effects how much damage you take."<<endl;
+	cout<<"Luck (LUK) - The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters."<<endl;
+	int intSkillPointsLeft = 100;
+	cout<<"You have "<< intSkillPointsLeft <<" points to spend however you desire on these five stats, however each stat must have at least 1 point."<<endl;
 
-do 
-{
-    cout<<endl<<"Enter your stat for your STRENGTH: ";
-    if ( !(cin >> intStr) ) //Checks that value entered is correct
-    {
-		cin.clear();
-		cin.ignore();
-		cout << "Incorrect entry. Try again: ";
-    }
-	intStr = floor(intStr);
-}while (intStr < 1);
-intSkillPointsLeft = intSkillPointsLeft - intStr;
-//A check to see if they put too many points into a stat
-//Since each stat must have at least 1 point
-if( intSkillPointsLeft < 4 )
-{
-    cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
-    return 'F';
-}
+	do 
+	{
+		cout<<endl<<"Enter your stat for your STRENGTH: ";
+		if ( !(cin >> intStr) ) //Checks that value entered is correct
+		{
+			cin.clear();
+			cin.ignore();
+			cout << "Incorrect entry. Try again: ";
+		}
+		intStr = floor(intStr);
+	}while (intStr < 1);
+	intSkillPointsLeft = intSkillPointsLeft - intStr;
+	//A check to see if they put too many points into a stat
+	//Since each stat must have at least 1 point
+	if( intSkillPointsLeft < 4 )
+	{
+		cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
+		return 'F';
+	}
 
-cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend.";
-do 
-{
-    cout<<endl<<"Enter your stat for your CONSTITUTION: ";
-    if ( !(cin >> intCons) ) //Checks that value entered is correct
-    {
-		cin.clear();
-		cin.ignore();
-		cout << "Incorrect entry. Try again: ";
-    }
-	intCons = floor(intCons);
-}while (intCons <1);
-intSkillPointsLeft = intSkillPointsLeft - intCons;
-if(intSkillPointsLeft < 3)
-{
-    cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
-    return 'F';
-}
-cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend";
-do 
-{
-    cout<<endl<<"Enter your stat for your DEFENCE: ";
-    if ( !(cin >> intDef) ) //Checks that value entered is correct
-    {
-		cin.clear();
-		cin.ignore();
-		cout << "Incorrect entry. Try again: ";
-    }
-	intDef = floor(intDef);
-}while (intDef <1);
-intSkillPointsLeft = intSkillPointsLeft - intDef;
-if(intSkillPointsLeft < 2)
-{
-    cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
-    return 'F';
-}
-cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend";
-do 
-{
-    cout<<endl<<"Enter your stat for your DEXTERITY: ";
-    if ( !(cin >> intDex) ) //Checks that value entered is correct
-    {
-		cin.clear();
-		cin.ignore();
-		cout << "Incorrect entry. Try again: ";
-    }
-	intDex = floor(intDex);
-}while (intDex < 1);
-intSkillPointsLeft = intSkillPointsLeft - intDex;
-if(intSkillPointsLeft < 1)
-{
-    cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
-    return 'F';
-}
+	cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend.";
+	do 
+	{
+		cout<<endl<<"Enter your stat for your CONSTITUTION: ";
+		if ( !(cin >> intCons) ) //Checks that value entered is correct
+		{
+			cin.clear();
+			cin.ignore();
+			cout << "Incorrect entry. Try again: ";
+		}
+		intCons = floor(intCons);
+	}while (intCons <1);
+	intSkillPointsLeft = intSkillPointsLeft - intCons;
+	if(intSkillPointsLeft < 3)
+	{
+		cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
+		return 'F';
+	}
+	cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend";
+	do 
+	{
+		cout<<endl<<"Enter your stat for your DEFENCE: ";
+		if ( !(cin >> intDef) ) //Checks that value entered is correct
+		{
+			cin.clear();
+			cin.ignore();
+			cout << "Incorrect entry. Try again: ";
+		}
+		intDef = floor(intDef);
+	}while (intDef <1);
+	intSkillPointsLeft = intSkillPointsLeft - intDef;
+	if(intSkillPointsLeft < 2)
+	{
+		cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
+		return 'F';
+	}
+	cout<<endl<<"You have "<< intSkillPointsLeft <<" points left to spend";
+	do 
+	{
+		cout<<endl<<"Enter your stat for your DEXTERITY: ";
+		if ( !(cin >> intDex) ) //Checks that value entered is correct
+		{
+			cin.clear();
+			cin.ignore();
+			cout << "Incorrect entry. Try again: ";
+		}
+		intDex = floor(intDex);
+	}while (intDex < 1);
+	intSkillPointsLeft = intSkillPointsLeft - intDex;
+	if(intSkillPointsLeft < 1)
+	{
+		cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
+		return 'F';
+	}
 
-cout<<endl<< intSkillPointsLeft <<" points are placed in LUCK."<<endl;
-intLuk = intSkillPointsLeft;
+	cout<<endl<< intSkillPointsLeft <<" points are placed in LUCK."<<endl;
+	intLuk = intSkillPointsLeft;
 
-char strAnswer;
-cout << string(50, '\n');
-AgreeWithStats:
-cout<<"Your current stats are as follows:"<<endl;
-cout<<"Strength: "<<intStr<<endl;
-cout<<"Constitution: "<<intCons<<endl;
-cout<<"Defence: "<<intDef<<endl;
-cout<<"Dexterity: "<<intDex<<endl;
-cout<<"Luck: "<<intLuk<<endl;
-cout<<"Do you agree with these stats? Y or N"<<endl;
+	char strAnswer;
+	cout << string(50, '\n');
+	AgreeWithStats:
+	cout<<"Your current stats are as follows:"<<endl;
+	cout<<"Strength: "<<intStr<<endl;
+	cout<<"Constitution: "<<intCons<<endl;
+	cout<<"Defence: "<<intDef<<endl;
+	cout<<"Dexterity: "<<intDex<<endl;
+	cout<<"Luck: "<<intLuk<<endl;
+	cout<<"Do you agree with these stats? Y or N"<<endl;
 
     cout<<"Y or N? > ";
     cin>>strAnswer;
 	strAnswer = CharConvertToUpper(strAnswer);
     switch(strAnswer)
     {
-    case 'Y' :
-        goto RestofGame;
-		break;
-    case 'N' :
-        return 'F';
-		break;
-    default :
-        cout<<endl<<"Invalid choice, try again."<<endl;
-        goto AgreeWithStats;
-		break;
+		case 'Y' :
+			goto RestofGame;
+			break;
+		case 'N' :
+			return 'F';
+			break;
+		default :
+			cout<<endl<<"Invalid choice, try again."<<endl;
+			goto AgreeWithStats;
+			break;
     }
 
-//Make an array of the player's Stats for easier referencing of them later
-RestofGame:
-PlayerStats[0]=intStr;
-PlayerStats[1]=intCons;
-PlayerStats[2]=intDef;
-PlayerStats[3]=intDex;
-PlayerStats[4]=intLuk;
-cout << string(50, '\n');
+	//Make an array of the player's stats for easier referencing of them later
+	RestofGame:
+	PlayerStats[0]=intStr;
+	PlayerStats[1]=intCons;
+	PlayerStats[2]=intDef;
+	PlayerStats[3]=intDex;
+	PlayerStats[4]=intLuk;
+	cout << string(50, '\n');
+
+	return 'T';
 //End of player initialize
-return 'T';
 }
 
 char startbattle(int intsLevel)
@@ -537,12 +544,12 @@ char startbattle(int intsLevel)
 	{
 		case 'T' :
 			cout << string(50, '\n');
-			cout<<"You beat the "<<MonsterName<<endl<<"Now advancing to level: "<<intBattleLevel + 1;
+			cout<<"You beat the "<<MonsterName<<endl;
             return 'T';
 			break;
 		case 'F' : 
 			cout << string(50, '\n');
-			cout<<"You lost..."<<endl<<" You defeated "<<intBattleLevel - 1 <<" monsters.";
+			cout<<"You lost..."<<endl<<" You defeated "<<intBattleLevel - 1 <<" levels.";
             cout<<endl<<"Press enter to close this game and try again!";
             system("pause");
             return 'F';
