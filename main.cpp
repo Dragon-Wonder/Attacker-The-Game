@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.2b
+Current Revision: 1.3b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -53,6 +53,8 @@ Date	Revision	Changed By			Changes
 										-Changed some if statements to case switches.
 										-Added breaks to case switches.
 =============================================================================================================================================================
+2/26/15	1.3b		Patrick Rye			-Moved player movement to the room.h
+=============================================================================================================================================================
 */
 
 /*********************************************************************************************************/
@@ -73,35 +75,16 @@ using namespace std;
 /*********************************************************************************************************/
 //Make all the global variables that I need.
 int intMainLevel;
-int intPlayerX; //Player position in X and Y.
-int intPlayerY;
-int intTempTile; //Value to hold what the cell that the player is moving into is.
 /*********************************************************************************************************/
 
 int main()
 {
-	enum
-    {
-        tileUnused = 0, //0
-        tileDirtWall, //1
-        tileDirtFloor, //2
-        tileStoneWall, //3
-        tileCorridor, //4
-        tileDoor, //5
-        tileUpStairs, //6
-        tileDownStairs, //7
-        tileChest, //8
-		tilePlayer //9
-    };//From rooms.h this holds the different possible tiles that can appear on the map.
-	intTempTile = tileUpStairs;
+
 	char chrPlayerMade = 'F';
 	char charPlayerDirection;
 	char charBattleEnding;
 	char charExitFind;
-	
-	int intPlayerNewX;
-	int intPlayerNewY;
-	
+
 	cout<<"Welcome to the World of Attacker"<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
 	cout<<"You are looking for the stairs down ( > ). While you are represented by †"<<endl;
 	cout<<"Every step brings you closer to your goal, but there might be a monster there as well."<<endl;
@@ -117,114 +100,18 @@ int main()
 		charExitFind = 'F';
 		cout<<endl;
 		Dungeon d;//Generates dungeon.
-		for (int y = 0; y < 25; y++){
-			for (int x = 0; x < 80; x++){
-				if (d.getCell(x,y)==9) //Finds where player is.
-				{
-					intPlayerX = x;
-					intPlayerY = y;
-					goto PostPlayerFind;
-				};
-			}
-		}
-		PostPlayerFind:
+
 		do
 		{
-			PickDirection:
 			cout << string(50, '\n');
 			d.showDungeon();
 			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
-			//cout<<endl<<"("<<intPlayerX<<","<<intPlayerY<<")"<<endl;
 			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter X to exit."<<endl;
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
-			switch (charPlayerDirection)
-			{
-				case 'N' :
-					intPlayerNewX = intPlayerX;
-					intPlayerNewY = intPlayerY - 1;
-					break;
-				case 'S' :
-					intPlayerNewX = intPlayerX;
-					intPlayerNewY = intPlayerY + 1;
-					break;
-				case 'E' :
-					intPlayerNewX = intPlayerX + 1;
-					intPlayerNewY = intPlayerY;
-					break;
-				case 'W' :
-					intPlayerNewX = intPlayerX - 1;
-					intPlayerNewY = intPlayerY;
-					break;
-				case '&' :
-					for (int y = 0; y < 25; y++){
-						for (int x = 0; x < 80; x++){
-							if (d.getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
-							{
-								intPlayerNewX = x;
-								intPlayerNewY = y;
-								goto PostMovingCode;
-							};
-						}
-					}
-					break;
-				case 'X' :
-					cout << string(50, '\n');
-					cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
-					cin>>charPlayerDirection;
-					charPlayerDirection = CharConvertToUpper(charPlayerDirection);
-					switch (charPlayerDirection)
-					{
-						case 'Y' :
-							return 0;
-							break;
-						default :
-							goto PickDirection;
-							break;
-					}
-					break;
-				default : 
-					cout<<endl<<"Invalid direction, please try again."<<endl;
-					goto PickDirection;
-					break;
-			//End of case for direction picked.
-			}
-			PostMovingCode:
-			switch (d.getCell(intPlayerNewX,intPlayerNewY))
-			{
-				case tileDownStairs :
-					//Return a true saying that the player found the exit, aka the down stairs.
-					charExitFind = 'T';
-					break;
-				case tileStoneWall :
-				case tileDirtWall :
-				case tileUnused :
-				case tilePlayer :
-					//Player is trying to walk into something they can't.
-					//Just return a False saying they did not find the exit.
-					charExitFind = 'F';
-					break;
-				case tileCorridor :
-				case tileChest :
-				case tileDirtFloor :
-				case tileDoor :
-				case tileUpStairs :
-					//Player is walking into a tile they are allowed to, move around the tiles.
-					d.setCell(intPlayerX,intPlayerY,intTempTile); //Set old location back to what it was.
-					intTempTile = d.getCell(intPlayerNewX,intPlayerNewY); //Set the temp value to what the next cell is.
-					intPlayerY = intPlayerNewY;
-					intPlayerX = intPlayerNewX;
-					d.setCell(intPlayerX,intPlayerY,tilePlayer); //Move the player.
-					charExitFind = 'F'; //Return a false, as they did not find the exit.
-					break;
-				default :
-					//Player is stepping on a tile that should never exist, if I remember to add it.
-					//Therefore just return a false.
-					charExitFind = 'F';
-					break;
-			//End of switch based on next cell.	
-			}
+			charExitFind = d.PlayerMovement(charPlayerDirection);
+			if (charExitFind == 'E') {return 0;} //If we get an error exit program.
 			if(rand() % 101 <= 10) //Random chance to encounter monster.
 			{
 				cout << string(50, '\n');
