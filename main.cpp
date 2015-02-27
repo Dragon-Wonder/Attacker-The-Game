@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.0b
+Current Revision: 1.1b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -43,27 +43,15 @@ Date	Revision	Changed By			Changes
 										-Allowed exit on map.
 										-Fixed opening text to reflect recent changes in the game.
 										-Grammar and spelling fixes (yay, made it several revisions without having to do this. :) ).
-=============================================================================================================================================================
-2/24/15	1.1b		Patrick Rye			-Attempted to allow movement on map through arrow keys.
-											-Could not get this to work and broke everything. Rolling back to previous version.
-											-Keeping this attempt in the record and will try to implement it again later.
-=============================================================================================================================================================
-2/25/15	1.2b		Patrick Rye			-Grammar and spelling fixes. ((╯°□°)╯︵ ┻━┻)
-										-Cleaned up code some more.
-										-Changed some if statements to case switches.
-										-Added breaks to case switches.
-=============================================================================================================================================================
-2/26/15	1.3b		Patrick Rye			-Moved player movement to the room.h
-=============================================================================================================================================================
-2/27/15	2.0b		Patrick Rye			-Added a save function, for testing purposes.
-										-Added load function.
-										-Added function to see if file exists.
-=============================================================================================================================================================
+=============================================================================================================================================================	
+2/24/15	1.1b		Patrick Rye			-Added arrow key movement controlling.
+=============================================================================================================================================================		
 */
 
 /*********************************************************************************************************/
 #include <iostream>
-#include <fstream>
+#include <ncurses.h>
+#include <stdio.h>
 #include <string>
 #include <math.h>
 #include <cstdlib>
@@ -72,184 +60,202 @@ Date	Revision	Changed By			Changes
 #include <cstdio>
 #include <ctime>
 /*********************************************************************************************************/
-#include "casechanger.h" //Functions that hold change the case of chars and strings.
-#include "rooms.h" //Functions that deal with generating a dungeon.
+#include "casechanger.h" //Functions that hold change the case of chars and strings
+#include "rooms.h" //Functions that deal with generating a dungeon
 #include "battle.h" //Functions that deal with battling, levelling up and making a player.
 /*********************************************************************************************************/
 using namespace std;
-Dungeon d;
 /*********************************************************************************************************/
-//Make all the global variables that I need.
+/*#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77*/
+/*********************************************************************************************************/
+//Make all the global variables that I need
 int intMainLevel;
-int intLevelStart;
+int intPlayerX; //Player position in X and Y
+int intPlayerY;
+int intTempTile = 6; //Value to hold what the cell that the player is moving into is, 6 is stairs up.
 /*********************************************************************************************************/
 
-bool saveexists()
+void initialize()
 {
-  ifstream ifile("save.bif");
-  return ifile;
+	/* Curses Initialisations */
+	initscr();
+	raw();
+	keypad(stdscr, TRUE);
+	noecho();
 }
 
-char savefunction()
+void finalize()
 {
-	/*
-	Testing a possible save function.
-	2 Return values possible.
-	T = True, save succeeded.
-	F = False, save failed.
-	*/
-	int intCheckSum = 0;
-	int arrbattlesave[7];
-	int arrmainsave[1] = {intMainLevel};
-	int arrroomsave[80][20];
-	for (int i = 0; i < 6; i++) {arrbattlesave[i] = savebattle(i);}
-	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}}
-	ofstream savefile;
-	savefile.open ("save.bif");
-	for (int i = 0; i < 7; i++) {savefile << arrbattlesave[i] << "\n";}
-	//savefile << "\n";
-	for (int i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
-	//savefile << "\n";
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}
-		//savefile << " ";
-	}
-	savefile.close();
-	//Save will now attempt to "load" the save it just made and compare it to the data available.
-	//Checks to see if save is correct or not.
-	ifstream loadfile("save.bif");
-	int arrloadnumbers[1608];
-	int x;
-	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
-	loadfile.close();
-	for (int i = 0; i < 8; i++)
-	{
-		if(i<7) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
-		else if (i == 7) {if (arrloadnumbers[i]==intMainLevel) {intCheckSum++;}}
-	}
-	int num = 7;
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 80; x++)
-		{
-			num ++;
-			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
-		}
-	}
-	cout<<endl<<endl<<intCheckSum;
-	if(intCheckSum >= 1608) {return 'T';}
-	else {return 'F';}
+	refresh();
+	getch();
+	endwin();
 }
-
-
-bool loadfunction()
-{
-	ifstream loadfile("save.bif");
-	int arrloadnumbers[1608];
-	int x;
-	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
-	loadfile.close();
-	for (int i = 0; i < 8; i++)
-	{
-		if(i<7) {x = loadbattle(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
-		else if (i == 7) {intLevelStart = arrloadnumbers[i];/*cout<<intLevelStart<<endl;*/}
-	}
-	int num = 7;
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 80; x++)
-		{
-			num ++;
-			d.setCell(x,y,arrloadnumbers[num]);
-			//cout<<arrloadnumbers[num];
-		}
-	}
-	//d.showDungeon();
-	return true;
-}
-
 
 int main()
 {
-
-	cout << string(48, '\n');
+	enum
+    {
+        tileUnused = 0, //0
+        tileDirtWall, //1
+        tileDirtFloor, //2
+        tileStoneWall, //3
+        tileCorridor, //4
+        tileDoor, //5
+        tileUpStairs, //6
+        tileDownStairs, //7
+        tileChest, //8
+		tilePlayer //9
+    };//From Rooms.h this holds the different possible tiles that can appear on the map.
+	intTempTile = tileUpStairs;
 	char chrPlayerMade = 'F';
-	char charPlayerDirection;
+	//char charPlayerDirection;
 	char charBattleEnding;
 	char charExitFind;
-	bool blLoadSuccess = false;
-	bool blOldSave = false;
-	char chrSaveSuccess = 'N'; //N means that save has not been run.
-	intLevelStart = 1;
-	if (saveexists())
-	{
-		blLoadSuccess = loadfunction();
-		if (blLoadSuccess) 
-		{
-			chrPlayerMade = 'T';
-			blOldSave = true; 
-		}
-		else {cout<<"There is a save present, but game is unable to load it."<<endl<<"Save is possibly corrupted."<<endl<<endl<<endl;}
-	}
 	
+	int intPlayerNewX;
+	int intPlayerNewY;
 	
-	if(!blOldSave) //If it is not an old save show welcome message.
+	initialize();
+	
+	cout<<"Welcome to the World of Attacker"<<endl<<"Your is to go through 10 randomly generated dungeons."<<endl;
+	cout<<"You are looking for the stairs down (>). While you are represented by †"<<endl;
+	cout<<"Every brings you closer to your goal, but there might be a monster there as well."<<endl;
+	cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
+	cout<<"Good luck!"<<endl<<endl<<endl<<endl;
+	
+	do {chrPlayerMade = PlayerInitialize();}while (chrPlayerMade != 'T'); //Repeat initialization until player is made.
+	//cout << string(50, '\n');
+	for(intMainLevel = 1; intMainLevel <= 10; intMainLevel++)
 	{
-		NewGame:
-		cout<<"Welcome to the World of Attacker"<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
-		cout<<"You are looking for the stairs down ( > ). While you are represented by †"<<endl;
-		cout<<"Every step brings you closer to your goal, but there might be a monster there as well."<<endl;
-		cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
-		cout<<"Good luck!"<<endl<<endl<<endl<<endl;
-		while (chrPlayerMade != 'T') {chrPlayerMade = PlayerInitialize();}; //Repeat initialization until player is made.
-	}
-
-	for(intMainLevel = intLevelStart; intMainLevel <= 10; intMainLevel++)
-	{
-		//Do level up if new level.
-		if (intMainLevel > intLevelStart) {LevelUpFunction();}
+		//Do level up if not first level.
+		if( intMainLevel != 1) { LevelUpFunction();}
 		charExitFind = 'F';
 		cout<<endl;
-		if (blOldSave && intMainLevel == intLevelStart) {d.playerfind(); d.showDungeon();} //If Old save and the level of that save, just load old dungeon.
-		else {Dungeon d;/*Generates dungeon.*/} //If it is not old game OR a different level of old game, make new dungeon.
+		Dungeon d;//generates dungeon.
+		for (int y = 0; y < 25; y++){
+			for (int x = 0; x < 80; x++){
+				if (d.getCell(x,y)==9) //Finds where player is.
+				{
+					intPlayerX = x;
+					intPlayerY = y;
+					goto PostPlayerFind;
+				};
+			}
+		}
+		PostPlayerFind:
 		
 		do
 		{
+			//PickDirection:
 			cout << string(50, '\n');
 			d.showDungeon();
 			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
-			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter X to exit, or P to save."<<endl;
+			//cout<<endl<<"("<<intPlayerX<<","<<intPlayerY<<")"<<endl;
+			/*cout<<"Please enter a direction you would like to go (N,E,S,W)."<<endl<<"Enter X to exit."<<endl;
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
-			charExitFind = d.PlayerMovement(charPlayerDirection);
-			if (charExitFind == 'E') {return 0;} //If we get an error exit program.
-			if (charExitFind == 'S') {chrSaveSuccess = savefunction();} //Save the game.
-			switch (chrSaveSuccess)
+			if (charPlayerDirection == 'N')//Had to make this an if statement as the a case wouldn't work.
 			{
-				case 'T' :
-					cout<<endl<<"Save succeeded."<<endl;
-					system("pause");
-					chrSaveSuccess = 'N';
-					break;
-				case 'F' :
-					cout<<endl<<"Save failed!"<<endl;
-					system("pause");
-					chrSaveSuccess = 'N';
-					break;
+				intPlayerNewX = intPlayerX;
+				intPlayerNewY = intPlayerY - 1;
 			}
-			if(rand() % 101 <= 10) //Random chance to encounter monster.
+			else if (charPlayerDirection == 'S')
+			{
+				intPlayerNewX = intPlayerX;
+				intPlayerNewY = intPlayerY + 1;				
+			}
+			else if (charPlayerDirection == 'E')
+			{
+				intPlayerNewX = intPlayerX + 1;
+				intPlayerNewY = intPlayerY;
+			}
+			else if (charPlayerDirection == 'W')
+			{
+				intPlayerNewX = intPlayerX - 1;
+				intPlayerNewY = intPlayerY;
+			}
+			else if (charPlayerDirection == 'D')
+			{
+				//Debug code that moves player directly to down stairs.
+				for (int y = 0; y < 25; y++){
+					for (int x = 0; x < 80; x++){
+						if (d.getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
+						{
+							intPlayerNewX = x;
+							intPlayerNewY = y;
+						};
+					}
+				}
+			}
+			else if (charPlayerDirection == 'X')
 			{
 				cout << string(50, '\n');
-				charBattleEnding = startbattle(intMainLevel); //Starts battle.
+				cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost"<<endl<<"Y or N"<<endl<<"> ";
+				cin>>charPlayerDirection;
+				charPlayerDirection = CharConvertToUpper(charPlayerDirection);
+				switch (charPlayerDirection)
+				{
+					case 'Y' :
+						return 0;
+					default :
+						goto PickDirection;
+				}
+			}
+			else
+			{
+				cout<<endl<<"Invalid direction, please try again."<<endl;
+				goto PickDirection;
+			}*/
+			int key;
+			key = wgetch( stdscr );
+			switch(key)
+			{
+				case KEY_LEFT:
+					intPlayerNewX= intPlayerX - 1;
+					intPlayerNewY = intPlayerY;
+				break;
+				case KEY_UP:
+					intPlayerNewX= intPlayerX;
+					intPlayerNewY = intPlayerY -1;
+				break;
+				case KEY_RIGHT:
+					intPlayerNewX= intPlayerX + 1;
+					intPlayerNewY = intPlayerY;
+				break;
+				case KEY_DOWN:
+					intPlayerNewX= intPlayerX;
+					intPlayerNewY = intPlayerY + 1;
+				break;
+			}
+			
+			if (d.getCell(intPlayerNewX,intPlayerNewY) == tileDownStairs) {charExitFind = 'T';} //Return a true saying that they found the exit, aka the down stairs
+			else if (d.getCell(intPlayerNewX,intPlayerNewY) == tileStoneWall) {charExitFind = 'F';} //They try to walk into a wall, just return a false that they did not find the exit
+			else if (d.getCell(intPlayerNewX,intPlayerNewY) == tileDirtWall) {charExitFind = 'F';} //They try to walk into a wall, just return a false that they did not find the exit
+			else //Player is walking into a tile they are allowed to, move around the tiles.
+			{
+				d.setCell(intPlayerX,intPlayerY,intTempTile); //Set old location back to what it was.
+				intTempTile = d.getCell(intPlayerNewX,intPlayerNewY); //Set the temp value to what the cell is.
+				intPlayerY = intPlayerNewY;
+				intPlayerX = intPlayerNewX;
+				d.setCell(intPlayerX,intPlayerY,tilePlayer); //Move the player.
+				charExitFind = 'F'; //Return a false, as they did not find the exit.
+			}
+			if(rand() % 101 <= 10) //Random chance to encounter monster
+			{
+				cout << string(50, '\n');
+				charBattleEnding = startbattle(intMainLevel); //Starts Battle.
 				if(charBattleEnding == 'F') {return 0;} //Player lost battle.
 			}
-		}while (charExitFind != 'T'); //Repeat until player finds exit.
+		}while (charExitFind != 'T');
 	}
 	cout << string(50, '\n');
 	cout<<"You win!!";
 	system("pause");
+	finalize();
 	return 0;
 //End of main
 }
