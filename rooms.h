@@ -1,33 +1,22 @@
-#ifndef _ROOMS_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
+#ifndef _ROOMS_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again
 #define _ROOMS_H_INCLUDED__
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.3
+Current Revision: 1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
 2/20/15	1.0			Patrick Rye			-Original
 =============================================================================================================================================================
-2/23/15	1.1			Patrick Rye			-Added player tile
+2/23/15	1.1			Patrick Rye			-Added Player Tile
 										-Changed the generated stairs up to generate a Player instead
 											-Basically you can never goo back up and I don't have to worry about putting the stair back when they move.
 										-Made getcell, setcell, showDungeon all public so I can access them from the main code.
-=============================================================================================================================================================
-2/26/15	1.2			Patrick Rye			-Moved player movement function here.
-=============================================================================================================================================================
-2/27/15	1.3			Patrick Rye			-Added option to save on map.
-=============================================================================================================================================================				
+=============================================================================================================================================================		
 */
-int intPlayerX; //Player position in X and Y.
-int intPlayerY;
-int intPlayerNewX; //Player position in X and Y.
-int intPlayerNewY;
- 
-int intTempTile = 6; //Value to hold what the cell that the player is moving into is.
- 
  
 class Dungeon
 {
@@ -498,8 +487,6 @@ class Dungeon
 					if (ways == 0){
 					//we're in state 0, let's place a Player from where they came down the stairs.
 						setCell(newx, newy, tilePlayer);
-						intPlayerX = newx;
-						intPlayerY = newy;
 						state = 1;
 						break;
 					}
@@ -526,12 +513,11 @@ class Dungeon
     int* make_dungeon()
     {
         int x = 80;
-        int y = 20;
+        int y = 25;
         int dungeon_objects = 100;
         dungeon_map = new int[x * y];
         //for(;;)
-        //{	
-			intTempTile = tileUpStairs;
+        //{
             if(createDungeon(x, y, dungeon_objects))
             showDungeon();
             //std::cin.get();
@@ -541,124 +527,17 @@ class Dungeon
 	void cmain()
     {
         int x = 80;
-        int y = 20;
+        int y = 25;
         int dungeon_objects = 100;
         dungeon_map = new int[x * y];
-
-        if(createDungeon(x, y, dungeon_objects)) {showDungeon();}
-		playerfind();
-	//PostPlayerFind:
+        //for(;;)
+        //{
+            if(createDungeon(x, y, dungeon_objects))
+            showDungeon();
+            //std::cin.get();
+        //}
+		//return dungeon_map;
     }
-	public:
-	void playerfind()
-	{
-		for (int y2 = 0; y2 < 20; y2++)
-		{
-			for (int x2 = 0; x2 < 80; x2++)
-			{
-				if (getCell(x2,y2)==9) //Finds where player is.
-				{
-					intPlayerX = x2;
-					intPlayerY = y2;
-					//goto PostPlayerFind;
-				}
-			}
-		}
-	}
-	public:
-	char PlayerMovement(char chrPlayerDirection)
-	{
-		switch (chrPlayerDirection)
-		{
-			case 'N' :
-				intPlayerNewX = intPlayerX;
-				intPlayerNewY = intPlayerY - 1;
-				break;
-			case 'S' :
-				intPlayerNewX = intPlayerX;
-				intPlayerNewY = intPlayerY + 1;
-				break;
-			case 'E' :
-				intPlayerNewX = intPlayerX + 1;
-				intPlayerNewY = intPlayerY;
-				break;
-			case 'W' :
-				intPlayerNewX = intPlayerX - 1;
-				intPlayerNewY = intPlayerY;
-				break;
-			case '&' :
-				for (int y = 0; y < 20; y++){
-					for (int x = 0; x < 80; x++){
-						if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
-						{
-							intPlayerNewX = x;
-							intPlayerNewY = y;
-							goto PostMovingCode;
-						};
-					}
-				}
-				break;
-			case 'X' :
-				cout << string(50, '\n');
-				cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
-				cin>>chrPlayerDirection;
-				chrPlayerDirection = CharConvertToUpper(chrPlayerDirection);
-				switch (chrPlayerDirection)
-				{
-					case 'Y' :
-						return 'E';
-						break;
-					default :
-						return 'F';
-						break;
-				}
-				break;
-			case 'P' : 
-				return 'S';
-				break;
-			default : 
-				cout<<endl<<"Invalid direction, please try again."<<endl;
-				return 'F';
-				break;
-		//End of case for direction picked.
-		}
-		PostMovingCode:
-		switch (getCell(intPlayerNewX,intPlayerNewY))
-		{
-			case tileDownStairs :
-				//Return a true saying that the player found the exit, aka the down stairs.
-				return 'T';
-				break;
-			case tileStoneWall :
-			case tileDirtWall :
-			case tileUnused :
-			case tilePlayer :
-				//Player is trying to walk into something they can't.
-				//Just return a False saying they did not find the exit.
-				return'F';
-				break;
-			case tileCorridor :
-			case tileChest :
-			case tileDirtFloor :
-			case tileDoor :
-			case tileUpStairs :
-				//Player is walking into a tile they are allowed to, move around the tiles.
-				setCell(intPlayerX,intPlayerY,intTempTile); //Set old location back to what it was.
-				intTempTile = getCell(intPlayerNewX,intPlayerNewY); //Set the temp value to what the next cell is.
-				intPlayerY = intPlayerNewY;
-				intPlayerX = intPlayerNewX;
-				setCell(intPlayerX,intPlayerY,tilePlayer); //Move the player.
-				return'F'; //Return a false, as they did not find the exit.
-				break;
-			default :
-				//Player is stepping on a tile that should never exist, if I remember to add it.
-				//Therefore just return a false.
-				return 'F';
-				break;
-		//End of switch based on next cell.	
-		}
-	//End of PlayerMovement function.
-	}
 	
 	
 public:
