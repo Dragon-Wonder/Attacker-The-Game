@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.1b
+Current Revision: 2.2b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -67,6 +67,12 @@ Date	Revision	Changed By			Changes
 										-Moved healing to be able to happen between battles.
 										-Added fail check for load function.
 =============================================================================================================================================================
+3/2/15	2.2b		Patrick Rye			-Improved code a bit.
+										-Added version number tracker.
+										-Prompt for loading save.
+										-Prompt for incorrect save version.
+										-Moved saving and loading functions to its own header.
+=============================================================================================================================================================
 */
 
 /*********************************************************************************************************/
@@ -90,132 +96,46 @@ Dungeon d;
 //Make all the global variables that I need.
 int intMainLevel;
 int intLevelStart;
+const string CurrentVerison = "2.2b";
 /*********************************************************************************************************/
-
-char savefunction()
+//These functions have to be up here as functions in save.h use them.
+int getmainvalue(int intvalue)
 {
-	/*
-	Testing a possible save function.
-	2 Return values possible.
-	T = True, save succeeded.
-	F = False, save failed.
-	*/
-	int intCheckSum = 0;
-	int arrbattlesave[7];
-	int arrmainsave[1] = {intMainLevel}; //An array of all the values needed to be saved from main.cpp
-	int arrroomsave[80][20];
-	for (int i = 0; i < 6; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
-	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
-	ofstream savefile;
-	savefile.open ("save.bif");
-	for (int i = 0; i < 7; i++) {savefile << arrbattlesave[i] << "\n";}
-	//savefile << "\n";
-	for (int i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
-	//savefile << "\n";
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}
-		//savefile << " ";
-	}
-	savefile.close();
-	//Save will now attempt to "load" the save it just made and compare it to the data available.
-	//Checks to see if save is correct or not.
-	ifstream loadfile("save.bif");
-	int arrloadnumbers[1608];
-	int x;
-	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
-	loadfile.close();
-	for (int i = 0; i < 8; i++)
-	{
-		if(i<7) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
-		else if (i == 7) {if (arrloadnumbers[i]==intMainLevel) {intCheckSum++;}}
-	} 
-	int num = 7;
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 80; x++)
-		{
-			num ++;
-			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
-		}
-	}
-	cout<<endl<<endl<<intCheckSum;
-	if(intCheckSum >= 1608) {return 'T';} //All of the saved values are correct if it equals 1608.
-	else {return 'F';} //Some of the values are wrong, say that the save failed.
+	if(intvalue == 0 ) {return intMainLevel;}
+	else if (intvalue == 1) {return intLevelStart;}
+	else {return 1;}
 }
 
-
-bool loadfunction()
+int setmainvalue(int intlocation, int intvalue)
 {
-	ifstream loadfile("save.bif");
-	int arrloadnumbers[1608];
-	int x;
-	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
-	loadfile.close();
-	for (int i = 0; i < 8; i++)
-	{
-		if(i<7) {x = setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
-		else if (i == 7) {intLevelStart = arrloadnumbers[i];/*cout<<intLevelStart<<endl;*/}
-	}
-	int num = 7;
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 80; x++)
-		{
-			num ++;
-			d.setCell(x,y,arrloadnumbers[num]);
-			//cout<<arrloadnumbers[num];
-		}
-	}
-	//d.showDungeon();
-	
-	//Double check that all the values loaded are correct.
-	ifstream checkfile("save.bif");
-	for(int i = 0; i < 1608; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
-	checkfile.close();
-	int intCheckSum = 1;
-	for (int i = 0; i < 8; i++)
-	{
-		if(i<7) {if (arrloadnumbers[i]==getbattlevalue(i)){intCheckSum++;}}
-		else if (i == 7) {if (arrloadnumbers[i]==intMainLevel) {intCheckSum++;}}
-	} 
-	num = 7;
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 80; x++)
-		{
-			num ++;
-			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
-		}
-	}
-	cout<<endl<<endl<<intCheckSum;
-	if(intCheckSum >= 1608) {return true;} //All of the saved values are correct if it equals 1608.
-	else {return false;} //Some of the values are wrong, say that the save failed.
+	if(intlocation != 0) {return 1;}
+	else {intLevelStart = intvalue;}
+	return 0;
 }
+#include "save.h" //A header to hold functions related to saving and loading.
+/*********************************************************************************************************/
 
 
 int main()
 {
 
 	cout << string(48, '\n');
-	char chrPlayerMade = 'F';
 	char charPlayerDirection;
 	char charBattleEnding;
 	char charExitFind;
-	bool blLoadSuccess = false;
 	bool blOldSave = false;
+	char chrPlayerMade = 'F';
+
 	char chrSaveSuccess = 'N'; //N means that save has not been run.
 	intLevelStart = 1;
-	if (saveexists()) //Check if there is a save present.
+	
+	if (fileexists("save.bif")) //Check if there is a save present.
 	{
-		blLoadSuccess = loadfunction(); //Try to load the save.
-		if (blLoadSuccess) 
-		{
-			chrPlayerMade = 'T';
-			blOldSave = true; 
-		}
-		else {cout<<endl<<"There is a save present, but game is unable to load it."<<endl<<"Save is possibly corrupted."<<endl<<endl<<endl;} //Load failed.
+		blOldSave = LoadOldSave(CurrentVerison);
+		if (blOldSave) {chrPlayerMade = 'T';}
+	//End of if save exists.	
 	}
+	else {cout<<string(50, '\n');}
 	
 	if(!blOldSave) //If it is not an old save show welcome message.
 	{
@@ -233,7 +153,7 @@ int main()
 		if (intMainLevel > intLevelStart) {LevelUpFunction();}
 		charExitFind = 'F';
 		cout<<endl;
-		if (blOldSave && intMainLevel == intLevelStart) {d.playerfind(); d.showDungeon();} //If old save and the level of that save, just load old dungeon.
+		if (blOldSave && intMainLevel == intLevelStart) {/*d.playerfind();*/ d.showDungeon();} //If old save and the level of that save, just load old dungeon.
 		else {Dungeon d;/*Generates dungeon.*/} //If it is not old game OR a different level of old game, make new dungeon.
 		
 		do
