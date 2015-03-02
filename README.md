@@ -43,7 +43,7 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 - [x] Save System - 2/27/15
 
-- [x] Change healing to be done between monster fights rather than during.
+- [x] Change healing to be done between monster fights rather than during. -3/2/15
 
 ###Short-Term
 
