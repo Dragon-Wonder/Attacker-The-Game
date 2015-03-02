@@ -95,4 +95,4 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 - [ ] An element weakness / strength factor.
   -Bascically every monster and attack has an element (fire, water, energy, etc...) and some are more resistive to some attacks then others. 
-  -Likely won't be impleneted until after magic if I decide to add it.
+  - Likely won't be impleneted until after magic if I decide to add it.
