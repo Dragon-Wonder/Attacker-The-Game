@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.3
+Current Revision: 1.4
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -19,7 +19,9 @@ Date	Revision	Changed By			Changes
 2/26/15	1.2			Patrick Rye			-Moved player movement function here.
 =============================================================================================================================================================
 2/27/15	1.3			Patrick Rye			-Added option to save on map.
-=============================================================================================================================================================				
+=============================================================================================================================================================
+3/2/15	1.4			Patrick Rye			-Moved healing to happening between battles.
+=============================================================================================================================================================		
 */
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
@@ -570,23 +572,23 @@ class Dungeon
 	{
 		switch (chrPlayerDirection)
 		{
-			case 'N' :
+			case 'N' : //Player wants to go up.
 				intPlayerNewX = intPlayerX;
 				intPlayerNewY = intPlayerY - 1;
 				break;
-			case 'S' :
+			case 'S' : //Player wants to go down.
 				intPlayerNewX = intPlayerX;
 				intPlayerNewY = intPlayerY + 1;
 				break;
-			case 'E' :
+			case 'E' : //Player wants to go right.
 				intPlayerNewX = intPlayerX + 1;
 				intPlayerNewY = intPlayerY;
 				break;
-			case 'W' :
+			case 'W' : //Player wants to go left.
 				intPlayerNewX = intPlayerX - 1;
 				intPlayerNewY = intPlayerY;
 				break;
-			case '&' :
+			case '&' : //Debug code to go straight to stairs.
 				for (int y = 0; y < 20; y++){
 					for (int x = 0; x < 80; x++){
 						if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
@@ -598,7 +600,7 @@ class Dungeon
 					}
 				}
 				break;
-			case 'X' :
+			case 'X' : //Player wants to exit game.
 				cout << string(50, '\n');
 				cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
 				cin>>chrPlayerDirection;
@@ -613,11 +615,35 @@ class Dungeon
 						break;
 				}
 				break;
-			case 'P' : 
-				return 'S';
+			case 'P' : //Player wants to save.
+				return 'S'; //Player is asking to save, return S for save.
+				break;
+			case 'H' : //Player wants to heal.
+				int intPlayerCurrHealth;
+				intPlayerCurrHealth = getbattlevalue(5);
+				int intPlayerMaxHealth;
+				intPlayerMaxHealth = getbattlevalue(6);
+				int intPlayerHealAmount;
+				intPlayerHealAmount = floor(intPlayerMaxHealth/10);
+				if (intPlayerCurrHealth + intPlayerHealAmount >= intPlayerMaxHealth) {intPlayerCurrHealth = intPlayerMaxHealth;}
+				else {intPlayerCurrHealth += intPlayerHealAmount;}
+				setbattlevalue(5,intPlayerCurrHealth); //Set player current health to the new amount.
+				cout<<endl<<"Your health is now: "<<intPlayerCurrHealth<<" out of "<<intPlayerMaxHealth<<".";
+				return 'F'; //Return F that player did not find exit.
+				break;
+			case 'C' : //Player is checking themselves.
+				int intPlayerStatsTemp[7];
+				for (int i = 0; i < 7; i++) {intPlayerStatsTemp[i]=getbattlevalue(i);}
+				cout<<endl<<"Your health is now: "<<intPlayerStatsTemp[5]<<" out of "<<intPlayerStatsTemp[6]<<".";
+				cout<<endl<<"Your stats are as follows: "<<endl;
+				cout<<"STR: "<<intPlayerStatsTemp[0]<<endl<<"CONS: "<<intPlayerStatsTemp[1]<<endl;
+				cout<<"DEF: "<<intPlayerStatsTemp[2]<<endl<<"DEX: "<<intPlayerStatsTemp[3]<<endl;
+				cout<<"LUK: "<<intPlayerStatsTemp[4]<<endl;
+				system("pause");
+				return 'F';
 				break;
 			default : 
-				cout<<endl<<"Invalid direction, please try again."<<endl;
+				cout<<endl<<"Invalid choice, please try again."<<endl;
 				return 'F';
 				break;
 		//End of case for direction picked.
@@ -634,7 +660,7 @@ class Dungeon
 			case tileUnused :
 			case tilePlayer :
 				//Player is trying to walk into something they can't.
-				//Just return a False saying they did not find the exit.
+				//Just return a false saying they did not find the exit.
 				return'F';
 				break;
 			case tileCorridor :
