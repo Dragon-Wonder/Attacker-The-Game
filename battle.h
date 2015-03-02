@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.6
+Current Revision: 1.7
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -13,7 +13,7 @@ Date	Revision	Changed By			Changes
 2/24/15	1.1			Patrick Rye			-Changed system("cls") to cout << string(50, '\n');
 =============================================================================================================================================================
 2/24/15	1.2			Patrick Rye			-Moved level up to happen when you change levels.
-										-Fixed bug that would cause endless loop is you entered non integer numbers for starting stats
+										-Fixed bug that would cause endless loop is you entered non integer numbers for starting stats.
 											-Bug has been there since the start I just didn't know how to fix it till now.
 										-Fixed bug where player could enter values below 1 for stats.
 										-Fixed bug where player could enter decimal places for stats.
@@ -34,7 +34,11 @@ Date	Revision	Changed By			Changes
 										-Changed health to carry over between battles.
 										-Moved health calculating to its own function.
 										-Moved damage calculating to its own function.
-=============================================================================================================================================================					
+=============================================================================================================================================================
+3/2/15	1.7			Patrick Rye			-Improved code.
+										-Grammar and spelling fixes.
+										-Moved dodge check to its own function.
+=============================================================================================================================================================									
 */
 
 /*
@@ -67,6 +71,17 @@ int PlayerStats[5];
 int intBattleLevel = 1;
 /*********************************************************************************************************/
 
+bool DodgeCheck(int LUK, int DEX)
+{
+	//The way I worked out this dodge calc is that if the Dex and Luk both equal 150 (which isn't possible under the current levelling up system),
+	//then they have a 25% chance to dodge. I also wanted Dex to factor into 75% of the chance and Luk only 25%
+	//Can return true, that they dodged or false that they did not.
+    double douDodgeChance = ((DEX/2)+(LUK/6)/4);
+	if(rand() % 101 <= douDodgeChance) {return true;}
+	else {return false;}
+}
+
+
 int CalculateHealth(int HealthLevel, int ConsStat)
 {
 	//A simple function for calculating health.
@@ -81,24 +96,7 @@ int CalculateDamage(int DamageLevel, int StrStat, int DefStat)
 	return floor(((((2 * (DamageLevel/5) + 2) * ((10*DamageLevel)/DefStat))*(StrStat))+5));
 }
 
-int getbattlevalue(int intvalue)
-{
-	if (intvalue < 0) {return 0;}
-	else if (intvalue < 5) {return PlayerStats[intvalue];}
-	else if (intvalue == 5) {return PlayerHealth[0];}
-	else if (intvalue == 6) {return PlayerHealth[1];}
-	else {return 0;}
-}
 
-int setbattlevalue(int intlocation, int intvalue)
-{
-	if (intlocation < 0) {return 0;}
-	else if (intlocation < 5) {PlayerStats[intlocation] = intvalue;}
-	else if (intlocation == 5) {PlayerHealth[0] = intvalue;}
-	else if (intlocation == 6) {PlayerHealth[1] = intvalue;}
-	else {return 0;}
-	return 1;
-}
 
 void RandomMonster()
 {
@@ -143,29 +141,29 @@ void RandomMonsterModifier()
 		{
 			intRandomModifier = rand() %7;
 			MonsterModifier = PosMonsterModifiers[intRandomModifier];
-			if (MonsterModifier == "Strong") {MonsterBaseStats[0]=MonsterBaseStats[0]+5;}
-			else if (MonsterModifier == "Large") {MonsterBaseStats[1]=MonsterBaseStats[1]+5;}
+			if (MonsterModifier == "Strong") {MonsterBaseStats[0]+=5;}
+			else if (MonsterModifier == "Large") {MonsterBaseStats[1]+=5;}
 			else if (MonsterModifier == "Massive")
 			{
-				MonsterBaseStats[1]=MonsterBaseStats[1]+5;
-				MonsterBaseStats[0]=MonsterBaseStats[0]+5;
-				MonsterBaseStats[3]=MonsterBaseStats[0]-5;
+				MonsterBaseStats[1]+=5;
+				MonsterBaseStats[0]+=5;
+				MonsterBaseStats[3]-=5;
 			}
-			else if (MonsterModifier == "Fast") {MonsterBaseStats[3]=MonsterBaseStats[3]+5;}
-			else if (MonsterModifier == "Lucky") {MonsterBaseStats[4]=MonsterBaseStats[4]+5;}
-			else if (MonsterModifier == "Powerful") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=MonsterBaseStats[i]+5;}}
-			else if (MonsterModifier == "Solid") {MonsterBaseStats[1]=MonsterBaseStats[1]+5;}
+			else if (MonsterModifier == "Fast") {MonsterBaseStats[3]+=5;}
+			else if (MonsterModifier == "Lucky") {MonsterBaseStats[4]+=5;}
+			else if (MonsterModifier == "Powerful") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]+=5;}}
+			else if (MonsterModifier == "Solid") {MonsterBaseStats[1]+=5;}
 			else {MonsterModifier="";}
 		}
 		else if (intRandomNumber <=100)
 		{
 			intRandomModifier = rand() %4;
 			MonsterModifier = NegMonsterModifiers[intRandomModifier];
-			if(MonsterModifier == "Weak") {MonsterBaseStats[0]=MonsterBaseStats[0]-5;}
-			else if (MonsterModifier == "Small") {MonsterBaseStats[1]=MonsterBaseStats[1]-5;}
-			else if (MonsterModifier == "Tiny") {MonsterBaseStats[2]=MonsterBaseStats[2]-5;}
-			else if (MonsterModifier == "Slow") {MonsterBaseStats[3]=MonsterBaseStats[3]-5;}
-			else if (MonsterModifier == "Unlucky") {MonsterBaseStats[4]=MonsterBaseStats[4]-5;}
+			if(MonsterModifier == "Weak") {MonsterBaseStats[0]-=5;}
+			else if (MonsterModifier == "Small") {MonsterBaseStats[1]-=5;}
+			else if (MonsterModifier == "Tiny") {MonsterBaseStats[2]-=5;}
+			else if (MonsterModifier == "Slow") {MonsterBaseStats[3]-=5;}
+			else if (MonsterModifier == "Unlucky") {MonsterBaseStats[4]-=5;}
 			else {MonsterModifier="";}
 		}
 		else {/*This shouldn't happen but just in case.*/MonsterModifier="";}
@@ -178,40 +176,40 @@ void RandomMonsterModifier()
 		{
 			intRandomModifier = rand() %4;
 			MonsterModifier = NegMonsterModifiers[intRandomModifier];
-			if(MonsterModifier == "Weak") {MonsterBaseStats[0]=MonsterBaseStats[0]-5;}
-			else if (MonsterModifier == "Small") {MonsterBaseStats[1]=MonsterBaseStats[1]-5;}
-			else if (MonsterModifier == "Tiny") {MonsterBaseStats[2]=MonsterBaseStats[2]-5;}
-			else if (MonsterModifier == "Slow") {MonsterBaseStats[3]=MonsterBaseStats[3]-5;}
-			else if (MonsterModifier == "Unlucky") {MonsterBaseStats[4]=MonsterBaseStats[4]-5;}
+			if(MonsterModifier == "Weak") {MonsterBaseStats[0]-=5;}
+			else if (MonsterModifier == "Small") {MonsterBaseStats[1]-=5;}
+			else if (MonsterModifier == "Tiny") {MonsterBaseStats[2]-=5;}
+			else if (MonsterModifier == "Slow") {MonsterBaseStats[3]-=5;}
+			else if (MonsterModifier == "Unlucky") {MonsterBaseStats[4]-=5;}
 			else {MonsterModifier="";}
 		}
 		else if (intRandomNumber <=100)
 		{
 			intRandomModifier = rand() %7;
 			MonsterModifier = PosMonsterModifiers[intRandomModifier];
-			if (MonsterModifier == "Strong") {MonsterBaseStats[0]=MonsterBaseStats[0]+5;}
-			else if (MonsterModifier == "Large") {MonsterBaseStats[1]=MonsterBaseStats[1]+5;}
+			if (MonsterModifier == "Strong") {MonsterBaseStats[0]+=5;}
+			else if (MonsterModifier == "Large") {MonsterBaseStats[1]+=5;}
 			else if (MonsterModifier == "Massive")
 			{
-				MonsterBaseStats[1]=MonsterBaseStats[1]+5;
-				MonsterBaseStats[0]=MonsterBaseStats[0]+5;
-				MonsterBaseStats[3]=MonsterBaseStats[0]-5;
+				MonsterBaseStats[1]+=5;
+				MonsterBaseStats[0]+=5;
+				MonsterBaseStats[3]-=5;
 			}
-			else if (MonsterModifier == "Fast") {MonsterBaseStats[3]=MonsterBaseStats[3]+5;}
-			else if (MonsterModifier == "Lucky") {MonsterBaseStats[4]=MonsterBaseStats[4]+5;}
-			else if (MonsterModifier == "Powerful") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=MonsterBaseStats[i]+5;}}
-			else if (MonsterModifier == "Solid") {MonsterBaseStats[1]=MonsterBaseStats[1]+5;}
+			else if (MonsterModifier == "Fast") {MonsterBaseStats[3]+=5;}
+			else if (MonsterModifier == "Lucky") {MonsterBaseStats[4]+=5;}
+			else if (MonsterModifier == "Powerful") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]+=5;}}
+			else if (MonsterModifier == "Solid") {MonsterBaseStats[1]+=5;}
 			else {MonsterModifier="";}
 		}
 		else {/*This shouldn't happen but just in case.*/MonsterModifier="";}
 	}
-	else {/*The two stats are equal therefore the monster is a normal monster without any other checks*/MonsterModifier = "";}
+	else {/*The two stats are equal therefore the monster is a normal monster without any other checks.*/MonsterModifier = "";}
 //End of random monster modifier.	
 }
 
 void LevelUpFunction()
 {
-	//Holds function for levelling up
+	//Holds function for levelling up.
 	int intPlayerStatPoints = 20; //Player gets 20 skill points to spend how they would like.
 	int intBattleLevelUpChoice;
 	int intBattleLevelUpAmount;
@@ -261,22 +259,15 @@ void LevelUpFunction()
 				cout <<endl<< "Incorrect entry. Try again: ";
 			}
 			intBattleLevelUpAmount = floor(intBattleLevelUpAmount);
-			if (intBattleLevelUpAmount > intPlayerStatPoints) 
-			{
-				cout << string(50, '\n');
-				cout<<endl<<"You have entered too many points, please try again with less points.";
-				goto LevelUpAmount;
-			}
-		
-			if (intBattleLevelUpAmount < 0)
+			if (intBattleLevelUpAmount > intPlayerStatPoints || intBattleLevelUpAmount < 0) 
 			{
 				cout << string(50, '\n');
 				cout<<endl<<"You have entered an invalid number, please try again.";
 				goto LevelUpAmount;
 			}
 			
-			PlayerStats[intBattleLevelUpChoice] = PlayerStats[intBattleLevelUpChoice] + intBattleLevelUpAmount;
-			intPlayerStatPoints = intPlayerStatPoints - intBattleLevelUpAmount;
+			PlayerStats[intBattleLevelUpChoice] += intBattleLevelUpAmount;
+			intPlayerStatPoints -= intBattleLevelUpAmount;
 		}
 		else {intPlayerStatPoints = 0;} //Player chose not to use rest of points so just cause the loop to end.
 		
@@ -284,7 +275,7 @@ void LevelUpFunction()
 	//Recalculate player's health.
     PlayerHealth[1] = CalculateHealth(intBattleLevel, PlayerStats[1]);
     PlayerHealth[0] = PlayerHealth[1];
-//End of level up function
+//End of level up function.
 }
 
 char BattleScene() 
@@ -303,38 +294,35 @@ char BattleScene()
 	char chrPlayerBattleChoice;
 	//Recalculate all of the stats needed
     //Update monster stats to new level
-	for (int i=0; i<5; i++) {MonsterStats[i] = floor((intBattleLevel*4)+MonsterBaseStats[i]);/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
+	for (int i=0; i<5; i++) {MonsterStats[i] = floor(((intBattleLevel-1)*4+MonsterBaseStats[i]));/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
     //Recalculate healths and re-heal them
     //PlayerHealth[1] = floor((23*((5.25+0.5625*intBattleLevel+0.00375*pow(intBattleLevel,2))+(1+0.066*intBattleLevel)*(PlayerStats[1]/16))));
     //PlayerHealth[0] = PlayerHealth[1];
     MonsterHealth[1] = CalculateHealth(intBattleLevel,MonsterStats[1]);
     MonsterHealth[0] = MonsterHealth[1];
-    //Recalculate amount player heals for
+    //Recalculate amount player heals for.
     douPlayerHealAmount = floor(PlayerHealth[1]/10);
     BattleGoto:
 	cout << string(10, '\n');
-	//The way I worked out this dodge calc is that if the Dex and Luk both equal 150 (which isn't possible under the current levelling up system),
-	//then they have a 25% chance to dodge. I also wanted Dex to factor into 75% of the chance and Luk only 25%
-    double douPlayerDodgeChance = ((PlayerStats[3]/2)+(PlayerStats[4]/6)/4);
-    double douMonsterDodgeChance = ((MonsterStats[3]/2)+(MonsterStats[4]/6)/4);
+
     double douPlayerCritChance = ((PlayerStats[4])/20 + rand() %3) * 4; 
     double douMonsterCritChance =((MonsterStats[4])/20 + rand() %3) * 4;
 	
     double douMonsterDamageMuli = 1;
     double douPlayerDamageMuli = 1;
+	
     int intPlayerDamage = 0;
     int intMonsterDamage = 0;
 	
-    //Check both monster and player to see if they get a crit this round
+    //Check both monster and player to see if they get a crit this round.
 	//Rand() % 101 generates a random number between 0 and 100.
     if (rand() % 101 <= douPlayerCritChance) {douPlayerDamageMuli = 1.375;}
     if (rand() % 101 <= douMonsterCritChance) {douMonsterDamageMuli = 1.375;}
 	
-    //Check to see if Monster or Player dodges
-    if(rand() % 101 <= douPlayerDodgeChance) {douMonsterDamageMuli = 0;} //Player dodges set monster damage to 0
-    if(rand() % 101 <= douMonsterDodgeChance) {douPlayerDamageMuli = 0;} // Monster dodges
+	if(DodgeCheck(PlayerStats[3],PlayerStats[4])) {douMonsterDamageMuli = 0;}
+    if(DodgeCheck(MonsterStats[3],MonsterStats[4])) {douPlayerDamageMuli = 0;}
 	
-    //Calculate damage done
+    //Calculate damage done.
     intPlayerDamage = CalculateDamage(intBattleLevel, PlayerStats[0], MonsterStats[2]) * douPlayerDamageMuli;
     intMonsterDamage = CalculateDamage(intBattleLevel, MonsterStats[0], PlayerStats[2]) * douMonsterDamageMuli;
 	
@@ -355,7 +343,7 @@ char BattleScene()
             {
                 if(douPlayerDamageMuli > 1) {cout<<"You got a crit on the "<<MonsterName<<"! ";}
                 cout<<"You hit at the "<<MonsterName<<" for "<<intPlayerDamage<<".";
-                MonsterHealth[0] = MonsterHealth[0] - intPlayerDamage;
+                MonsterHealth[0] -= intPlayerDamage;
             }
             else { cout<<"The "<<MonsterName<<" dodges your attack!"; }
             
@@ -364,7 +352,7 @@ char BattleScene()
             {
                 if(douMonsterDamageMuli > 1){cout<<"The "<<MonsterName<<" got a crit on you! ";}
                 cout<<"The "<<MonsterName<<" hits you for "<<intMonsterDamage<<".";
-                PlayerHealth[0] = PlayerHealth[0] - intMonsterDamage;
+                PlayerHealth[0] -= intMonsterDamage;
             }
             else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
 
@@ -378,12 +366,12 @@ char BattleScene()
             {
                 if(douMonsterDamageMuli > 1){cout<<"The "<<MonsterName<<" got a crit on you! ";}
                 cout<<"The "<<MonsterName<<" hit you for "<<intMonsterDamage/2<<".";
-                PlayerHealth[0] = PlayerHealth[0] - intMonsterDamage/2;
+                PlayerHealth[0] -= intMonsterDamage/2;
             }
             else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
 
 			if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
-			else {PlayerHealth[0] = PlayerHealth[0] + douPlayerHealAmount;}
+			else {PlayerHealth[0] += douPlayerHealAmount;}
             cout<<endl<<"You heal yourself for "<<douPlayerHealAmount<<" HP.";
             goto HealthCheck;
 			break;
@@ -399,8 +387,6 @@ char BattleScene()
 			cout << string(2, '\n');
             cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
             cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
-            cout<<endl<<"Player dodge chance: "<<douPlayerDodgeChance;
-            cout<<endl<<"Monster dodge chance: "<<douMonsterDodgeChance;
             cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
             cout<<endl<<"Monster muli: "<<douMonsterDamageMuli;
             cout<<endl<<"Player damage: "<<intPlayerDamage;
@@ -470,7 +456,7 @@ char PlayerInitialize()
 		}
 		intStr = floor(intStr);
 	}while (intStr < 1);
-	intSkillPointsLeft = intSkillPointsLeft - intStr;
+	intSkillPointsLeft -= intStr;
 	//A check to see if they put too many points into a stat
 	//Since each stat must have at least 1 point
 	if( intSkillPointsLeft < 4 )
@@ -491,7 +477,7 @@ char PlayerInitialize()
 		}
 		intCons = floor(intCons);
 	}while (intCons <1);
-	intSkillPointsLeft = intSkillPointsLeft - intCons;
+	intSkillPointsLeft -= intCons;
 	if(intSkillPointsLeft < 3)
 	{
 		cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
@@ -509,7 +495,7 @@ char PlayerInitialize()
 		}
 		intDef = floor(intDef);
 	}while (intDef <1);
-	intSkillPointsLeft = intSkillPointsLeft - intDef;
+	intSkillPointsLeft -= intDef;
 	if(intSkillPointsLeft < 2)
 	{
 		cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
@@ -527,7 +513,7 @@ char PlayerInitialize()
 		}
 		intDex = floor(intDex);
 	}while (intDex < 1);
-	intSkillPointsLeft = intSkillPointsLeft - intDex;
+	intSkillPointsLeft -= intDex;
 	if(intSkillPointsLeft < 1)
 	{
 		cout<<"You used too many points."<<endl<<"Each stat must have at least one point in it.";
@@ -578,28 +564,28 @@ char PlayerInitialize()
     PlayerHealth[0] = PlayerHealth[1];
 	
 	return 'T';
-//End of player initialize
+//End of player initialize.
 }
 
 char startbattle(int intsLevel)
 {
 	intBattleLevel = intsLevel;
 	char charBattleSceneEnding;
-	RandomMonster(); //Generate a random monster
-	RandomMonsterModifier(); //Give monster random modifier 
-	if (MonsterModifier != "") {MonsterName = ConvertToLower(MonsterModifier) + " " + ConvertToLower(MonsterName);} //If monster has a modifier change name to include it
+	RandomMonster(); //Generate a random monster.
+	RandomMonsterModifier(); //Give monster random modifier. 
+	if (MonsterModifier != "") {MonsterName = ConvertToLower(MonsterModifier) + " " + ConvertToLower(MonsterName);} //If monster has a modifier change name to include it.
 	else {MonsterName = ConvertToLower(MonsterName);}
     charBattleSceneEnding = BattleScene();
 	switch(charBattleSceneEnding)
 	{
 		case 'T' :
 			cout << string(50, '\n');
-			cout<<"You beat the "<<MonsterName<<endl;
+			cout<<"You beat the "<<MonsterName<<"."<<endl;
             return 'T';
 			break;
 		case 'F' : 
 			cout << string(50, '\n');
-			cout<<"You lost..."<<endl<<" You defeated "<<intBattleLevel - 1 <<" levels.";
+			cout<<"You lost..."<<endl<<" You completed "<<intBattleLevel - 1 <<" dungeons.";
             cout<<endl<<"Press enter to close this game and try again!";
             system("pause");
             return 'F';
@@ -610,6 +596,25 @@ char startbattle(int intsLevel)
 			return 'F';
 			break;
 	}
+}
+
+int getbattlevalue(int intvalue)
+{
+	if (intvalue < 0) {return 0;}
+	else if (intvalue < 5) {return PlayerStats[intvalue];}
+	else if (intvalue == 5) {return PlayerHealth[0];}
+	else if (intvalue == 6) {return PlayerHealth[1];}
+	else {return 0;}
+}
+
+int setbattlevalue(int intlocation, int intvalue)
+{
+	if (intlocation < 0) {return 0;}
+	else if (intlocation < 5) {PlayerStats[intlocation] = intvalue;}
+	else if (intlocation == 5) {PlayerHealth[0] = intvalue;}
+	else if (intlocation == 6) {PlayerHealth[1] = intvalue;}
+	else {return 0;}
+	return 1;
 }
 
 #endif
