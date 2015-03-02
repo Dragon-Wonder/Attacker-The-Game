@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.4
+Current Revision: 1.5
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -21,7 +21,10 @@ Date	Revision	Changed By			Changes
 2/27/15	1.3			Patrick Rye			-Added option to save on map.
 =============================================================================================================================================================
 3/2/15	1.4			Patrick Rye			-Moved healing to happening between battles.
-=============================================================================================================================================================		
+=============================================================================================================================================================
+3/2/15	1.5			Patrick Rye			-General code improvement.
+										-Fixed two player bug.
+=============================================================================================================================================================				
 */
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
@@ -500,8 +503,8 @@ class Dungeon
 					if (ways == 0){
 					//we're in state 0, let's place a Player from where they came down the stairs.
 						setCell(newx, newy, tilePlayer);
-						intPlayerX = newx;
-						intPlayerY = newy;
+						//intPlayerX = newx;
+						//intPlayerY = newy;
 						state = 1;
 						break;
 					}
@@ -562,7 +565,9 @@ class Dungeon
 				{
 					intPlayerX = x2;
 					intPlayerY = y2;
-					//goto PostPlayerFind;
+					x2 = 80;
+					y2 = 20;
+					//Set x and y to max values so the for loops stop.
 				}
 			}
 		}
@@ -570,23 +575,22 @@ class Dungeon
 	public:
 	char PlayerMovement(char chrPlayerDirection)
 	{
+		playerfind();
+		intPlayerNewX = intPlayerX;
+		intPlayerNewY = intPlayerY;
 		switch (chrPlayerDirection)
 		{
 			case 'N' : //Player wants to go up.
-				intPlayerNewX = intPlayerX;
-				intPlayerNewY = intPlayerY - 1;
+				intPlayerNewY -= 1;
 				break;
 			case 'S' : //Player wants to go down.
-				intPlayerNewX = intPlayerX;
-				intPlayerNewY = intPlayerY + 1;
+				intPlayerNewY += 1;
 				break;
 			case 'E' : //Player wants to go right.
-				intPlayerNewX = intPlayerX + 1;
-				intPlayerNewY = intPlayerY;
+				intPlayerNewX += 1;
 				break;
 			case 'W' : //Player wants to go left.
-				intPlayerNewX = intPlayerX - 1;
-				intPlayerNewY = intPlayerY;
+				intPlayerNewX -= 1;
 				break;
 			case '&' : //Debug code to go straight to stairs.
 				for (int y = 0; y < 20; y++){
