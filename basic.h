@@ -1,19 +1,28 @@
-#ifndef _CASECHANGER_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again
-#define _CASECHANGER_H_INCLUDED__
+#ifndef _BASIC_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
+#define _BASIC_H_INCLUDED__
 
 /*
 Made By: Patrick J. Rye
-Purpose: A header to hold the case changing functions, in a header as these should not be changed often and to test the options that headers give me.
+Purpose: A header to hold functions that are pretty basic and likely won't change very often or at all.
 Current Revision: 1.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
 2/20/15	1.0			Patrick Rye			-Original from 3.1a
-=============================================================================================================================================================		
+=============================================================================================================================================================
+3/2/15	2.0			Patrick Rye			-Renamed to Basic.h
+										-Added save file checker function.
+=============================================================================================================================================================
 */
 
 using namespace std;
+
+bool saveexists()
+{
+  ifstream ifile("save.bif");
+  return ifile;
+}
 
 std::string ConvertToUpper(std::string& str)
 {
