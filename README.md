@@ -43,6 +43,8 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 - [x] Save System - 2/27/15
 
+- [x] Change healing to be done between monster fights rather than during.
+
 ###Short-Term
 
 - [ ] Something that allows the monster or player to move first and chance to stun.
@@ -56,9 +58,6 @@ I have a few goals in mind about what I want to do with this but I am always loo
 - [ ] Redo leveling system to work off of experience, rather than dungeons completed.
   - So if I do this, the player would need a way to go back to fight weaker monsters if they find that they moved to the next dungeon too quickly.
 
-- [ ] Change healing to be done between monster fights rather than during.
-
-  - Health will then be carried between battles.
 
 - [ ] Doors are more than just a thing you can walk through.
 
