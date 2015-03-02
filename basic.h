@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions that are pretty basic and likely won't change very often or at all.
-Current Revision: 1.0
+Current Revision: 2.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -14,9 +14,18 @@ Date	Revision	Changed By			Changes
 3/2/15	2.0			Patrick Rye			-Renamed to Basic.h
 										-Added save file checker function.
 =============================================================================================================================================================
+3/2/15	2.1			Patrick Rye			-Changed save file checker to be able to check for any file name.
+=============================================================================================================================================================
 */
 
 using namespace std;
+
+
+bool fileexists(const char *fileName)
+{
+    std::ifstream infile(fileName);
+    return infile.good();
+}
 
 bool saveexists()
 {
