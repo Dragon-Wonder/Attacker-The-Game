@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.5
+Current Revision: 1.6
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -29,7 +29,12 @@ Date	Revision	Changed By			Changes
 =============================================================================================================================================================
 2/27/15	1.5			Patrick Rye			-Added function that saves needed values.
 										-Changed health arrays from doubles to integers.
-=============================================================================================================================================================				
+=============================================================================================================================================================
+3/2/15	1.6			Patrick Rye			-Changed name of some functions to better reflect what they do.
+										-Changed health to carry over between battles.
+										-Moved health calculating to its own function.
+										-Moved damage calculating to its own function.
+=============================================================================================================================================================					
 */
 
 /*
@@ -54,13 +59,46 @@ const string NegMonsterModifiers[5] = {"Weak","Small","Tiny","Slow","Unlucky"};
 string MonsterName;
 string MonsterModifier;
 /*********************************************************************************************************/
-int PlayerHealth[2] = {0,300}; //An array 0 is current health 1 is max
+int PlayerHealth[2] = {0,300}; //An array 0 is current health 1 is max.
 int MonsterHealth[2]; //An array 0 is current health 1 is max
 int MonsterStats[5];
 int PlayerStats[5];
 /*********************************************************************************************************/
-int intBattleLevel;
+int intBattleLevel = 1;
 /*********************************************************************************************************/
+
+int CalculateHealth(int HealthLevel, int ConsStat)
+{
+	//A simple function for calculating health.
+	//In its own function so future changes will be changed everywhere.
+	return floor((23*((5.25+0.5625*HealthLevel+0.00375*pow(HealthLevel,2))+(1+0.066*HealthLevel)*(ConsStat/16))));
+}
+
+int CalculateDamage(int DamageLevel, int StrStat, int DefStat)
+{
+	//A simple function for calculating damage
+	//In its own function so future changes will be changed everywhere.
+	return floor(((((2 * (DamageLevel/5) + 2) * ((10*DamageLevel)/DefStat))*(StrStat))+5));
+}
+
+int getbattlevalue(int intvalue)
+{
+	if (intvalue < 0) {return 0;}
+	else if (intvalue < 5) {return PlayerStats[intvalue];}
+	else if (intvalue == 5) {return PlayerHealth[0];}
+	else if (intvalue == 6) {return PlayerHealth[1];}
+	else {return 0;}
+}
+
+int setbattlevalue(int intlocation, int intvalue)
+{
+	if (intlocation < 0) {return 0;}
+	else if (intlocation < 5) {PlayerStats[intlocation] = intvalue;}
+	else if (intlocation == 5) {PlayerHealth[0] = intvalue;}
+	else if (intlocation == 6) {PlayerHealth[1] = intvalue;}
+	else {return 0;}
+	return 1;
+}
 
 void RandomMonster()
 {
@@ -243,6 +281,9 @@ void LevelUpFunction()
 		else {intPlayerStatPoints = 0;} //Player chose not to use rest of points so just cause the loop to end.
 		
 	} while (intPlayerStatPoints > 0);
+	//Recalculate player's health.
+    PlayerHealth[1] = CalculateHealth(intBattleLevel, PlayerStats[1]);
+    PlayerHealth[0] = PlayerHealth[1];
 //End of level up function
 }
 
@@ -264,9 +305,9 @@ char BattleScene()
     //Update monster stats to new level
 	for (int i=0; i<5; i++) {MonsterStats[i] = floor((intBattleLevel*4)+MonsterBaseStats[i]);/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
     //Recalculate healths and re-heal them
-    PlayerHealth[1] = floor((23*((5.25+0.5625*intBattleLevel+0.00375*pow(intBattleLevel,2))+(1+0.066*intBattleLevel)*(PlayerStats[1]/16))));
-    PlayerHealth[0] = PlayerHealth[1];
-    MonsterHealth[1] = floor((23*((5.25+0.5625*intBattleLevel+0.00375*pow(intBattleLevel,2))+(1+0.066*intBattleLevel)*(MonsterStats[1]/16))/3));
+    //PlayerHealth[1] = floor((23*((5.25+0.5625*intBattleLevel+0.00375*pow(intBattleLevel,2))+(1+0.066*intBattleLevel)*(PlayerStats[1]/16))));
+    //PlayerHealth[0] = PlayerHealth[1];
+    MonsterHealth[1] = CalculateHealth(intBattleLevel,MonsterStats[1]);
     MonsterHealth[0] = MonsterHealth[1];
     //Recalculate amount player heals for
     douPlayerHealAmount = floor(PlayerHealth[1]/10);
@@ -278,20 +319,25 @@ char BattleScene()
     double douMonsterDodgeChance = ((MonsterStats[3]/2)+(MonsterStats[4]/6)/4);
     double douPlayerCritChance = ((PlayerStats[4])/20 + rand() %3) * 4; 
     double douMonsterCritChance =((MonsterStats[4])/20 + rand() %3) * 4;
+	
     double douMonsterDamageMuli = 1;
     double douPlayerDamageMuli = 1;
     int intPlayerDamage = 0;
     int intMonsterDamage = 0;
+	
     //Check both monster and player to see if they get a crit this round
 	//Rand() % 101 generates a random number between 0 and 100.
     if (rand() % 101 <= douPlayerCritChance) {douPlayerDamageMuli = 1.375;}
     if (rand() % 101 <= douMonsterCritChance) {douMonsterDamageMuli = 1.375;}
+	
     //Check to see if Monster or Player dodges
     if(rand() % 101 <= douPlayerDodgeChance) {douMonsterDamageMuli = 0;} //Player dodges set monster damage to 0
     if(rand() % 101 <= douMonsterDodgeChance) {douPlayerDamageMuli = 0;} // Monster dodges
+	
     //Calculate damage done
-    intPlayerDamage = floor(((((2 * (intBattleLevel/5) + 2) * ((10*intBattleLevel)/MonsterStats[2]))*(PlayerStats[0]/8))+5)*douPlayerDamageMuli);
-    intMonsterDamage = floor(((((2 * (intBattleLevel/5) + 2) * ((10*intBattleLevel)/PlayerStats[2]))*(MonsterStats[0]/8))+5)*douMonsterDamageMuli);
+    intPlayerDamage = CalculateDamage(intBattleLevel, PlayerStats[0], MonsterStats[2]) * douPlayerDamageMuli;
+    intMonsterDamage = CalculateDamage(intBattleLevel, MonsterStats[0], PlayerStats[2]) * douMonsterDamageMuli;
+	
     cout<<"You are now fighting a level "<<intBattleLevel<<" "<<MonsterName<<"!";
     cout<<endl<<"It has "<<MonsterHealth[0]<<" out of "<<MonsterHealth[1]<<" HP left"<<endl;
     cout<<endl<<endl<<"You have "<<PlayerHealth[0]<<" out of "<<PlayerHealth[1]<<" HP left."<<endl;
@@ -527,7 +573,10 @@ char PlayerInitialize()
 	PlayerStats[3]=intDex;
 	PlayerStats[4]=intLuk;
 	cout << string(50, '\n');
-
+	
+	PlayerHealth[1] = CalculateHealth(1,PlayerStats[1]);
+    PlayerHealth[0] = PlayerHealth[1];
+	
 	return 'T';
 //End of player initialize
 }
@@ -561,25 +610,6 @@ char startbattle(int intsLevel)
 			return 'F';
 			break;
 	}
-}
-
-int savebattle(int intvalue)
-{
-	if (intvalue < 0) {return 0;}
-	else if (intvalue < 5) {return PlayerStats[intvalue];}
-	else if (intvalue == 6) {return PlayerHealth[0];}
-	else if (intvalue == 7) {return PlayerHealth[1];}
-	else {return 0;}
-}
-
-int loadbattle(int intlocation, int intvalue)
-{
-	if (intlocation < 0) {return 0;}
-	else if (intlocation < 5) {PlayerStats[intlocation] = intvalue;}
-	else if (intlocation == 6) {PlayerHealth[0] = intvalue;}
-	else if (intlocation == 7) {PlayerHealth[1] = intvalue;}
-	else {return 0;}
-	return 1;
 }
 
 #endif
