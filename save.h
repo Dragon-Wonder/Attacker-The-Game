@@ -4,17 +4,25 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.0
+Current Revision: 1.0.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
 3/2/15	1.0			Patrick Rye			-Original
 =============================================================================================================================================================
+3/2/15	1.0.1		Patrick Rye			-Quick fix for version not being applied properly.
+=============================================================================================================================================================
 */
 
 
 string ProgramVerison;
+
+void PassProgramVerison(const string Verison)
+{
+	ProgramVerison = Verison;
+}
+
 
 char savefunction()
 {
@@ -120,13 +128,10 @@ bool loadfunction()
 	else {return false;} //Some of the values are wrong, say that the load failed.
 }
 
-bool LoadOldSave(const string Verison)
+bool LoadOldSave()
 {
-	ProgramVerison = Verison;
 	bool blLoadSuccess = false;
 	char chrPlayerChoice;
-	
-	cout << Verison<<endl<<ProgramVerison<<endl;
 	
 	string SaveVerison;
 	ifstream checkfileverison;
@@ -135,9 +140,7 @@ bool LoadOldSave(const string Verison)
 		getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, SaveVerison);
 	checkfileverison.close();
-	
-	cout<<SaveVerison<<endl;
-	
+
 	SaveDetected:
 	cout<<"Previous save has been detected, would you like to load?"<<endl<<"Y or N"<<endl;
 	cout<<"> ";
