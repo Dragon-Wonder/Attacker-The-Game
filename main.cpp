@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.2b
+Current Revision: 2.2.1b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -73,6 +73,8 @@ Date	Revision	Changed By			Changes
 										-Prompt for incorrect save version.
 										-Moved saving and loading functions to its own header.
 =============================================================================================================================================================
+3/2/15	2.2.1b		Patrick Rye			-Quick fix for version not being applied properly.
+=============================================================================================================================================================
 */
 
 /*********************************************************************************************************/
@@ -96,7 +98,7 @@ Dungeon d;
 //Make all the global variables that I need.
 int intMainLevel;
 int intLevelStart;
-const string CurrentVerison = "2.2b";
+const string CurrentVerison = "2.2.1b";
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 int getmainvalue(int intvalue)
@@ -118,7 +120,7 @@ int setmainvalue(int intlocation, int intvalue)
 
 int main()
 {
-
+	PassProgramVerison(CurrentVerison);
 	cout << string(48, '\n');
 	char charPlayerDirection;
 	char charBattleEnding;
@@ -131,7 +133,7 @@ int main()
 	
 	if (fileexists("save.bif")) //Check if there is a save present.
 	{
-		blOldSave = LoadOldSave(CurrentVerison);
+		blOldSave = LoadOldSave();
 		if (blOldSave) {chrPlayerMade = 'T';}
 	//End of if save exists.	
 	}
