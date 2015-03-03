@@ -29,28 +29,22 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.1b
+Current Revision: 1.0e
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================			
 -------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM ALPHA TO BETA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~EXPERIEMENTAL VERISON~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-2/24/15	1.0b		Patrick Rye			-Moved from V5.0-alpha to V1.0-beta
-										-Fixed level up so it happens when you get to a new level.
-										-Allowed exit on map.
-										-Fixed opening text to reflect recent changes in the game.
-										-Grammar and spelling fixes (yay, made it several revisions without having to do this. :) ).
-=============================================================================================================================================================	
-2/24/15	1.1b		Patrick Rye			-Added arrow key movement controlling.
+3/3/15	1.0e		Patrick Rye			-Added arrow key movement controlling.
 =============================================================================================================================================================		
 */
 
 /*********************************************************************************************************/
 #include <iostream>
-#include <ncurses.h>
+#include "ncurses/curses.h"
 #include <stdio.h>
 #include <string>
 #include <math.h>
@@ -80,11 +74,11 @@ int intTempTile = 6; //Value to hold what the cell that the player is moving int
 
 void initialize()
 {
-	/* Curses Initialisations */
+
 	initscr();
 	raw();
 	keypad(stdscr, TRUE);
-	noecho();
+	//noecho();
 }
 
 void finalize()
@@ -94,8 +88,10 @@ void finalize()
 	endwin();
 }
 
+
 int main()
 {
+	initialize();
 	enum
     {
         tileUnused = 0, //0
@@ -118,13 +114,11 @@ int main()
 	int intPlayerNewX;
 	int intPlayerNewY;
 	
-	initialize();
-	
-	cout<<"Welcome to the World of Attacker"<<endl<<"Your is to go through 10 randomly generated dungeons."<<endl;
-	cout<<"You are looking for the stairs down (>). While you are represented by †"<<endl;
-	cout<<"Every brings you closer to your goal, but there might be a monster there as well."<<endl;
-	cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
-	cout<<"Good luck!"<<endl<<endl<<endl<<endl;
+	printf("Welcome to the World of Attacker\nYour is to go through 10 randomly generated dungeons.\n");
+	printf("You are looking for the stairs down (>). While you are represented by †\n");
+	printf("Every brings you closer to your goal, but there might be a monster there as well.\n");
+	printf("Each level is harder than the last, do you have what it takes to win?\n");
+	printf("Good luck!\n\n\n\n");
 	
 	do {chrPlayerMade = PlayerInitialize();}while (chrPlayerMade != 'T'); //Repeat initialization until player is made.
 	//cout << string(50, '\n');
@@ -133,7 +127,7 @@ int main()
 		//Do level up if not first level.
 		if( intMainLevel != 1) { LevelUpFunction();}
 		charExitFind = 'F';
-		cout<<endl;
+		cout<<"\n";
 		Dungeon d;//generates dungeon.
 		for (int y = 0; y < 25; y++){
 			for (int x = 0; x < 80; x++){
@@ -152,81 +146,25 @@ int main()
 			//PickDirection:
 			cout << string(50, '\n');
 			d.showDungeon();
-			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
-			//cout<<endl<<"("<<intPlayerX<<","<<intPlayerY<<")"<<endl;
-			/*cout<<"Please enter a direction you would like to go (N,E,S,W)."<<endl<<"Enter X to exit."<<endl;
-			cout<<"> ";
-			cin>>charPlayerDirection;
-			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
-			if (charPlayerDirection == 'N')//Had to make this an if statement as the a case wouldn't work.
+			cout<<"Level "<<intMainLevel<<" of 10."<<"\n";
+			//cout<<"\n"<<"("<<intPlayerX<<","<<intPlayerY<<")"<<"\n";
+			int ch;
+			ch = wgetch( stdscr );
+			switch(ch)
 			{
-				intPlayerNewX = intPlayerX;
-				intPlayerNewY = intPlayerY - 1;
-			}
-			else if (charPlayerDirection == 'S')
-			{
-				intPlayerNewX = intPlayerX;
-				intPlayerNewY = intPlayerY + 1;				
-			}
-			else if (charPlayerDirection == 'E')
-			{
-				intPlayerNewX = intPlayerX + 1;
-				intPlayerNewY = intPlayerY;
-			}
-			else if (charPlayerDirection == 'W')
-			{
-				intPlayerNewX = intPlayerX - 1;
-				intPlayerNewY = intPlayerY;
-			}
-			else if (charPlayerDirection == 'D')
-			{
-				//Debug code that moves player directly to down stairs.
-				for (int y = 0; y < 25; y++){
-					for (int x = 0; x < 80; x++){
-						if (d.getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
-						{
-							intPlayerNewX = x;
-							intPlayerNewY = y;
-						};
-					}
-				}
-			}
-			else if (charPlayerDirection == 'X')
-			{
-				cout << string(50, '\n');
-				cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost"<<endl<<"Y or N"<<endl<<"> ";
-				cin>>charPlayerDirection;
-				charPlayerDirection = CharConvertToUpper(charPlayerDirection);
-				switch (charPlayerDirection)
-				{
-					case 'Y' :
-						return 0;
-					default :
-						goto PickDirection;
-				}
-			}
-			else
-			{
-				cout<<endl<<"Invalid direction, please try again."<<endl;
-				goto PickDirection;
-			}*/
-			int key;
-			key = wgetch( stdscr );
-			switch(key)
-			{
-				case KEY_LEFT:
+				case KEY_LEFT :
 					intPlayerNewX= intPlayerX - 1;
 					intPlayerNewY = intPlayerY;
 				break;
-				case KEY_UP:
+				case KEY_UP :
 					intPlayerNewX= intPlayerX;
 					intPlayerNewY = intPlayerY -1;
 				break;
-				case KEY_RIGHT:
+				case KEY_RIGHT :
 					intPlayerNewX= intPlayerX + 1;
 					intPlayerNewY = intPlayerY;
 				break;
-				case KEY_DOWN:
+				case KEY_DOWN :
 					intPlayerNewX= intPlayerX;
 					intPlayerNewY = intPlayerY + 1;
 				break;
