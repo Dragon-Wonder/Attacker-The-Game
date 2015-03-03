@@ -58,7 +58,6 @@ char savefunction()
 	//Checks to see if save is correct or not.
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1608];
-	int x;
 	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
 	for (int i = 0; i < 8; i++)
@@ -85,13 +84,12 @@ bool loadfunction()
 {
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1608];
-	int x;
 	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
 	for (int i = 0; i < 8; i++)
 	{
-		if(i<7) {x = setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
-		else if (i == 7) {x = setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
+		if(i<7) {setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
+		else if (i == 7) {setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
 	}
 	int num = 7;
 	for (int y = 0; y < 20; y++)
@@ -127,6 +125,7 @@ bool loadfunction()
 	cout<<endl<<endl<<intCheckSum;
 	if(intCheckSum >= 1608) {return true;} //All of the saved values are correct if it equals 1608.
 	else {return false;} //Some of the values are wrong, say that the load failed.
+	return false;
 }
 
 bool LoadOldSave()
@@ -192,6 +191,7 @@ bool LoadOldSave()
 			break;
 	//End of switch
 	}
+	return false;
 }
 
 #endif
