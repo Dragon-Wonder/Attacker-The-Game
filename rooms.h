@@ -1,22 +1,43 @@
-#ifndef _ROOMS_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again
+#ifndef _ROOMS_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
 #define _ROOMS_H_INCLUDED__
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.1
+Current Revision: 2.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
 2/20/15	1.0			Patrick Rye			-Original
 =============================================================================================================================================================
-2/23/15	1.1			Patrick Rye			-Added Player Tile
+2/23/15	1.1			Patrick Rye			-Added player tile
 										-Changed the generated stairs up to generate a Player instead
 											-Basically you can never goo back up and I don't have to worry about putting the stair back when they move.
 										-Made getcell, setcell, showDungeon all public so I can access them from the main code.
-=============================================================================================================================================================		
+=============================================================================================================================================================
+2/26/15	1.2			Patrick Rye			-Moved player movement function here.
+=============================================================================================================================================================
+2/27/15	1.3			Patrick Rye			-Added option to save on map.
+=============================================================================================================================================================
+3/2/15	1.4			Patrick Rye			-Moved healing to happening between battles.
+=============================================================================================================================================================
+3/2/15	1.5			Patrick Rye			-General code improvement.
+										-Fixed two player bug.
+=============================================================================================================================================================
+3/3/15	2.0			Patrick Rye			-Added debug mode.
+=============================================================================================================================================================	
 */
+int intPlayerX; //Player position in X and Y.
+int intPlayerY;
+int intPlayerNewX; //Player position in X and Y.
+int intPlayerNewY;
+ 
+int intTempTile = 6; //Value to hold what the cell that the player is moving into is.
+ 
+bool blRoomsDebugMode = false;
+ 
+void SetRoomDebugMode(bool isDebug) {blRoomsDebugMode = isDebug;} 
  
 class Dungeon
 {
@@ -487,6 +508,8 @@ class Dungeon
 					if (ways == 0){
 					//we're in state 0, let's place a Player from where they came down the stairs.
 						setCell(newx, newy, tilePlayer);
+						//intPlayerX = newx;
+						//intPlayerY = newy;
 						state = 1;
 						break;
 					}
@@ -513,11 +536,12 @@ class Dungeon
     int* make_dungeon()
     {
         int x = 80;
-        int y = 25;
+        int y = 20;
         int dungeon_objects = 100;
         dungeon_map = new int[x * y];
         //for(;;)
-        //{
+        //{	
+			intTempTile = tileUpStairs;
             if(createDungeon(x, y, dungeon_objects))
             showDungeon();
             //std::cin.get();
@@ -527,17 +551,149 @@ class Dungeon
 	void cmain()
     {
         int x = 80;
-        int y = 25;
+        int y = 20;
         int dungeon_objects = 100;
         dungeon_map = new int[x * y];
-        //for(;;)
-        //{
-            if(createDungeon(x, y, dungeon_objects))
-            showDungeon();
-            //std::cin.get();
-        //}
-		//return dungeon_map;
+
+        if(createDungeon(x, y, dungeon_objects)) {showDungeon();}
+		playerfind();
+	//PostPlayerFind:
     }
+	public:
+	void playerfind()
+	{
+		for (int y2 = 0; y2 < 20; y2++)
+		{
+			for (int x2 = 0; x2 < 80; x2++)
+			{
+				if (getCell(x2,y2)==9) //Finds where player is.
+				{
+					intPlayerX = x2;
+					intPlayerY = y2;
+					x2 = 80;
+					y2 = 20;
+					//Set x and y to max values so the for loops stop.
+				}
+			}
+		}
+	}
+	public:
+	char PlayerMovement(char chrPlayerDirection)
+	{
+		playerfind();
+		intPlayerNewX = intPlayerX;
+		intPlayerNewY = intPlayerY;
+		switch (chrPlayerDirection)
+		{
+			case 'N' : //Player wants to go up.
+				intPlayerNewY -= 1;
+				break;
+			case 'S' : //Player wants to go down.
+				intPlayerNewY += 1;
+				break;
+			case 'E' : //Player wants to go right.
+				intPlayerNewX += 1;
+				break;
+			case 'W' : //Player wants to go left.
+				intPlayerNewX -= 1;
+				break;
+			case 'X' : //Player wants to exit game.
+				cout << string(50, '\n');
+				cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
+				cin>>chrPlayerDirection;
+				chrPlayerDirection = CharConvertToUpper(chrPlayerDirection);
+				switch (chrPlayerDirection)
+				{
+					case 'Y' :
+						return 'E';
+						break;
+					default :
+						return 'F';
+						break;
+				}
+				break;
+			case 'P' : //Player wants to save.
+				return 'S'; //Player is asking to save, return S for save.
+				break;
+			case 'H' : //Player wants to heal.
+				int intPlayerCurrHealth;
+				intPlayerCurrHealth = getbattlevalue(5);
+				int intPlayerMaxHealth;
+				intPlayerMaxHealth = getbattlevalue(6);
+				int intPlayerHealAmount;
+				intPlayerHealAmount = floor(intPlayerMaxHealth/10);
+				if (intPlayerCurrHealth + intPlayerHealAmount >= intPlayerMaxHealth) {intPlayerCurrHealth = intPlayerMaxHealth;}
+				else {intPlayerCurrHealth += intPlayerHealAmount;}
+				setbattlevalue(5,intPlayerCurrHealth); //Set player current health to the new amount.
+				cout<<endl<<"Your health is now: "<<intPlayerCurrHealth<<" out of "<<intPlayerMaxHealth<<".";
+				return 'F'; //Return F that player did not find exit.
+				break;
+			case 'C' : //Player is checking themselves.
+				int intPlayerStatsTemp[7];
+				for (int i = 0; i < 7; i++) {intPlayerStatsTemp[i]=getbattlevalue(i);}
+				cout<<endl<<"Your health is now: "<<intPlayerStatsTemp[5]<<" out of "<<intPlayerStatsTemp[6]<<".";
+				cout<<endl<<"Your stats are as follows: "<<endl;
+				cout<<"STR: "<<intPlayerStatsTemp[0]<<endl<<"CONS: "<<intPlayerStatsTemp[1]<<endl;
+				cout<<"DEF: "<<intPlayerStatsTemp[2]<<endl<<"DEX: "<<intPlayerStatsTemp[3]<<endl;
+				cout<<"LUK: "<<intPlayerStatsTemp[4]<<endl;
+				system("pause");
+				return 'F';
+				break;
+			case '&' : //Debug code to go straight to stairs.
+				if (blRoomsDebugMode)
+				{for (int y = 0; y < 20; y++){for (int x = 0; x < 80; x++){
+					if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
+					{
+						intPlayerNewX = x;
+						intPlayerNewY = y;
+						goto PostMovingCode;
+					};
+				}} break;}
+			case 'M' :
+				if (blRoomsDebugMode) {return 'M'; break;}
+			default : 
+				cout<<endl<<"Invalid choice, please try again."<<endl;
+				return 'F';
+				break;
+		//End of case for direction picked.
+		}
+		PostMovingCode:
+		switch (getCell(intPlayerNewX,intPlayerNewY))
+		{
+			case tileDownStairs :
+				//Return a true saying that the player found the exit, aka the down stairs.
+				return 'T';
+				break;
+			case tileStoneWall :
+			case tileDirtWall :
+			case tileUnused :
+			case tilePlayer :
+				//Player is trying to walk into something they can't.
+				//Just return a false saying they did not find the exit.
+				return'F';
+				break;
+			case tileCorridor :
+			case tileChest :
+			case tileDirtFloor :
+			case tileDoor :
+			case tileUpStairs :
+				//Player is walking into a tile they are allowed to, move around the tiles.
+				setCell(intPlayerX,intPlayerY,intTempTile); //Set old location back to what it was.
+				intTempTile = getCell(intPlayerNewX,intPlayerNewY); //Set the temp value to what the next cell is.
+				intPlayerY = intPlayerNewY;
+				intPlayerX = intPlayerNewX;
+				setCell(intPlayerX,intPlayerY,tilePlayer); //Move the player.
+				return'F'; //Return a false, as they did not find the exit.
+				break;
+			default :
+				//Player is stepping on a tile that should never exist, if I remember to add it.
+				//Therefore just return a false.
+				return 'F';
+				break;
+		//End of switch based on next cell.	
+		}
+	//End of PlayerMovement function.
+	}
 	
 	
 public:
