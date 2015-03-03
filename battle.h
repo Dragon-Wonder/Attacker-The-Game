@@ -628,14 +628,11 @@ int getbattlevalue(int intvalue)
 	else {return 0;}
 }
 
-int setbattlevalue(int intlocation, int intvalue)
+void setbattlevalue(int intlocation, int intvalue)
 {
-	if (intlocation < 0) {return 0;}
-	else if (intlocation < 5) {PlayerStats[intlocation] = intvalue;}
+	if (intlocation < 5) {PlayerStats[intlocation] = intvalue;}
 	else if (intlocation == 5) {PlayerHealth[0] = intvalue;}
 	else if (intlocation == 6) {PlayerHealth[1] = intvalue;}
-	else {return 0;}
-	return 1;
 }
 
 #endif
