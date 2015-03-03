@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.8
+Current Revision: 2.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -39,9 +39,11 @@ Date	Revision	Changed By			Changes
 										-Grammar and spelling fixes.
 										-Moved dodge check to its own function.
 =============================================================================================================================================================
-3/3/15	1.8			Patrick Rye			-Grammar and spelling fixes.
+3/3/15	2.0			Patrick Rye			-Grammar and spelling fixes.
 										-Initialized certain variables with values.
 										-Nerffered monster health, now 1/3 of a player's with the same stats.
+										-Added debug mode.
+										-Floored damage done when healing.
 =============================================================================================================================================================	
 */
 
@@ -73,6 +75,7 @@ int MonsterStats[5] = {6,6,6,6,6};
 int PlayerStats[5] = {5,5,5,5,5};
 /*********************************************************************************************************/
 int intBattleLevel = 1;
+bool blBattleDebugMode = false;
 /*********************************************************************************************************/
 
 bool DodgeCheck(int LUK, int DEX)
@@ -100,7 +103,7 @@ int CalculateDamage(int DamageLevel, int StrStat, int DefStat)
 	return floor(((((2 * (DamageLevel/5) + 2) * ((10*DamageLevel)/DefStat))*(StrStat))+5));
 }
 
-
+void SetBattleDebugMode(bool isDebug) {blBattleDebugMode = isDebug;}
 
 void RandomMonster()
 {
@@ -335,9 +338,11 @@ char BattleScene()
     cout<<endl<<endl<<"You have "<<PlayerHealth[0]<<" out of "<<PlayerHealth[1]<<" HP left."<<endl;
     PlayerChoice:
     cout<<endl<<"What you like to do?"<<endl<<"A = Attack, H = Heal, E = Exit, Q = Help"<<endl;
+	if (blBattleDebugMode) {cout<<"'K' to end the battle, and 'D' for debug values"<<endl;}
     cout<<"> ";
     cin>>chrPlayerBattleChoice;
     chrPlayerBattleChoice = CharConvertToUpper(chrPlayerBattleChoice);
+	
     switch(chrPlayerBattleChoice)
     {
         case 'A' :
@@ -370,7 +375,7 @@ char BattleScene()
             {
                 if(douMonsterDamageMuli > 1){cout<<"The "<<MonsterName<<" got a crit on you! ";}
                 cout<<"The "<<MonsterName<<" hit you for "<<intMonsterDamage/2<<".";
-                PlayerHealth[0] -= intMonsterDamage/2;
+                PlayerHealth[0] -= floor(intMonsterDamage/2);
             }
             else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
 
@@ -388,18 +393,30 @@ char BattleScene()
             goto PlayerChoice;
 			break;
         case 'D' : //Debug code reveal some values.
-			cout << string(2, '\n');
-            cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
-            cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
-            cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
-            cout<<endl<<"Monster muli: "<<douMonsterDamageMuli;
-            cout<<endl<<"Player damage: "<<intPlayerDamage;
-            cout<<endl<<"Monster damage: "<<intMonsterDamage;
-            goto PlayerChoice;
+			if (blBattleDebugMode)
+			{
+				cout << string(2, '\n');
+				cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
+				cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
+				cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
+				cout<<endl<<"Monster muli: "<<douMonsterDamageMuli;
+				cout<<endl<<"Player damage: "<<intPlayerDamage;
+				cout<<endl<<"Monster damage: "<<intMonsterDamage;
+			}
+			else {cout<<endl<<"Invalid choice, please try again.";}
+			goto PlayerChoice;
 			break;
         case 'K' : //Debug code "kills" the current monster.
-			cout << string(50, '\n');
-            return 'T';
+			if (blBattleDebugMode)
+			{
+				cout << string(50, '\n');
+				return 'T';
+			}
+			else 
+			{
+				cout<<endl<<"Invalid choice, please try again.";
+				goto PlayerChoice;
+			}
 			break;
         case 'E' : //Exits game.
 			cout << string(50, '\n');
