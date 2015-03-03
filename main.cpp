@@ -77,7 +77,8 @@ Date	Revision	Changed By			Changes
 =============================================================================================================================================================
 3/2/15	2.3b		Patrick Rye			-Added more comments.
 										-Changed some wording to better explain stuff.
-										-Added a debug mode to game, detect if source code exists.
+										-Added a debug mode to game, detects if source code exists.
+										-Grammar & spelling fixes.
 =============================================================================================================================================================
 */
 
@@ -117,8 +118,7 @@ int getmainvalue(int intvalue)
 int setmainvalue(int intlocation, int intvalue)
 {
 	if(intlocation != 0) {return 1;}
-	else {intLevelStart = intvalue;}
-	return 0;
+	else {intLevelStart = intvalue; return 0;}
 }
 #include "save.h" //A header to hold functions related to saving and loading.
 /*********************************************************************************************************/
@@ -152,7 +152,7 @@ int main()
 	if(!blOldSave) //If it is not an old save show welcome message.
 	{
 		cout<<"Welcome to the World of Attacker."<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
-		cout<<"You are looking for the stairs down ( > ). While you are represented by †"<<endl;
+		cout<<"You are looking for the stairs down ( > ). While you are represented by † ."<<endl;
 		cout<<"Every step brings you closer to your goal, but there might be a monster there as well."<<endl;
 		cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
 		cout<<"Good luck!"<<endl<<endl<<endl<<endl;
@@ -175,6 +175,7 @@ int main()
 			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
 			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter 'X' to exit, 'C' to get your current health and stats,";
 			cout<<endl<<"'H' to heal, or 'P' to save."<<endl;
+			if (blDebugMode) {cout<<"'&' to go straight to down stairs, or 'M' to force monster."<<endl;}
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
@@ -197,7 +198,7 @@ int main()
 			}
 			if (!(charExitFind=='S') && !(charPlayerDirection == 'C')) //If player did not save or did not check himself, see if player runs into monster.
 			{
-				if(rand() % 101 <= 10) //Random chance to encounter monster.
+				if(rand() % 101 <= 10 || charExitFind == 'M') //Random chance to encounter monster, or debug code to force monster encounter.
 				{
 					cout << string(50, '\n');
 					charBattleEnding = startbattle(intMainLevel); //Starts battle.
@@ -205,6 +206,7 @@ int main()
 				}
 			}
 		}while (charExitFind != 'T'); //Repeat until player finds exit.
+	//End of FOR levels.
 	}
 	cout << string(50, '\n');
 	cout<<"You win!!";
