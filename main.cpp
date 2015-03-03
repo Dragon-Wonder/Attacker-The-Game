@@ -67,7 +67,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use function in there anyw
 //Make all the global variables that I need.
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
-const string CurrentVerison = "2.0e"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "1.1e"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
