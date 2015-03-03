@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.7
+Current Revision: 1.8
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -38,7 +38,11 @@ Date	Revision	Changed By			Changes
 3/2/15	1.7			Patrick Rye			-Improved code.
 										-Grammar and spelling fixes.
 										-Moved dodge check to its own function.
-=============================================================================================================================================================									
+=============================================================================================================================================================
+3/3/15	1.8			Patrick Rye			-Grammar and spelling fixes.
+										-Initialized certain variables with values.
+										-Nerffered monster health, now 1/3 of a player's with the same stats.
+=============================================================================================================================================================	
 */
 
 /*
@@ -64,9 +68,9 @@ string MonsterName;
 string MonsterModifier;
 /*********************************************************************************************************/
 int PlayerHealth[2] = {0,300}; //An array 0 is current health 1 is max.
-int MonsterHealth[2]; //An array 0 is current health 1 is max
-int MonsterStats[5];
-int PlayerStats[5];
+int MonsterHealth[2] = {0,300}; //An array 0 is current health 1 is max
+int MonsterStats[5] = {6,6,6,6,6};
+int PlayerStats[5] = {5,5,5,5,5};
 /*********************************************************************************************************/
 int intBattleLevel = 1;
 /*********************************************************************************************************/
@@ -298,7 +302,7 @@ char BattleScene()
     //Recalculate healths and re-heal them
     //PlayerHealth[1] = floor((23*((5.25+0.5625*intBattleLevel+0.00375*pow(intBattleLevel,2))+(1+0.066*intBattleLevel)*(PlayerStats[1]/16))));
     //PlayerHealth[0] = PlayerHealth[1];
-    MonsterHealth[1] = CalculateHealth(intBattleLevel,MonsterStats[1]);
+    MonsterHealth[1] = CalculateHealth(intBattleLevel,MonsterStats[1])/3;
     MonsterHealth[0] = MonsterHealth[1];
     //Recalculate amount player heals for.
     douPlayerHealAmount = floor(PlayerHealth[1]/10);
@@ -339,7 +343,7 @@ char BattleScene()
         case 'A' :
             cout << string(10, '\n');
 			
-            if (intPlayerDamage != 0) //Check to see if monster manages to dodge the player
+            if (intPlayerDamage != 0) //Check to see if monster manages to dodge the player.
             {
                 if(douPlayerDamageMuli > 1) {cout<<"You got a crit on the "<<MonsterName<<"! ";}
                 cout<<"You hit at the "<<MonsterName<<" for "<<intPlayerDamage<<".";
@@ -360,7 +364,7 @@ char BattleScene()
             goto HealthCheck;
 			break;
         case 'H' :
-            //Code for player healing
+            //Code for player healing.
 			cout << string(10, '\n');
             if(intMonsterDamage !=0)
             {
@@ -383,7 +387,7 @@ char BattleScene()
             cout<<endl<<"Help brings up this menu."<<endl;
             goto PlayerChoice;
 			break;
-        case 'D' : //Debug code reveal some values
+        case 'D' : //Debug code reveal some values.
 			cout << string(2, '\n');
             cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
             cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
@@ -393,11 +397,11 @@ char BattleScene()
             cout<<endl<<"Monster damage: "<<intMonsterDamage;
             goto PlayerChoice;
 			break;
-        case 'K' : //Debug code "kills" the current monster
+        case 'K' : //Debug code "kills" the current monster.
 			cout << string(50, '\n');
             return 'T';
 			break;
-        case 'E' : //exits game
+        case 'E' : //Exits game.
 			cout << string(50, '\n');
 			cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
 			cin>>chrPlayerBattleChoice;
@@ -413,18 +417,18 @@ char BattleScene()
 			}
 			break;
         default :
-            cout<<endl<<"Invalid choice, try again";
+            cout<<endl<<"Invalid choice, please try again.";
             goto PlayerChoice;
 			break;
 	
     }
-	//Check if player is dead
+	//Check if player is dead.
 	HealthCheck:
 	if (PlayerHealth[0] <= 0) {return 'F';}	
 	if (MonsterHealth[0] <= 0) {return 'T';}
-	//Neither player or monster is dead; go back to choice again
+	//Neither player or monster is dead; go back to choice again.
 	goto BattleGoto;
-//End of battle scene function
+//End of battle scene function.
 }
 
 char PlayerInitialize()
