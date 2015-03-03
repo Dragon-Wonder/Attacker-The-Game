@@ -25,7 +25,7 @@ Date	Revision	Changed By			Changes
 3/2/15	1.5			Patrick Rye			-General code improvement.
 										-Fixed two player bug.
 =============================================================================================================================================================
-3/3/15	2.0			Patrick Rye			-Added Debug Mode.
+3/3/15	2.0			Patrick Rye			-Added debug mode.
 =============================================================================================================================================================	
 */
 int intPlayerX; //Player position in X and Y.
@@ -597,26 +597,6 @@ class Dungeon
 			case 'W' : //Player wants to go left.
 				intPlayerNewX -= 1;
 				break;
-			case '&' : //Debug code to go straight to stairs.
-				if (blRoomsDebugMode)
-				{
-					for (int y = 0; y < 20; y++){
-						for (int x = 0; x < 80; x++){
-							if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
-							{
-								intPlayerNewX = x;
-								intPlayerNewY = y;
-								goto PostMovingCode;
-							};
-						}
-					}
-				}
-				else 
-				{
-					cout<<endl<<"Invalid choice, please try again."<<endl;
-					return 'F';
-				}
-				break;
 			case 'X' : //Player wants to exit game.
 				cout << string(50, '\n');
 				cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
@@ -659,6 +639,18 @@ class Dungeon
 				system("pause");
 				return 'F';
 				break;
+			case '&' : //Debug code to go straight to stairs.
+				if (blRoomsDebugMode)
+				{for (int y = 0; y < 20; y++){for (int x = 0; x < 80; x++){
+					if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
+					{
+						intPlayerNewX = x;
+						intPlayerNewY = y;
+						goto PostMovingCode;
+					};
+				}} break;}
+			case 'M' :
+				if (blRoomsDebugMode) {return 'M'; break;}
 			default : 
 				cout<<endl<<"Invalid choice, please try again."<<endl;
 				return 'F';
