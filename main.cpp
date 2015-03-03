@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.2.1b
+Current Revision: 2.3b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -75,6 +75,11 @@ Date	Revision	Changed By			Changes
 =============================================================================================================================================================
 3/2/15	2.2.1b		Patrick Rye			-Quick fix for version not being applied properly.
 =============================================================================================================================================================
+3/2/15	2.3b		Patrick Rye			-Added more comments.
+										-Changed some wording to better explain stuff.
+										-Added a debug mode to game, detects if source code exists.
+										-Grammar & spelling fixes.
+=============================================================================================================================================================
 */
 
 /*********************************************************************************************************/
@@ -93,14 +98,16 @@ Date	Revision	Changed By			Changes
 #include "rooms.h" //Functions that deal with generating a dungeon.
 /*********************************************************************************************************/
 using namespace std;
-Dungeon d;
+Dungeon d; //Define the dungeon class as 'd' so I can use function in there anywhere later in the code.
 /*********************************************************************************************************/
 //Make all the global variables that I need.
-int intMainLevel;
-int intLevelStart;
-const string CurrentVerison = "2.2.1b";
+int intMainLevel; //The level of the dungeon.
+int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
+const string CurrentVerison = "2.3b"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
+//These values are used to pass values to the save header so that they may be saved.
+//Or to set values from a load.
 int getmainvalue(int intvalue)
 {
 	if(intvalue == 0 ) {return intMainLevel;}
@@ -108,28 +115,27 @@ int getmainvalue(int intvalue)
 	else {return 1;}
 }
 
-int setmainvalue(int intlocation, int intvalue)
-{
-	if(intlocation != 0) {return 1;}
-	else {intLevelStart = intvalue;}
-	return 0;
-}
+void setmainvalue(int intlocation, int intvalue) {if (intlocation == 0) {intLevelStart = intvalue;}}
 #include "save.h" //A header to hold functions related to saving and loading.
 /*********************************************************************************************************/
 
 
 int main()
 {
-	PassProgramVerison(CurrentVerison);
+	PassProgramVerison(CurrentVerison); //Pass current program version into the save header.
 	cout << string(48, '\n');
 	char charPlayerDirection;
 	char charBattleEnding;
 	char charExitFind;
 	bool blOldSave = false;
 	char chrPlayerMade = 'F';
+	bool blDebugMode = false;
 
 	char chrSaveSuccess = 'N'; //N means that save has not been run.
-	intLevelStart = 1;
+	
+	blDebugMode = fileexists("main.cpp"); //If source code exists, set game into debug mode.
+	
+	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true);} //Sets debug mode for both Rooms.h & Battle.h
 	
 	if (fileexists("save.bif")) //Check if there is a save present.
 	{
@@ -141,8 +147,8 @@ int main()
 	
 	if(!blOldSave) //If it is not an old save show welcome message.
 	{
-		cout<<"Welcome to the World of Attacker"<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
-		cout<<"You are looking for the stairs down ( > ). While you are represented by †"<<endl;
+		cout<<"Welcome to the World of Attacker."<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
+		cout<<"You are looking for the stairs down ( > ). While you are represented by † ."<<endl;
 		cout<<"Every step brings you closer to your goal, but there might be a monster there as well."<<endl;
 		cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
 		cout<<"Good luck!"<<endl<<endl<<endl<<endl;
@@ -163,10 +169,13 @@ int main()
 			cout << string(50, '\n');
 			d.showDungeon();
 			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
-			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter X to exit, C to check yourself, H to heal, or P to save."<<endl;
+			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter 'X' to exit, 'C' to get your current health and stats,";
+			cout<<endl<<"'H' to heal, or 'P' to save."<<endl;
+			if (blDebugMode) {cout<<"'&' to go straight to down stairs, or 'M' to force monster."<<endl;}
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
+			
 			charExitFind = d.PlayerMovement(charPlayerDirection);
 			if (charExitFind == 'E') {return 0;} //If we get an error exit program.
 			if (charExitFind == 'S') {chrSaveSuccess = savefunction();} //Save the game.
@@ -185,7 +194,7 @@ int main()
 			}
 			if (!(charExitFind=='S') && !(charPlayerDirection == 'C')) //If player did not save or did not check himself, see if player runs into monster.
 			{
-				if(rand() % 101 <= 10) //Random chance to encounter monster.
+				if(rand() % 101 <= 10 || charExitFind == 'M') //Random chance to encounter monster, or debug code to force monster encounter.
 				{
 					cout << string(50, '\n');
 					charBattleEnding = startbattle(intMainLevel); //Starts battle.
@@ -193,6 +202,7 @@ int main()
 				}
 			}
 		}while (charExitFind != 'T'); //Repeat until player finds exit.
+	//End of FOR levels.
 	}
 	cout << string(50, '\n');
 	cout<<"You win!!";

@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.0.1
+Current Revision: 1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -13,16 +13,18 @@ Date	Revision	Changed By			Changes
 =============================================================================================================================================================
 3/2/15	1.0.1		Patrick Rye			-Quick fix for version not being applied properly.
 =============================================================================================================================================================
+3/3/15	1.1			Patrick Rye			-General code improvement.
+										-Added more comments.
+										-Fixed bug where max player health wasn't saving properly.
+=============================================================================================================================================================
 */
 
 
 string ProgramVerison;
 
-void PassProgramVerison(const string Verison)
-{
-	ProgramVerison = Verison;
-}
-
+//This function is needed to pass the version of the program (a constant string in main.cpp)
+//and place it in the variable here called ProgramVerison for purposes of calling it in this header.
+void PassProgramVerison(const string Verison) {ProgramVerison = Verison;}
 
 char savefunction()
 {
@@ -34,30 +36,28 @@ char savefunction()
 	*/
 	int intCheckSum = 0;
 	int arrbattlesave[7];
-	int arrmainsave[1]; //An array of all the values needed to be saved from main.cpp
+	int arrmainsave[1]; //An array of all the values needed to be saved from main.cpp, its an array in the case that later I add more stuff to be saved.
 	arrmainsave[0] = getmainvalue(0);
 	int arrroomsave[80][20];
-	for (int i = 0; i < 6; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
+	for (int i = 0; i <= 6; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
 	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
 	ofstream savefile;
 	savefile.open ("save.bif");
-	for (int i = 0; i < 7; i++) {savefile << arrbattlesave[i] << "\n";}
-	//savefile << "\n";
+	
+	for (int i = 0; i < 7; i++) {savefile << arrbattlesave[i] << "\n";} 
+
 	for (int i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
-	//savefile << "\n";
-	for (int y = 0; y < 20; y++)
-	{
-		for (int x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}
-		//savefile << " ";
-	}
+
+	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
+	
 	savefile << ProgramVerison; //Writes version number at the very bottom of save.
-	if (fileexists("main.cpp")) {savefile <<"\n"<<"DEBUG";} //Check if this source file is present and write DEBUG at end of save if it does.
+	if (fileexists("main.cpp")) {savefile <<"\n"<<"DEBUG";} //Check if source code is present and write DEBUG at end of save if it does.
 	savefile.close();
+	
 	//Save will now attempt to "load" the save it just made and compare it to the data available.
 	//Checks to see if save is correct or not.
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1608];
-	int x;
 	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
 	for (int i = 0; i < 8; i++)
@@ -84,13 +84,12 @@ bool loadfunction()
 {
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1608];
-	int x;
 	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
 	for (int i = 0; i < 8; i++)
 	{
-		if(i<7) {x = setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
-		else if (i == 7) {x = setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
+		if(i<7) {setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
+		else if (i == 7) {setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
 	}
 	int num = 7;
 	for (int y = 0; y < 20; y++)
@@ -126,6 +125,7 @@ bool loadfunction()
 	cout<<endl<<endl<<intCheckSum;
 	if(intCheckSum >= 1608) {return true;} //All of the saved values are correct if it equals 1608.
 	else {return false;} //Some of the values are wrong, say that the load failed.
+	return false;
 }
 
 bool LoadOldSave()
@@ -155,7 +155,7 @@ bool LoadOldSave()
 				DifferentVersion:
 				cout <<endl<<"Save version does not match the game version."<<endl;
 				cout<<"I recommend using the same save version as the game, as things could break."<<endl;
-				cout<<"Do you wish to continue with the loading?"<<endl<<"> ";
+				cout<<"Do you wish to continue with the loading?"<<endl<<"Y or N"<<endl<<"> ";
 				cin>>chrPlayerChoice;
 				chrPlayerChoice = CharConvertToUpper(chrPlayerChoice);
 				switch (chrPlayerChoice)
@@ -191,9 +191,7 @@ bool LoadOldSave()
 			break;
 	//End of switch
 	}
+	return false;
 }
-
-
-
 
 #endif
