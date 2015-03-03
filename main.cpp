@@ -77,6 +77,7 @@ Date	Revision	Changed By			Changes
 =============================================================================================================================================================
 3/2/15	2.3b		Patrick Rye			-Added more comments.
 										-Changed some wording to better explain stuff.
+										-Added a debug mode to game, detect if source code exists.
 =============================================================================================================================================================
 */
 
@@ -132,8 +133,13 @@ int main()
 	char charExitFind;
 	bool blOldSave = false;
 	char chrPlayerMade = 'F';
+	bool blDebugMode = false;
 
 	char chrSaveSuccess = 'N'; //N means that save has not been run.
+	
+	blDebugMode = fileexists("main.cpp"); //If source code exists, set game into debug mode.
+	
+	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true);} //Sets debug mode for both Rooms.h & Battle.h
 	
 	if (fileexists("save.bif")) //Check if there is a save present.
 	{
@@ -172,6 +178,7 @@ int main()
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
+			
 			charExitFind = d.PlayerMovement(charPlayerDirection);
 			if (charExitFind == 'E') {return 0;} //If we get an error exit program.
 			if (charExitFind == 'S') {chrSaveSuccess = savefunction();} //Save the game.
