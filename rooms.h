@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.5
+Current Revision: 2.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -24,7 +24,9 @@ Date	Revision	Changed By			Changes
 =============================================================================================================================================================
 3/2/15	1.5			Patrick Rye			-General code improvement.
 										-Fixed two player bug.
-=============================================================================================================================================================				
+=============================================================================================================================================================
+3/3/15	2.0			Patrick Rye			-Added Debug Mode.
+=============================================================================================================================================================	
 */
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
@@ -33,6 +35,9 @@ int intPlayerNewY;
  
 int intTempTile = 6; //Value to hold what the cell that the player is moving into is.
  
+bool blRoomsDebugMode = false;
+ 
+void SetRoomDebugMode(bool isDebug) {blRoomsDebugMode = isDebug;} 
  
 class Dungeon
 {
@@ -593,15 +598,23 @@ class Dungeon
 				intPlayerNewX -= 1;
 				break;
 			case '&' : //Debug code to go straight to stairs.
-				for (int y = 0; y < 20; y++){
-					for (int x = 0; x < 80; x++){
-						if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
-						{
-							intPlayerNewX = x;
-							intPlayerNewY = y;
-							goto PostMovingCode;
-						};
+				if (blRoomsDebugMode)
+				{
+					for (int y = 0; y < 20; y++){
+						for (int x = 0; x < 80; x++){
+							if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
+							{
+								intPlayerNewX = x;
+								intPlayerNewY = y;
+								goto PostMovingCode;
+							};
+						}
 					}
+				}
+				else 
+				{
+					cout<<endl<<"Invalid choice, please try again."<<endl;
+					return 'F';
 				}
 				break;
 			case 'X' : //Player wants to exit game.
