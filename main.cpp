@@ -115,11 +115,7 @@ int getmainvalue(int intvalue)
 	else {return 1;}
 }
 
-int setmainvalue(int intlocation, int intvalue)
-{
-	if(intlocation != 0) {return 1;}
-	else {intLevelStart = intvalue; return 0;}
-}
+void setmainvalue(int intlocation, int intvalue) {if (intlocation == 0) {intLevelStart = intvalue;}}
 #include "save.h" //A header to hold functions related to saving and loading.
 /*********************************************************************************************************/
 
