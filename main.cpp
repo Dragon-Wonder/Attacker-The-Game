@@ -109,7 +109,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "2.4b-dev2"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "2.4b"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
