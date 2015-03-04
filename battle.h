@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 2.1.1
+Current Revision: 2.2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -48,6 +48,12 @@ Date	Revision	Changed By			Changes
 3/4/15	2.1			Patrick Rye			-Added new monster, Golem.
 										-Changed monster base stats so that they total to 100.
 										-Floored monster health.
+=============================================================================================================================================================
+3/4/15	2.2			Patrick Rye			-Change battle menu a bit.
+											-Exit is now 'X' instead of 'E'.
+											-Changed help to 'P' instead of 'Q'
+										-Added function which can randomly return a string giving a description of the state of the monster based on current health.
+										-During battle the status of the monster is replaced with description.
 =============================================================================================================================================================	
 */
 
@@ -85,6 +91,36 @@ int PlayerStats[5] = {5,5,5,5,5};
 int intBattleLevel = 1;
 bool blBattleDebugMode = false;
 /*********************************************************************************************************/
+
+string StateOfBeing(int intCurrHealth, int intMaxHealth)
+{
+	/*Outputs a string that gives a description of how the monster is doing
+	  Example: at full health can return "Healthy"
+	  while below 10% of max health it might return "dying" or "badly wounded"*/
+	long flHealthPercent = (intCurrHealth * 100)/intMaxHealth;
+	string strState;
+	int intRandomState;
+	
+	const string FullHealthOutput[3] = {"steady","well","healthy"};
+	const string SeventyPHealthOutput[3] = {"wounded","damaged","hurt"};
+	const string FiftyPHealthOutput[3] = {"injured","bleeding","very hurt"};
+	const string TwentyFivePHealthOutput[3] = {"really hurt","in pain","badly damaged"};
+	const string TenPHealthOutput[3] = {"badly wounded","badly hurt","close to dying"};
+	const string FivePHealthOutput[3] = {"to be dying","heavily wounded","gravely wounded"};
+	
+	intRandomState = rand() % 3; //0-2
+	
+	if (flHealthPercent <= 5) {strState = FivePHealthOutput[intRandomState];}
+	else if (flHealthPercent <= 10) {strState = TenPHealthOutput[intRandomState];}
+	else if (flHealthPercent <= 25) {strState = TwentyFivePHealthOutput[intRandomState];}
+	else if (flHealthPercent <= 50) {strState = FiftyPHealthOutput[intRandomState];}
+	else if (flHealthPercent <= 70) {strState = SeventyPHealthOutput[intRandomState];}
+	else {strState = FullHealthOutput[intRandomState];}
+	
+	return strState;
+}
+
+
 
 bool DodgeCheck(int LUK, int DEX)
 {
@@ -342,11 +378,15 @@ char BattleScene()
     intMonsterDamage = CalculateDamage(intBattleLevel, MonsterStats[0], PlayerStats[2]) * douMonsterDamageMuli;
 	
     cout<<"You are now fighting a level "<<intBattleLevel<<" "<<MonsterName<<"!";
-    cout<<endl<<"It has "<<MonsterHealth[0]<<" out of "<<MonsterHealth[1]<<" HP left"<<endl;
+    /*cout<<endl<<"It has "<<MonsterHealth[0]<<" out of "<<MonsterHealth[1]<<" HP left"<<endl;*/
+	cout<<endl<<"The "<<MonsterName<<" appears to be "<<StateOfBeing(MonsterHealth[0],MonsterHealth[1])<<".";
     cout<<endl<<endl<<"You have "<<PlayerHealth[0]<<" out of "<<PlayerHealth[1]<<" HP left."<<endl;
     PlayerChoice:
-    cout<<endl<<"What you like to do?"<<endl<<"A = Attack, H = Heal, E = Exit, Q = Help"<<endl;
-	if (blBattleDebugMode) {cout<<"'K' to end the battle, and 'D' for debug values"<<endl;}
+	
+    cout<<endl<<"What you like to do?"<<endl;
+	cout<<"[A]ttack    [H]eal"<<endl<<"E[X]it    Hel[P]"<<endl;
+	if (blBattleDebugMode) {cout<<"[K]ill monster    [D]ebug values"<<endl;}
+	
     cout<<"> ";
     cin>>chrPlayerBattleChoice;
     chrPlayerBattleChoice = CharConvertToUpper(chrPlayerBattleChoice);
@@ -389,10 +429,11 @@ char BattleScene()
 
 			if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
 			else {PlayerHealth[0] += douPlayerHealAmount;}
+			
             cout<<endl<<"You heal yourself for "<<douPlayerHealAmount<<" HP.";
             goto HealthCheck;
 			break;
-        case 'Q' :
+        case 'P' :
 			cout << string(2, '\n');
             cout<<endl<<"Attacking means that you attack the monster and you both deal damage to each other assuming no one dodges";
             cout<<endl<<"Healing means that you heal for 10% of your maximum health, "<< douPlayerHealAmount<<" HP. While healing you also take less damage.";
@@ -404,6 +445,8 @@ char BattleScene()
 			if (blBattleDebugMode)
 			{
 				cout << string(2, '\n');
+				cout<<endl<<"Monster current health: "<<MonsterHealth[0];
+				cout<<endl<<"Monster max health: "<<MonsterHealth[1];
 				cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
 				cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
 				cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
@@ -426,7 +469,7 @@ char BattleScene()
 				goto PlayerChoice;
 			}
 			break;
-        case 'E' : //Exits game.
+        case 'X' : //Exits game.
 			cout << string(50, '\n');
 			cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
 			cin>>chrPlayerBattleChoice;
