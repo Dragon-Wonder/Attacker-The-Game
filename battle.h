@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 2.1
+Current Revision: 2.1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -313,7 +313,7 @@ char BattleScene()
 	for (int i=0; i<5; i++) {MonsterStats[i] = floor(((intBattleLevel-1)*4+MonsterBaseStats[i]));/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
 	
     //Recalculate healths and re-heal them
-    MonsterHealth[1] = Floor(CalculateHealth(intBattleLevel,MonsterStats[1])/3);
+    MonsterHealth[1] = floor(CalculateHealth(intBattleLevel,MonsterStats[1])/3);
     MonsterHealth[0] = MonsterHealth[1];
     //Recalculate amount player heals for.
     douPlayerHealAmount = floor(PlayerHealth[1]/10);
