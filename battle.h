@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 2.0
+Current Revision: 2.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -44,6 +44,10 @@ Date	Revision	Changed By			Changes
 										-Nerffered monster health, now 1/3 of a player's with the same stats.
 										-Added debug mode.
 										-Floored damage done when healing.
+=============================================================================================================================================================
+3/4/15	2.1			Patrick Rye			-Added new monster, Golem.
+										-Changed monster base stats so that they total to 100.
+										-Floored monster health.
 =============================================================================================================================================================	
 */
 
@@ -55,14 +59,18 @@ For Stat Arrays
 3 = DEX
 4 = LUK
 */
+
 /*********************************************************************************************************/
-int MonsterBaseStats[5] = {25,25,10,25,10}; //A base array for the monsters 
-const int ZombieBaseStats[5] = {25,25,10,25,10};
-const int SkeletonBaseStats[5] = {20,35,15,35,6};
-const int WitchBaseStats[5] = {15,15,20,40,30};
-const int ImpBaseStats[5] = {10,10,10,40,10};
+/*A quick note on the base stats, a stat cannot be lower than 6, as a modifier might reduce the value by 5 points.
+  The base stat point should also add up to be 100. */
+int MonsterBaseStats[5] = {25,25,10,25,15}; //A base array for the monsters 
+const int ZombieBaseStats[5] = {25,25,10,25,15};
+const int SkeletonBaseStats[5] = {35,18,6,35,6};
+const int WitchBaseStats[5] = {15,15,20,20,30};
+const int ImpBaseStats[5] = {15,15,15,40,15};
+const int GolemBaseStats[5] = {20,34,34,6,6};
 /*********************************************************************************************************/
-const string MonsterNames[4] = {"Zombie","Skeleton","Witch","Imp"};
+const string MonsterNames[5] = {"Zombie","Skeleton","Witch","Imp","Golem"};
 const string PosMonsterModifiers[7] = {"Strong","Large","Massive","Fast","Lucky","Powerful","Solid"};
 const string NegMonsterModifiers[5] = {"Weak","Small","Tiny","Slow","Unlucky"};
 /*********************************************************************************************************/
@@ -88,7 +96,6 @@ bool DodgeCheck(int LUK, int DEX)
 	else {return false;}
 }
 
-
 int CalculateHealth(int HealthLevel, int ConsStat)
 {
 	//A simple function for calculating health.
@@ -111,12 +118,13 @@ void RandomMonster()
 	//It then places the name and base stats of the monster appropriately. 
 	int intRandomMonsterNumber;
 	
-	intRandomMonsterNumber = rand() % 4;
+	intRandomMonsterNumber = rand() % 5;
 	MonsterName = MonsterNames[intRandomMonsterNumber];
 	if (MonsterName == "Witch") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=WitchBaseStats[i];}}
 	else if (MonsterName == "Imp") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=ImpBaseStats[i];}}
 	else if (MonsterName == "Skeleton") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=SkeletonBaseStats[i];}}
 	else if (MonsterName == "Zombie") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=ZombieBaseStats[i];}}
+	else if (MonsterName == "Golem") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=GolemBaseStats[i];}} 
 	else
 	{
 		//In the event that the name wasn't found default to zombie
@@ -136,9 +144,9 @@ void RandomMonsterModifier()
 	//Two more random numbers for further randomization of the effects.
 	int intRandomNumber;
 	int intRandomModifier;
-	intMRandomNumber = rand() % 20;
-	intPRandomNumber = rand() % 20;
-	intRandomNumber = rand() % 100 + 1;
+	intMRandomNumber = rand() % 20; //0 - 19
+	intPRandomNumber = rand() % 20; //0 - 19
+	intRandomNumber = rand() % 100 + 1; //1 - 100
 	
 	if (MonsterStats[4] + intMRandomNumber > PlayerStats[4]+intPRandomNumber)
 	{
@@ -146,7 +154,7 @@ void RandomMonsterModifier()
 		if (intRandomNumber < 60){MonsterModifier = "";}
 		else if (intRandomNumber < 90)
 		{
-			intRandomModifier = rand() %7;
+			intRandomModifier = rand() %7; //0 - 6
 			MonsterModifier = PosMonsterModifiers[intRandomModifier];
 			if (MonsterModifier == "Strong") {MonsterBaseStats[0]+=5;}
 			else if (MonsterModifier == "Large") {MonsterBaseStats[1]+=5;}
@@ -164,7 +172,7 @@ void RandomMonsterModifier()
 		}
 		else if (intRandomNumber <=100)
 		{
-			intRandomModifier = rand() %4;
+			intRandomModifier = rand() %5; //0 - 4
 			MonsterModifier = NegMonsterModifiers[intRandomModifier];
 			if(MonsterModifier == "Weak") {MonsterBaseStats[0]-=5;}
 			else if (MonsterModifier == "Small") {MonsterBaseStats[1]-=5;}
@@ -181,7 +189,7 @@ void RandomMonsterModifier()
 		if (intRandomNumber < 60) {MonsterModifier = "";}
 		else if (intRandomNumber < 90)
 		{
-			intRandomModifier = rand() %4;
+			intRandomModifier = rand() %5; //0 - 4
 			MonsterModifier = NegMonsterModifiers[intRandomModifier];
 			if(MonsterModifier == "Weak") {MonsterBaseStats[0]-=5;}
 			else if (MonsterModifier == "Small") {MonsterBaseStats[1]-=5;}
@@ -192,7 +200,7 @@ void RandomMonsterModifier()
 		}
 		else if (intRandomNumber <=100)
 		{
-			intRandomModifier = rand() %7;
+			intRandomModifier = rand() %7; //0 - 6
 			MonsterModifier = PosMonsterModifiers[intRandomModifier];
 			if (MonsterModifier == "Strong") {MonsterBaseStats[0]+=5;}
 			else if (MonsterModifier == "Large") {MonsterBaseStats[1]+=5;}
@@ -299,13 +307,13 @@ char BattleScene()
 	
     double douPlayerHealAmount;
 	char chrPlayerBattleChoice;
-	//Recalculate all of the stats needed
-    //Update monster stats to new level
+	
+	//Recalculate all of the stats needed.
+    //Update monster stats to new level.
 	for (int i=0; i<5; i++) {MonsterStats[i] = floor(((intBattleLevel-1)*4+MonsterBaseStats[i]));/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
+	
     //Recalculate healths and re-heal them
-    //PlayerHealth[1] = floor((23*((5.25+0.5625*intBattleLevel+0.00375*pow(intBattleLevel,2))+(1+0.066*intBattleLevel)*(PlayerStats[1]/16))));
-    //PlayerHealth[0] = PlayerHealth[1];
-    MonsterHealth[1] = CalculateHealth(intBattleLevel,MonsterStats[1])/3;
+    MonsterHealth[1] = Floor(CalculateHealth(intBattleLevel,MonsterStats[1])/3);
     MonsterHealth[0] = MonsterHealth[1];
     //Recalculate amount player heals for.
     douPlayerHealAmount = floor(PlayerHealth[1]/10);
