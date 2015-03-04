@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 2.0
+Current Revision: 2.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -26,6 +26,8 @@ Date	Revision	Changed By			Changes
 										-Fixed two player bug.
 =============================================================================================================================================================
 3/3/15	2.0			Patrick Rye			-Added debug mode.
+=============================================================================================================================================================
+3/4/15	2.1 		Patrick Rye			-Changed save to 'V' rather then 'P'.
 =============================================================================================================================================================	
 */
 int intPlayerX; //Player position in X and Y.
@@ -612,7 +614,7 @@ class Dungeon
 						break;
 				}
 				break;
-			case 'P' : //Player wants to save.
+			case 'V' : //Player wants to save.
 				return 'S'; //Player is asking to save, return S for save.
 				break;
 			case 'H' : //Player wants to heal.
