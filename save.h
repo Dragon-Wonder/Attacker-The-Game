@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.2
+Current Revision: 1.2.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -21,6 +21,8 @@ Date	Revision	Changed By			Changes
 										-Floors all values prior to loading.
 										-Debug mode can now be set by loading from debug save.
 =============================================================================================================================================================
+3/4/15	1.2.1		Patrick Rye			-Fixed bug where loading from a debug save and then saving again might not keep debug mode.
+=============================================================================================================================================================	
 */
 
 
@@ -76,7 +78,7 @@ char savefunction()
 	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
 	
 	savefile << ProgramVerison; //Writes version number at the very bottom of save.
-	if (fileexists("main.cpp")) {savefile <<"\n"<<"DEBUG";} //Check if source code is present and write DEBUG at end of save if it does.
+	if (fileexists("main.cpp") || blSaveDebugMode) {savefile <<"\n"<<"DEBUG";} //Check if source code is present and write DEBUG at end of save if it does.
 	savefile.close();
 	
 	//Save will now attempt to "load" the save it just made and compare it to the data available.
