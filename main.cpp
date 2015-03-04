@@ -81,6 +81,9 @@ Date	Revision	Changed By			Changes
 										-Grammar & spelling fixes.
 =============================================================================================================================================================
 3/4/15	2.4b		Patrick Rye			-Debug mode can be set by loading a debug save.
+										-Grammar & spelling fixes.
+										-Improved map menu.
+										-Changed save to 'V' rather than 'P'.
 =============================================================================================================================================================
 */
 
@@ -100,13 +103,13 @@ Date	Revision	Changed By			Changes
 #include "rooms.h" //Functions that deal with generating a dungeon.
 /*********************************************************************************************************/
 using namespace std;
-Dungeon d; //Define the dungeon class as 'd' so I can use function in there anywhere later in the code.
+Dungeon d; //Define the dungeon class as 'd' so I can use functions in there anywhere later in the code.
 /*********************************************************************************************************/
 //Make all the global variables that I need.
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
-bool blDebugMode = false; //If game is in debug mode or not.
-const string CurrentVerison = "2.4b"; //The current version of this program, stored in a save file later on.
+bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
+const string CurrentVerison = "2.4b-dev2"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -134,7 +137,8 @@ int main()
 
 	char chrSaveSuccess = 'N'; //N means that save has not been run.
 	
-	blDebugMode = fileexists("main.cpp"); //If source code exists, set game into debug mode.
+	//If game is not already in debug mode, checks if source code exists then put it in debug mode if it does.
+	if (!(blDebugMode)) {blDebugMode = fileexists("main.cpp"); } 
 	
 	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true);} //Sets debug mode for both Rooms.h & Battle.h
 	
@@ -170,8 +174,9 @@ int main()
 			cout << string(50, '\n');
 			d.showDungeon();
 			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
-			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter 'X' to exit, 'C' to get your current health and stats,";
-			cout<<endl<<"'H' to heal, or 'P' to save."<<endl;
+			cout<<"Please enter a direction you would like to go: "<<endl;
+			cout<<"[N]orth,  [E]ast,  [S]outh,  [W]est  "<<endl;
+			cout<<"E[X]it,   [C]heck your health, [H]eal,   Sa[V]e  "<<endl;
 			if (blDebugMode) {cout<<"'&' to go straight to down stairs, or 'M' to force monster."<<endl;}
 			cout<<"> ";
 			cin>>charPlayerDirection;
