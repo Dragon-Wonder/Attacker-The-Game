@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.1
+Current Revision: 1.2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -17,14 +17,39 @@ Date	Revision	Changed By			Changes
 										-Added more comments.
 										-Fixed bug where max player health wasn't saving properly.
 =============================================================================================================================================================
+3/4/15	1.2			Patrick Rye			-Added "sanity" checks load values and makes sure they make sense.
+										-Floors all values prior to loading.
+										-Debug mode can now be set by loading from debug save.
+=============================================================================================================================================================
 */
 
 
 string ProgramVerison;
+bool blSaveDebugMode = false;
+
 
 //This function is needed to pass the version of the program (a constant string in main.cpp)
 //and place it in the variable here called ProgramVerison for purposes of calling it in this header.
 void PassProgramVerison(const string Verison) {ProgramVerison = Verison;}
+
+int SanityChecker(int intValueLocation, int intValueCheck)
+{
+	/*Checks sanity of load.
+	If load is trying to call a room that doesn't exist, stats that should not be possible
+	or a level that is too high return a 1 for an error, otherwise return 0 for no error.*/
+	if (intValueLocation < 0) {return 1;}
+	else if (intValueLocation <= 4) {if (intValueCheck < 1 || intValueCheck > 256) {return 1;}} 
+	/* 256 is the highest value a stat can have assuming that they put 96 points when they created the character, 
+	and put all 20 points in that stat for the 8 level ups.*/
+	else if (intValueLocation <= 6) {return 0;} //Don't bother checking health values since they are just going to be recalculated later.
+	else if (intValueLocation == 7) {if (intValueCheck < 1 || intValueCheck > 10) {return 1;}} //Check the level.
+	else if (intValueLocation < 1608) {if (intValueCheck < 0 || intValueCheck > 9) {return 1;}} //Check the dungeon.
+	else {return 1;} //Invalid number on array.
+	
+	return 0; //Value is okay, return 0 for no error found.	
+}
+
+
 
 char savefunction()
 {
@@ -86,6 +111,16 @@ bool loadfunction()
 	int arrloadnumbers[1608];
 	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
+	
+	//Floor all the values in the array.
+	for (int i = 0; i < 1608; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
+	
+	int intNumOfErrors = 0; //Keeps track of how many errors it find, if greater than 1 cancel load.
+	
+	for (int i = 0; i < 1608; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
+	
+	if (intNumOfErrors > 0) {return false;} //If any errors found, cancel load with a false.
+	
 	for (int i = 0; i < 8; i++)
 	{
 		if(i<7) {setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
@@ -134,13 +169,18 @@ bool LoadOldSave()
 	char chrPlayerChoice;
 	
 	string SaveVerison;
+	string DebugModeLine;
+	
 	ifstream checkfileverison;
 	checkfileverison.open ("save.bif");
 	for(int i = 0; i < 1608; ++i)
 		getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, SaveVerison);
+	getline(checkfileverison, DebugModeLine);
 	checkfileverison.close();
 
+	
+	
 	SaveDetected:
 	cout<<"Previous save has been detected, would you like to load?"<<endl<<"Y or N"<<endl;
 	cout<<"> ";
@@ -161,6 +201,7 @@ bool LoadOldSave()
 				switch (chrPlayerChoice)
 				{
 					case 'Y' :
+						if (DebugModeLine == "DEBUG") {setdebugmode(true); blSaveDebugMode = true;}
 						blLoadSuccess = loadfunction();
 						break;
 					case 'N' :
@@ -172,7 +213,7 @@ bool LoadOldSave()
 						break;
 				}
 			}
-			else {blLoadSuccess = loadfunction();}
+			else {if (DebugModeLine == "DEBUG") {setdebugmode(true); blSaveDebugMode = true;} blLoadSuccess = loadfunction();}
 			
 			if (blLoadSuccess) {return true;}
 			else 
