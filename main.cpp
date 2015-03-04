@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.3b
+Current Revision: 2.4b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -80,6 +80,8 @@ Date	Revision	Changed By			Changes
 										-Added a debug mode to game, detects if source code exists.
 										-Grammar & spelling fixes.
 =============================================================================================================================================================
+3/4/15	2.4b		Patrick Rye			-Debug mode can be set by loading a debug save.
+=============================================================================================================================================================
 */
 
 /*********************************************************************************************************/
@@ -103,7 +105,8 @@ Dungeon d; //Define the dungeon class as 'd' so I can use function in there anyw
 //Make all the global variables that I need.
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
-const string CurrentVerison = "2.3b"; //The current version of this program, stored in a save file later on.
+bool blDebugMode = false; //If game is in debug mode or not.
+const string CurrentVerison = "2.4b"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -114,11 +117,10 @@ int getmainvalue(int intvalue)
 	else if (intvalue == 1) {return intLevelStart;}
 	else {return 1;}
 }
-
 void setmainvalue(int intlocation, int intvalue) {if (intlocation == 0) {intLevelStart = intvalue;}}
+void setdebugmode(bool blsetdebugmode) {blDebugMode = blsetdebugmode;}
 #include "save.h" //A header to hold functions related to saving and loading.
 /*********************************************************************************************************/
-
 
 int main()
 {
@@ -129,7 +131,6 @@ int main()
 	char charExitFind;
 	bool blOldSave = false;
 	char chrPlayerMade = 'F';
-	bool blDebugMode = false;
 
 	char chrSaveSuccess = 'N'; //N means that save has not been run.
 	
