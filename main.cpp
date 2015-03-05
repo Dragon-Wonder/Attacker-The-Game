@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.1e
+Current Revision: 1.2e
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -41,14 +41,18 @@ Date	Revision	Changed By			Changes
 3/3/15	1.0e		Patrick Rye			-Added arrow key movement controlling.
 =============================================================================================================================================================
 3/3/15	1.1e		Patrick Rye			-Merged new code with V2.3b-dev1
-=============================================================================================================================================================		
+=============================================================================================================================================================
+3/4/15	1.2e		Patrick Rye			-Changed all system("pause") to getch.
+										-Changed all cout to printf
+										-Replaced all cout << string(X, '\n'); with refresh();
+										-Made enum of letters on the keyboard
+=============================================================================================================================================================			
 */
 
 /*********************************************************************************************************/
 #include <iostream>
 #include <fstream>
 #include "curses.h"
-#include <stdio.h>
 #include <string>
 #include <math.h>
 #include <cstdlib>
@@ -67,7 +71,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use function in there anyw
 //Make all the global variables that I need.
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
-const string CurrentVerison = "1.1e"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "1.2e"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -86,6 +90,37 @@ int setmainvalue(int intlocation, int intvalue)
 }
 #include "save.h" //A header to hold functions related to saving and loading.
 /*********************************************************************************************************/
+enum 
+{
+	
+	KEYBOARD_KEY_A = 97,
+	KEYBOARD_KEY_B, 
+	KEYBOARD_KEY_C, 
+	KEYBOARD_KEY_D, 
+	KEYBOARD_KEY_E, 
+	KEYBOARD_KEY_F, 
+	KEYBOARD_KEY_G, 
+	KEYBOARD_KEY_H, 
+	KEYBOARD_KEY_I, 
+	KEYBOARD_KEY_J, 
+	KEYBOARD_KEY_K, 
+	KEYBOARD_KEY_L, 
+	KEYBOARD_KEY_M, 
+	KEYBOARD_KEY_N, 
+	KEYBOARD_KEY_O, 
+	KEYBOARD_KEY_P, 
+	KEYBOARD_KEY_Q, 
+	KEYBOARD_KEY_R, 
+	KEYBOARD_KEY_S, 
+	KEYBOARD_KEY_T, 
+	KEYBOARD_KEY_U, 
+	KEYBOARD_KEY_V, 
+	KEYBOARD_KEY_W, 
+	KEYBOARD_KEY_X, 
+	KEYBOARD_KEY_Y,
+	KEYBOARD_KEY_Z
+};
+/*********************************************************************************************************/
 
 
 void initialize()
@@ -94,6 +129,8 @@ void initialize()
 	initscr();
 	raw();
 	keypad(stdscr, TRUE);
+	//wborder(stdscr, '|', '|', '-', '-', '+', '+', '+', '+');
+	wrefresh(stdscr);
 	//noecho();
 }
 
@@ -109,7 +146,7 @@ int main()
 {
 	initialize();
 	PassProgramVerison(CurrentVerison); //Pass current program version into the save header.
-	cout << string(48, '\n');
+	refresh();
 	char charPlayerDirection;
 	char charBattleEnding;
 	char charExitFind;
@@ -128,7 +165,7 @@ int main()
 		if (blOldSave) {chrPlayerMade = 'T';}
 	//End of if save exists.	
 	}
-	else {cout<<string(50, '\n');}
+	else {refresh();}
 	
 	if(!blOldSave) //If it is not an old save show welcome message.
 	{
@@ -140,7 +177,7 @@ int main()
 		do {chrPlayerMade = PlayerInitialize();} while (chrPlayerMade != 'T'); //Repeat initialization until player is made.
 	}
 
-	//cout << string(50, '\n');
+	//refresh();
 	for(intMainLevel = intLevelStart; intMainLevel <= 10; intMainLevel++)
 	{
 		//Do level up if new level.
@@ -152,12 +189,12 @@ int main()
 		
 		do
 		{
-			cout << string(50, '\n');
+			refresh();
 			d.showDungeon();
 			cout<<"Level "<<intMainLevel<<" of 10."<<endl;
 			cout<<"Please enter a direction you would like to go ( N , E , S , W )."<<endl<<"Enter 'X' to exit, 'C' to get your current health and stats,";
 			cout<<endl<<"'H' to heal, or 'P' to save."<<endl;
-			if (blDebugMode) {cout<<"'&' to go straight to down stairs, or 'M' to force monster."<<endl;}
+			if (blDebugMode) {cout<<"'O' to go straight to down stairs, or 'M' to force monster."<<endl;}
 			int ch;
 			ch = wgetch( stdscr );
 			switch(ch)
@@ -174,22 +211,22 @@ int main()
 				case KEY_DOWN :
 					charPlayerDirection = 'S';
 					break;
-				case 104 /*H*/ :
+				case KEYBOARD_KEY_H :
 					charPlayerDirection = 'H';
 					break;
-				case 120 /*X*/:
+				case KEYBOARD_KEY_X :
 					charPlayerDirection = 'X';
 					break;
-				case 112 /*P*/:
+				case KEYBOARD_KEY_P:
 					charPlayerDirection = 'P';
 					break;
-				case 109 /*M*/:
+				case KEYBOARD_KEY_M:
 					charPlayerDirection = 'M';
 					break;
-				case 111 /*o*/:
+				case KEYBOARD_KEY_O:
 					charPlayerDirection = '&';
 					break;
-				case 'c' /*c*/:
+				case KEYBOARD_KEY_C:
 					charPlayerDirection = 'C';
 					break;
 			}
@@ -201,12 +238,12 @@ int main()
 			{
 				case 'T' :
 					cout<<endl<<"Save succeeded."<<endl;
-					system("pause");
+					getch();
 					chrSaveSuccess = 'N'; //Set this back to N, so that player is not spammed with this message.
 					break;
 				case 'F' :
 					cout<<endl<<"Save failed!"<<endl;
-					system("pause");
+					getch();
 					chrSaveSuccess = 'N'; //Set this back to N, so that player is not spammed with this message.
 					break;
 			}
@@ -214,16 +251,16 @@ int main()
 			{
 				if(rand() % 101 <= 10 || charExitFind == 'M') //Random chance to encounter monster, or debug code to force monster encounter.
 				{
-					cout << string(50, '\n');
+					refresh();
 					charBattleEnding = startbattle(intMainLevel); //Starts battle.
 					if(charBattleEnding == 'F') {return 0;} //Player lost battle.
 				}
 			}
 		}while (charExitFind != 'T');
 	}
-	cout << string(50, '\n');
+	refresh();
 	cout<<"You win!!";
-	system("pause");
+	getch();
 	finalize();
 	return 0;
 //End of main
