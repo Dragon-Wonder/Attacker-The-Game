@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 2.0
+Current Revision: 2.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -26,6 +26,9 @@ Date	Revision	Changed By			Changes
 										-Fixed two player bug.
 =============================================================================================================================================================
 3/3/15	2.0			Patrick Rye			-Added debug mode.
+=============================================================================================================================================================
+3/4/15 	2.1			Patrick Rye			-Changed all system("pause") to getch.
+										-Replaced all cout << string(X, '\n'); with refresh();
 =============================================================================================================================================================	
 */
 int intPlayerX; //Player position in X and Y.
@@ -562,9 +565,9 @@ class Dungeon
 	public:
 	void playerfind()
 	{
-		for (int y2 = 0; y2 < 20; y2++)
+		for (int y2 = 0; y2 < 80; y2++)
 		{
-			for (int x2 = 0; x2 < 80; x2++)
+			for (int x2 = 0; x2 < 20; x2++)
 			{
 				if (getCell(x2,y2)==9) //Finds where player is.
 				{
@@ -598,7 +601,7 @@ class Dungeon
 				intPlayerNewX -= 1;
 				break;
 			case 'X' : //Player wants to exit game.
-				cout << string(50, '\n');
+				refresh();
 				cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
 				cin>>chrPlayerDirection;
 				chrPlayerDirection = CharConvertToUpper(chrPlayerDirection);
@@ -626,6 +629,7 @@ class Dungeon
 				else {intPlayerCurrHealth += intPlayerHealAmount;}
 				setbattlevalue(5,intPlayerCurrHealth); //Set player current health to the new amount.
 				cout<<endl<<"Your health is now: "<<intPlayerCurrHealth<<" out of "<<intPlayerMaxHealth<<".";
+				getch();
 				return 'F'; //Return F that player did not find exit.
 				break;
 			case 'C' : //Player is checking themselves.
@@ -636,7 +640,7 @@ class Dungeon
 				cout<<"STR: "<<intPlayerStatsTemp[0]<<endl<<"CONS: "<<intPlayerStatsTemp[1]<<endl;
 				cout<<"DEF: "<<intPlayerStatsTemp[2]<<endl<<"DEX: "<<intPlayerStatsTemp[3]<<endl;
 				cout<<"LUK: "<<intPlayerStatsTemp[4]<<endl;
-				system("pause");
+				getch();
 				return 'F';
 				break;
 			case '&' : //Debug code to go straight to stairs.
@@ -705,9 +709,9 @@ public:
         xsize = 0;
         ysize = 0;
  
-        objects = 0;
+        objects = 10;
  
-        chanceRoom = 75;
+        chanceRoom = 80;
         chanceCorridor = 25;
  
         msgXSize = "X size of dungeon: \t";
