@@ -3,14 +3,14 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 2.0
+Current Revision: 2.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
 2/23/15	1.0			Patrick Rye			-Original
 =============================================================================================================================================================
-2/24/15	1.1			Patrick Rye			-Changed system("cls") to cout << string(50, '\n');
+2/24/15	1.1			Patrick Rye			-Changed system("cls") to refresh();
 =============================================================================================================================================================
 2/24/15	1.2			Patrick Rye			-Moved level up to happen when you change levels.
 										-Fixed bug that would cause endless loop is you entered non integer numbers for starting stats.
@@ -44,7 +44,10 @@ Date	Revision	Changed By			Changes
 										-Nerffered monster health, now 1/3 of a player's with the same stats.
 										-Added debug mode.
 										-Floored damage done when healing.
-=============================================================================================================================================================	
+=============================================================================================================================================================
+3/4/15	2.1			Patrick Rye			-Changed all system("pause") to getch.
+										-Replaced all cout << string(X, '\n'); with refresh();
+=============================================================================================================================================================
 */
 
 /*
@@ -221,7 +224,7 @@ void LevelUpFunction()
 	int intBattleLevelUpChoice;
 	int intBattleLevelUpAmount;
 	string strLevelUpChoice;
-	cout << string(50, '\n');
+	refresh();
 	cout<<endl<<"LEVEL UP!"<<endl<<"You can put 20 points in any way you wish."<<endl;
 	
 	do
@@ -246,7 +249,7 @@ void LevelUpFunction()
 		else if (strLevelUpChoice == "NONE") {intBattleLevelUpChoice = 9999;}
 		else 
 		{
-			cout << string(50, '\n');
+			refresh();
 			cout<<endl<<"Invalid choice, try again."<<endl;
 			goto LevelUpChoice;
 		}
@@ -254,7 +257,7 @@ void LevelUpFunction()
 		if (strLevelUpChoice != "NONE")
 		{
 			LevelUpAmount:
-			cout << string(50, '\n');
+			refresh();
 			cout<<endl<<"You have chosen to upgrade "<<strLevelUpChoice<<" please enter the points you wish to add."<<endl;
 			cout<<"You have "<<intPlayerStatPoints<<" left to spend."<<endl;
 			cout<<"If you chose the wrong stat just enter 0 to not give it any points."<<endl<<endl;
@@ -268,7 +271,7 @@ void LevelUpFunction()
 			intBattleLevelUpAmount = floor(intBattleLevelUpAmount);
 			if (intBattleLevelUpAmount > intPlayerStatPoints || intBattleLevelUpAmount < 0) 
 			{
-				cout << string(50, '\n');
+				refresh();
 				cout<<endl<<"You have entered an invalid number, please try again.";
 				goto LevelUpAmount;
 			}
@@ -309,9 +312,11 @@ char BattleScene()
     MonsterHealth[0] = MonsterHealth[1];
     //Recalculate amount player heals for.
     douPlayerHealAmount = floor(PlayerHealth[1]/10);
+	refresh();
     BattleGoto:
-	cout << string(10, '\n');
-
+	//refresh();
+	
+	cout << string(5, '\n');
     double douPlayerCritChance = ((PlayerStats[4])/20 + rand() %3) * 4; 
     double douMonsterCritChance =((MonsterStats[4])/20 + rand() %3) * 4;
 	
@@ -346,7 +351,7 @@ char BattleScene()
     switch(chrPlayerBattleChoice)
     {
         case 'A' :
-            cout << string(10, '\n');
+            refresh();
 			
             if (intPlayerDamage != 0) //Check to see if monster manages to dodge the player.
             {
@@ -370,7 +375,7 @@ char BattleScene()
 			break;
         case 'H' :
             //Code for player healing.
-			cout << string(10, '\n');
+			refresh();
             if(intMonsterDamage !=0)
             {
                 if(douMonsterDamageMuli > 1){cout<<"The "<<MonsterName<<" got a crit on you! ";}
@@ -385,7 +390,7 @@ char BattleScene()
             goto HealthCheck;
 			break;
         case 'Q' :
-			cout << string(2, '\n');
+			refresh();
             cout<<endl<<"Attacking means that you attack the monster and you both deal damage to each other assuming no one dodges";
             cout<<endl<<"Healing means that you heal for 10% of your maximum health, "<< douPlayerHealAmount<<" HP. While healing you also take less damage.";
 			cout<<endl<<"Exit will leave the game and lose all progress.";
@@ -395,7 +400,7 @@ char BattleScene()
         case 'D' : //Debug code reveal some values.
 			if (blBattleDebugMode)
 			{
-				cout << string(2, '\n');
+				refresh();
 				cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
 				cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
 				cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
@@ -409,7 +414,7 @@ char BattleScene()
         case 'K' : //Debug code "kills" the current monster.
 			if (blBattleDebugMode)
 			{
-				cout << string(50, '\n');
+				refresh();
 				return 'T';
 			}
 			else 
@@ -419,7 +424,7 @@ char BattleScene()
 			}
 			break;
         case 'E' : //Exits game.
-			cout << string(50, '\n');
+			refresh();
 			cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
 			cin>>chrPlayerBattleChoice;
 			chrPlayerBattleChoice = CharConvertToUpper(chrPlayerBattleChoice);
@@ -545,7 +550,7 @@ char PlayerInitialize()
 	intLuk = intSkillPointsLeft;
 
 	char strAnswer;
-	cout << string(50, '\n');
+	refresh();
 	AgreeWithStats:
 	cout<<"Your current stats are as follows:"<<endl;
 	cout<<"Strength: "<<intStr<<endl;
@@ -579,7 +584,7 @@ char PlayerInitialize()
 	PlayerStats[2]=intDef;
 	PlayerStats[3]=intDex;
 	PlayerStats[4]=intLuk;
-	cout << string(50, '\n');
+	refresh();
 	
 	PlayerHealth[1] = CalculateHealth(1,PlayerStats[1]);
     PlayerHealth[0] = PlayerHealth[1];
@@ -600,20 +605,20 @@ char startbattle(int intsLevel)
 	switch(charBattleSceneEnding)
 	{
 		case 'T' :
-			cout << string(50, '\n');
+			refresh();
 			cout<<"You beat the "<<MonsterName<<"."<<endl;
             return 'T';
 			break;
 		case 'F' : 
-			cout << string(50, '\n');
+			refresh();
 			cout<<"You lost..."<<endl<<" You completed "<<intBattleLevel - 1 <<" dungeons.";
             cout<<endl<<"Press enter to close this game and try again!";
-            system("pause");
+            getch();
             return 'F';
 			break;
 		default :
 			cout<<endl<<"An error has occurred in the code. Sorry :( The game will exit.";
-			system("pause");
+			getch();
 			return 'F';
 			break;
 	}
