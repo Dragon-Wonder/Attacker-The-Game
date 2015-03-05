@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.1
+Current Revision: 1.2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date	Revision	Changed By			Changes
 ------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
@@ -16,6 +16,9 @@ Date	Revision	Changed By			Changes
 3/3/15	1.1			Patrick Rye			-General code improvement.
 										-Added more comments.
 										-Fixed bug where max player health wasn't saving properly.
+=============================================================================================================================================================
+3/4/15	1.2			Patrick Rye			-Changed all system("pause") to getch.
+										-Replaced all cout << string(X, '\n'); with refresh();
 =============================================================================================================================================================
 */
 
@@ -154,6 +157,7 @@ bool LoadOldSave()
 			if ((SaveVerison != ProgramVerison))
 			{
 				DifferentVersion:
+				refresh();
 				cout <<endl<<"Save version does not match the game version."<<endl;
 				cout<<"I recommend using the same save version as the game, as things could break."<<endl;
 				cout<<"Do you wish to continue with the loading?"<<endl<<"Y or N"<<endl<<"> ";
@@ -179,7 +183,7 @@ bool LoadOldSave()
 			else 
 			{
 				cout<<endl<<"Unable to load save, possibly corrupted."<<endl;
-				system("pause");
+				getch();
 				return false;
 			}
 			break;
