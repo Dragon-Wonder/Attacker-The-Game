@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.3
+Current Revision: 1.3.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -26,6 +26,9 @@ Date		Revision	Changed By		Changes
 2015/03/05	1.3			Patrick Rye 	-Made some stuff hidden unless in debug mode.
 										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
 										-Shows game version and save version if they do not match.
+=============================================================================================================================================================
+2015/03/06	1.3.1		Patrick Rye		-Changed system("pause") to getchar();
+										-Added more pauses.
 =============================================================================================================================================================		
 */
 
@@ -223,7 +226,7 @@ bool LoadOldSave()
 			else 
 			{
 				cout<<endl<<"Unable to load save, possibly corrupted."<<endl;
-				system("pause");
+				getchar();
 				return false;
 			}
 			break;
