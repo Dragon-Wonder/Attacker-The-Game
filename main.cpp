@@ -29,37 +29,37 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.4b
+Current Revision: 2.5ß-dev3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date	Revision	Changed By			Changes
-------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
+Date		Revision	Changed By		Changes
+------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================			
 -------------------------------------------------------------------------------------------------------------------------------------------------------------									
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM ALPHA TO BETA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-2/24/15	1.0b		Patrick Rye			-Moved from V5.0-alpha to V1.0-beta
+2015/02/24	1.0b		Patrick Rye		-Moved from V5.0-alpha to V1.0-beta
 										-Fixed level up so it happens when you get to a new level.
 										-Allowed exit on map.
 										-Fixed opening text to reflect recent changes in the game.
 										-Grammar and spelling fixes (yay, made it several revisions without having to do this. :) ).
 =============================================================================================================================================================
-2/24/15	1.1b		Patrick Rye			-Attempted to allow movement on map through arrow keys.
-											-Could not get this to work and broke everything. Rolling back to previous version.
-											-Keeping this attempt in the record and will try to implement it again later.
+2015/02/24	1.1b		Patrick Rye		-Attempted to allow movement on map through arrow keys.
+										-Could not get this to work and broke everything. Rolling back to previous version.
+										-Keeping this attempt in the record and will try to implement it again later.
 =============================================================================================================================================================
-2/25/15	1.2b		Patrick Rye			-Grammar and spelling fixes. ((╯°□°)╯︵ ┻━┻)
+2015/02/25	1.2b		Patrick Rye		-Grammar and spelling fixes. ((╯°□°)╯︵ ┻━┻)
 										-Cleaned up code some more.
 										-Changed some if statements to case switches.
 										-Added breaks to case switches.
 =============================================================================================================================================================
-2/26/15	1.3b		Patrick Rye			-Moved player movement to the room.h
+2015/02/26	1.3b		Patrick Rye		-Moved player movement to the room.h
 =============================================================================================================================================================
-2/27/15	2.0b		Patrick Rye			-Added a save function, for testing purposes.
+2015/02/27	2.0b		Patrick Rye		-Added a save function, for testing purposes.
 										-Added load function.
 										-Added function to see if file exists.
 =============================================================================================================================================================
-2/27/15	2.1b		Patrick Rye			-Moved save checker to basic.h
+2015/02/27	2.1b		Patrick Rye		-Moved save checker to basic.h
 										-Renamed casechecker.h to basic.h
 										-Added more comments explaining parts of the code.
 										-Changed some names of functions to better reflect what they do.
@@ -67,24 +67,27 @@ Date	Revision	Changed By			Changes
 										-Moved healing to be able to happen between battles.
 										-Added fail check for load function.
 =============================================================================================================================================================
-3/2/15	2.2b		Patrick Rye			-Improved code a bit.
+2015/03/02	2.2b		Patrick Rye		-Improved code a bit.
 										-Added version number tracker.
 										-Prompt for loading save.
 										-Prompt for incorrect save version.
 										-Moved saving and loading functions to its own header.
 =============================================================================================================================================================
-3/2/15	2.2.1b		Patrick Rye			-Quick fix for version not being applied properly.
+2015/03/02	2.2.1b		Patrick Rye		-Quick fix for version not being applied properly.
 =============================================================================================================================================================
-3/2/15	2.3b		Patrick Rye			-Added more comments.
+2015/03/03	2.3b		Patrick Rye		-Added more comments.
 										-Changed some wording to better explain stuff.
 										-Added a debug mode to game, detects if source code exists.
 										-Grammar & spelling fixes.
 =============================================================================================================================================================
-3/4/15	2.4b		Patrick Rye			-Debug mode can be set by loading a debug save.
+2015/03/04	2.4b		Patrick Rye		-Debug mode can be set by loading a debug save.
 										-Grammar & spelling fixes.
 										-Improved map menu.
 										-Changed save to 'V' rather than 'P'.
 =============================================================================================================================================================
+2015/03/06	2.5ß		Patrick Rye		-Changed some debug commands.
+										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
+=============================================================================================================================================================	
 */
 
 /*********************************************************************************************************/
@@ -98,7 +101,7 @@ Date	Revision	Changed By			Changes
 #include <cstdio>
 #include <ctime>
 /*********************************************************************************************************/
-#include "basic.h" //Functions that are simple and won't need to be changes very often.
+#include "basic.h" //Functions that are simple and won't need to be changed very often.
 #include "battle.h" //Functions that deal with battling, levelling up and making a player.
 #include "rooms.h" //Functions that deal with generating a dungeon.
 /*********************************************************************************************************/
@@ -109,7 +112,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "2.4b"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "2.5ß-dev3"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -130,7 +133,7 @@ int main()
 	PassProgramVerison(CurrentVerison); //Pass current program version into the save header.
 	cout << string(48, '\n');
 	char charPlayerDirection;
-	char charBattleEnding;
+	bool blBattleEnding = false;
 	char charExitFind;
 	bool blOldSave = false;
 	char chrPlayerMade = 'F';
@@ -140,7 +143,7 @@ int main()
 	//If game is not already in debug mode, checks if source code exists then put it in debug mode if it does.
 	if (!(blDebugMode)) {blDebugMode = fileexists("main.cpp"); } 
 	
-	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true);} //Sets debug mode for both Rooms.h & Battle.h
+	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true);} //Sets debug mode for both rooms.h & battle.h
 	
 	if (fileexists("save.bif")) //Check if there is a save present.
 	{
@@ -177,7 +180,7 @@ int main()
 			cout<<"Please enter a direction you would like to go: "<<endl;
 			cout<<"[N]orth,  [E]ast,  [S]outh,  [W]est  "<<endl;
 			cout<<"E[X]it,   [C]heck your health, [H]eal,   Sa[V]e  "<<endl;
-			if (blDebugMode) {cout<<"'&' to go straight to down stairs, or 'M' to force monster."<<endl;}
+			if (blDebugMode) {cout<<"[L]evel up, or [M]onster."<<endl;}
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
@@ -203,8 +206,8 @@ int main()
 				if(rand() % 101 <= 10 || charExitFind == 'M') //Random chance to encounter monster, or debug code to force monster encounter.
 				{
 					cout << string(50, '\n');
-					charBattleEnding = startbattle(intMainLevel); //Starts battle.
-					if(charBattleEnding == 'F') {return 0;} //Player lost battle.
+					blBattleEnding = startbattle(intMainLevel); //Starts battle.
+					if(blBattleEnding) {return 0;} //Player lost battle.
 				}
 			}
 		}while (charExitFind != 'T'); //Repeat until player finds exit.
