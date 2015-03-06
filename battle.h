@@ -3,58 +3,65 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 2.2
+Current Revision: 2.3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date	Revision	Changed By			Changes
-------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
+Date		Revision	Changed By		Changes
+------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-2/23/15	1.0			Patrick Rye			-Original
+2015/02/23	1.0			Patrick Rye		-Original
 =============================================================================================================================================================
-2/24/15	1.1			Patrick Rye			-Changed system("cls") to cout << string(50, '\n');
+2015/02/24	1.1			Patrick Rye		-Changed system("cls") to cout << string(50, '\n');
 =============================================================================================================================================================
-2/24/15	1.2			Patrick Rye			-Moved level up to happen when you change levels.
+2015/02/24	1.2			Patrick Rye		-Moved level up to happen when you change levels.
 										-Fixed bug that would cause endless loop is you entered non integer numbers for starting stats.
 											-Bug has been there since the start I just didn't know how to fix it till now.
 										-Fixed bug where player could enter values below 1 for stats.
 										-Fixed bug where player could enter decimal places for stats.
 =============================================================================================================================================================
-2/25/15	1.3			Patrick Rye			-Improved look of the code by adding separators.
+2015/02/25	1.3			Patrick Rye		-Improved look of the code by adding separators.
 										-Reduced chance for dodges and crits (cut by half).
 										-Grammar and spelling fixes. (Whelp back to the old grim I guess).
 										-Added breaks to case switches (kinda surprised it worked before).
 =============================================================================================================================================================
-2/26/15	1.4			Patrick Rye			-General code improvement.
+2015/02/26	1.4			Patrick Rye		-General code improvement.
 										-Fixed losing message to better represent changes to objectives.
 										-Grammar and spelling fixes.
 =============================================================================================================================================================
-2/27/15	1.5			Patrick Rye			-Added function that saves needed values.
+2015/02/27	1.5			Patrick Rye		-Added function that saves needed values.
 										-Changed health arrays from doubles to integers.
 =============================================================================================================================================================
-3/2/15	1.6			Patrick Rye			-Changed name of some functions to better reflect what they do.
+2015/03/02	1.6			Patrick Rye		-Changed name of some functions to better reflect what they do.
 										-Changed health to carry over between battles.
 										-Moved health calculating to its own function.
 										-Moved damage calculating to its own function.
 =============================================================================================================================================================
-3/2/15	1.7			Patrick Rye			-Improved code.
+2015/03/02	1.7			Patrick Rye		-Improved code.
 										-Grammar and spelling fixes.
 										-Moved dodge check to its own function.
 =============================================================================================================================================================
-3/3/15	2.0			Patrick Rye			-Grammar and spelling fixes.
+2015/03/03	2.0			Patrick Rye		-Grammar and spelling fixes.
 										-Initialized certain variables with values.
 										-Nerffered monster health, now 1/3 of a player's with the same stats.
 										-Added debug mode.
 										-Floored damage done when healing.
 =============================================================================================================================================================
-3/4/15	2.1			Patrick Rye			-Added new monster, Golem.
+2015/03/04	2.1			Patrick Rye		-Added new monster, Golem.
 										-Changed monster base stats so that they total to 100.
 										-Floored monster health.
 =============================================================================================================================================================
-3/4/15	2.2			Patrick Rye			-Change battle menu a bit.
-											-Exit is now 'X' instead of 'E'.
-											-Changed help to 'P' instead of 'Q'
+2015/03/04	2.2			Patrick Rye		-Change battle menu a bit.
+										-Exit is now 'X' instead of 'E'.
+										-Changed help to 'P' instead of 'Q'
 										-Added function which can randomly return a string giving a description of the state of the monster based on current health.
 										-During battle the status of the monster is replaced with description.
-=============================================================================================================================================================	
+=============================================================================================================================================================
+2015/03/06	2.3			Patrick Rye		-General code improvement.
+										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
+										-Changed battles so that the monster or player will apply damage first, depending on dexterity.
+										-Added option to run away from battle.
+										-Moved player attacking and monster attacking to their own functions.
+										-Changed battle start to return a boolean.
+=============================================================================================================================================================		
 */
 
 /*
@@ -92,6 +99,41 @@ int intBattleLevel = 1;
 bool blBattleDebugMode = false;
 /*********************************************************************************************************/
 
+bool MonsterAttack(int MonsterDamage, double MonsterMuli, bool ishealing)
+{
+	//Holds stuff for when monster attacks.
+	//Only returns true if player died.
+	//Is in its own function so I can call it a couple of different places.
+	cout<<endl;
+	if (ishealing) {floor(MonsterDamage /= 2);} //if player is healing reduce damage.
+	if (MonsterDamage != 0)
+	{
+		if (MonsterMuli > 1){cout<<"The "<<MonsterName<<" got a crit on you! ";}
+		cout<<"The "<<MonsterName<<" hit you for "<<MonsterDamage<<".";
+	}
+	else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
+	PlayerHealth[0] -= MonsterDamage;
+	if (PlayerHealth[0] <= 0) {return true;}
+	return false;
+}
+
+bool PlayerAttack(int PlayerDamage, double PlayerMuli)
+{
+	//Holds stuff for when player attacks.
+	//Only returns true if monster died.
+	//Is in its own function so I can call it a couple of different places.
+	cout<<endl;
+	if (PlayerDamage != 0)
+	{
+		if (PlayerMuli > 1){cout<<"You got a crit on the "<<MonsterName<<"! ";}
+		cout<<"You hit the "<<MonsterName<<" for "<<PlayerDamage<<".";
+	}
+	else {cout<<"The "<<MonsterName<<" dodged your attack.";}
+	MonsterHealth[0] -= PlayerDamage;
+	if (MonsterHealth[0]<=0) {return true;}
+	return false;
+}
+
 string StateOfBeing(int intCurrHealth, int intMaxHealth)
 {
 	/*Outputs a string that gives a description of how the monster is doing
@@ -119,8 +161,6 @@ string StateOfBeing(int intCurrHealth, int intMaxHealth)
 	
 	return strState;
 }
-
-
 
 bool DodgeCheck(int LUK, int DEX)
 {
@@ -365,6 +405,9 @@ char BattleScene()
     int intPlayerDamage = 0;
     int intMonsterDamage = 0;
 	
+	bool blPlayerDead = false;
+	bool blMonsterDead = false;
+	
     //Check both monster and player to see if they get a crit this round.
 	//Rand() % 101 generates a random number between 0 and 100.
     if (rand() % 101 <= douPlayerCritChance) {douPlayerDamageMuli = 1.375;}
@@ -385,6 +428,7 @@ char BattleScene()
 	
     cout<<endl<<"What you like to do?"<<endl;
 	cout<<"[A]ttack    [H]eal"<<endl<<"E[X]it    Hel[P]"<<endl;
+	cout<<"[R]un away"<<endl;
 	if (blBattleDebugMode) {cout<<"[K]ill monster    [D]ebug values"<<endl;}
 	
     cout<<"> ";
@@ -395,81 +439,58 @@ char BattleScene()
     {
         case 'A' :
             cout << string(10, '\n');
-			
-            if (intPlayerDamage != 0) //Check to see if monster manages to dodge the player.
-            {
-                if(douPlayerDamageMuli > 1) {cout<<"You got a crit on the "<<MonsterName<<"! ";}
-                cout<<"You hit at the "<<MonsterName<<" for "<<intPlayerDamage<<".";
-                MonsterHealth[0] -= intPlayerDamage;
-            }
-            else { cout<<"The "<<MonsterName<<" dodges your attack!"; }
-            
-            cout<<endl<<endl;
-            if(intMonsterDamage !=0)
-            {
-                if(douMonsterDamageMuli > 1){cout<<"The "<<MonsterName<<" got a crit on you! ";}
-                cout<<"The "<<MonsterName<<" hits you for "<<intMonsterDamage<<".";
-                PlayerHealth[0] -= intMonsterDamage;
-            }
-            else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
-
+			if ((MonsterStats[3]+MonsterStats[4]/5)+rand() % 5 > (PlayerStats[3]+PlayerStats[4]/5)+rand() % 5) //See who attacks first.
+			{
+				//Monster attacks first.
+				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
+				if (blPlayerDead) {return 'F';}
+				blMonsterDead = PlayerAttack(intPlayerDamage,douPlayerDamageMuli);
+				if (blMonsterDead) {return 'T';}
+			}
+			else 
+			{
+				//Player attacks first.
+				blMonsterDead = PlayerAttack(intPlayerDamage,douPlayerDamageMuli);
+				if (blMonsterDead) {return 'T';}
+				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
+				if (blPlayerDead) {return 'F';}				
+			}
             cout<<endl;
-            goto HealthCheck;
+            goto BattleGoto;
 			break;
         case 'H' :
             //Code for player healing.
 			cout << string(10, '\n');
-            if(intMonsterDamage !=0)
-            {
-                if(douMonsterDamageMuli > 1){cout<<"The "<<MonsterName<<" got a crit on you! ";}
-                cout<<"The "<<MonsterName<<" hit you for "<<intMonsterDamage/2<<".";
-                PlayerHealth[0] -= floor(intMonsterDamage/2);
-            }
-            else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
-
-			if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
-			else {PlayerHealth[0] += douPlayerHealAmount;}
-			
-            cout<<endl<<"You heal yourself for "<<douPlayerHealAmount<<" HP.";
-            goto HealthCheck;
+			if ((MonsterStats[3]+MonsterStats[4]/5)+rand() % 5 > (PlayerStats[3]+PlayerStats[4]/5)+rand() % 5) //See who attacks first.
+			{
+				//Monster attacks first
+				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,true);
+				if (blPlayerDead) {return 'F';}
+				
+				if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
+				else {PlayerHealth[0] += douPlayerHealAmount;}
+			}
+			else
+			{
+				//Player heals first
+				if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
+				else {PlayerHealth[0] += douPlayerHealAmount;}
+				
+				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,true);
+				if (blPlayerDead) {return 'F';}				
+			}
+			goto BattleGoto;
 			break;
         case 'P' :
 			cout << string(2, '\n');
             cout<<endl<<"Attacking means that you attack the monster and you both deal damage to each other assuming no one dodges";
             cout<<endl<<"Healing means that you heal for 10% of your maximum health, "<< douPlayerHealAmount<<" HP. While healing you also take less damage.";
+			cout<<endl<<"Running away, has a small chance based on DEX and LUK to leave a battle and return to dungeon map.";
 			cout<<endl<<"Exit will leave the game and lose all progress.";
             cout<<endl<<"Help brings up this menu."<<endl;
             goto PlayerChoice;
 			break;
-        case 'D' : //Debug code reveal some values.
-			if (blBattleDebugMode)
-			{
-				cout << string(2, '\n');
-				cout<<endl<<"Monster current health: "<<MonsterHealth[0];
-				cout<<endl<<"Monster max health: "<<MonsterHealth[1];
-				cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
-				cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
-				cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
-				cout<<endl<<"Monster muli: "<<douMonsterDamageMuli;
-				cout<<endl<<"Player damage: "<<intPlayerDamage;
-				cout<<endl<<"Monster damage: "<<intMonsterDamage;
-			}
-			else {cout<<endl<<"Invalid choice, please try again.";}
-			goto PlayerChoice;
-			break;
-        case 'K' : //Debug code "kills" the current monster.
-			if (blBattleDebugMode)
-			{
-				cout << string(50, '\n');
-				return 'T';
-			}
-			else 
-			{
-				cout<<endl<<"Invalid choice, please try again.";
-				goto PlayerChoice;
-			}
-			break;
-        case 'X' : //Exits game.
+		case 'X' : //Exits game.
 			cout << string(50, '\n');
 			cout<<endl<<"Are you sure you want to exit the game?"<<endl<<"All progress will be lost."<<endl<<"Y or N"<<endl<<"> ";
 			cin>>chrPlayerBattleChoice;
@@ -484,18 +505,42 @@ char BattleScene()
 					break;
 			}
 			break;
+		case 'R' : //chance to run away.
+			if (rand() % 101 < ((PlayerStats[3] + PlayerStats[4]/6) + rand() % 10)/10 ) {return 'T';}
+			else 
+			{
+				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
+				if (blPlayerDead) {return 'F';}
+			}
+			goto BattleGoto;
+			break;
+		/*Debug commands & invalid choice here*/
+        case 'D' : //Debug code reveal some values.
+			if (blBattleDebugMode)
+			{
+				cout << string(2, '\n');
+				cout<<endl<<"Monster current health: "<<MonsterHealth[0];
+				cout<<endl<<"Monster max health: "<<MonsterHealth[1];
+				cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
+				cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
+				cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
+				cout<<endl<<"Monster muli: "<<douMonsterDamageMuli;
+				cout<<endl<<"Player damage: "<<intPlayerDamage;
+				cout<<endl<<"Monster damage: "<<intMonsterDamage;
+			}
+        case 'K' : //Debug code "kills" the current monster.
+			if (blBattleDebugMode)
+			{
+				cout << string(50, '\n');
+				return 'T';
+			}
         default :
             cout<<endl<<"Invalid choice, please try again.";
             goto PlayerChoice;
 			break;
 	
     }
-	//Check if player is dead.
-	HealthCheck:
-	if (PlayerHealth[0] <= 0) {return 'F';}	
-	if (MonsterHealth[0] <= 0) {return 'T';}
-	//Neither player or monster is dead; go back to choice again.
-	goto BattleGoto;
+	goto BattleGoto; //Should not need this but just in case.
 //End of battle scene function.
 }
 
@@ -639,7 +684,7 @@ char PlayerInitialize()
 //End of player initialize.
 }
 
-char startbattle(int intsLevel)
+bool startbattle(int intsLevel)
 {
 	intBattleLevel = intsLevel;
 	char charBattleSceneEnding;
@@ -653,19 +698,19 @@ char startbattle(int intsLevel)
 		case 'T' :
 			cout << string(50, '\n');
 			cout<<"You beat the "<<MonsterName<<"."<<endl;
-            return 'T';
+            return true;
 			break;
 		case 'F' : 
 			cout << string(50, '\n');
 			cout<<"You lost..."<<endl<<" You completed "<<intBattleLevel - 1 <<" dungeons.";
             cout<<endl<<"Press enter to close this game and try again!";
             system("pause");
-            return 'F';
+            return false;
 			break;
 		default :
 			cout<<endl<<"An error has occurred in the code. Sorry :( The game will exit.";
 			system("pause");
-			return 'F';
+			return false;
 			break;
 	}
 }
