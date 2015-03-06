@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.5ß-dev4
+Current Revision: 2.5ß
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -87,6 +87,8 @@ Date		Revision	Changed By		Changes
 =============================================================================================================================================================
 2015/03/06	2.5ß		Patrick Rye		-Changed some debug commands.
 										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
+										-Added better opening message.
+										-Replaced all system("pause") with getchar();
 =============================================================================================================================================================	
 */
 
@@ -112,7 +114,24 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "2.5ß-dev4"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "2.5ß"; //The current version of this program, stored in a save file later on.
+/*********************************************************************************************************/
+const string OpeningMessage[16] = {"                                                             \n",
+								   ",--.   ,--.       ,--.                                       \n",
+								   "|  |   |  | ,---. |  | ,---. ,---. ,--,--,--. ,---.          \n",
+								   "|  |.'.|  || .-. :|  || .--'| .-. ||        || .-. :         \n",
+								   "|   ,'.   |\\   --.|  |\\ `--.' '-' '|  |  |  |\\   --.         \n",
+								   "'--'   '--' `----'`--' `---' `---' `--`--`--' `----'         \n",
+								   "  ,--.                                                       \n",
+								   ",-'  '-. ,---.                                               \n",
+								   "'-.  .-'| .-. |                                              \n",
+								   "  |  |  ' '-' '                                              \n",
+								   "  `--'   `---'                                               \n",
+								   "  ,---.    ,--.    ,--.                ,--.                  \n",
+								   " /  O  \\ ,-'  '-.,-'  '-. ,--,--. ,---.|  |,-. ,---. ,--.--. \n",
+								   "|  .-.  |'-.  .-''-.  .-'' ,-.  || .--'|     /| .-. :|  .--' \n",
+								   "|  | |  |  |  |    |  |  \\ '-'  |\\ `--.|  \\  \\\\   --.|  |    \n",
+								   "`--' `--'  `--'    `--'   `--`--' `---'`--'`--'`----'`--'    \n"};
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -145,6 +164,10 @@ int main()
 	
 	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true);} //Sets debug mode for both rooms.h & battle.h
 	
+	for (int i = 0; i < 16; i++){cout<<OpeningMessage[i];}
+	getchar();
+	cout<<string(50,'\n');
+	
 	if (fileexists("save.bif")) //Check if there is a save present.
 	{
 		blOldSave = LoadOldSave();
@@ -155,7 +178,7 @@ int main()
 	
 	if(!blOldSave) //If it is not an old save show welcome message.
 	{
-		cout<<"Welcome to the World of Attacker."<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
+		cout<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
 		cout<<"You are looking for the stairs down ( > ). While you are represented by † ."<<endl;
 		cout<<"Every step brings you closer to your goal, but there might be a monster there as well."<<endl;
 		cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
@@ -192,12 +215,12 @@ int main()
 			{
 				case 'T' :
 					cout<<endl<<"Save succeeded."<<endl;
-					system("pause");
+					getchar();
 					chrSaveSuccess = 'N'; //Set this back to N, so that player is not spammed with this message.
 					break;
 				case 'F' :
 					cout<<endl<<"Save failed!"<<endl;
-					system("pause");
+					getchar();
 					chrSaveSuccess = 'N'; //Set this back to N, so that player is not spammed with this message.
 					break;
 			}
@@ -215,7 +238,7 @@ int main()
 	}
 	cout << string(50, '\n');
 	cout<<"You win!!";
-	system("pause");
+	getchar();
 	return 0;
 //End of main
 }
