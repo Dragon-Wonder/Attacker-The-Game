@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 2.3
+Current Revision: 2.3.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,10 @@ Date		Revision	Changed By		Changes
 										-Added option to run away from battle.
 										-Moved player attacking and monster attacking to their own functions.
 										-Changed battle start to return a boolean.
-=============================================================================================================================================================		
+=============================================================================================================================================================
+2015/03/06	2.3.1		Patrick Rye		-Changed system("pause") to getchar();
+										-Added more pauses.
+=============================================================================================================================================================
 */
 
 /*
@@ -456,6 +459,7 @@ char BattleScene()
 				if (blPlayerDead) {return 'F';}				
 			}
             cout<<endl;
+			getchar();
             goto BattleGoto;
 			break;
         case 'H' :
@@ -479,6 +483,7 @@ char BattleScene()
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,true);
 				if (blPlayerDead) {return 'F';}				
 			}
+			getchar();
 			goto BattleGoto;
 			break;
         case 'P' :
@@ -488,6 +493,7 @@ char BattleScene()
 			cout<<endl<<"Running away, has a small chance based on DEX and LUK to leave a battle and return to dungeon map.";
 			cout<<endl<<"Exit will leave the game and lose all progress.";
             cout<<endl<<"Help brings up this menu."<<endl;
+			getchar();
             goto PlayerChoice;
 			break;
 		case 'X' : //Exits game.
@@ -509,7 +515,9 @@ char BattleScene()
 			if (rand() % 101 < ((PlayerStats[3] + PlayerStats[4]/6) + rand() % 10)/10 ) {return 'T';}
 			else 
 			{
+				cout<<"You failed to get away."<<endl;
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
+				getchar();
 				if (blPlayerDead) {return 'F';}
 			}
 			goto BattleGoto;
@@ -527,6 +535,8 @@ char BattleScene()
 				cout<<endl<<"Monster muli: "<<douMonsterDamageMuli;
 				cout<<endl<<"Player damage: "<<intPlayerDamage;
 				cout<<endl<<"Monster damage: "<<intMonsterDamage;
+				getchar();
+				goto BattleGoto;
 			}
         case 'K' : //Debug code "kills" the current monster.
 			if (blBattleDebugMode)
@@ -698,18 +708,20 @@ bool startbattle(int intsLevel)
 		case 'T' :
 			cout << string(50, '\n');
 			cout<<"You beat the "<<MonsterName<<"."<<endl;
+			getchar();
             return true;
 			break;
 		case 'F' : 
 			cout << string(50, '\n');
 			cout<<"You lost..."<<endl<<" You completed "<<intBattleLevel - 1 <<" dungeons.";
             cout<<endl<<"Press enter to close this game and try again!";
-            system("pause");
+            getchar();
             return false;
 			break;
 		default :
 			cout<<endl<<"An error has occurred in the code. Sorry :( The game will exit.";
-			system("pause");
+			cout<<endl<<"If you would be so kind as to report what you were doing I can try to fix it!";
+			getchar();
 			return false;
 			break;
 	}
