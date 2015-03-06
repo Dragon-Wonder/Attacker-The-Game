@@ -31,25 +31,27 @@ I have a few goals in mind about what I want to do with this but I am always loo
 
 ###Completed Goals
 
-- [x] Implent more monsters that have different stats and increase the variaty a bit. -2/17/15
+- [x] Implent more monsters that have different stats and increase the variaty a bit. -2015-02-17
 
-- [x] Implented more variety in monster with random modifiers. -2/19/15
+- [x] Implented more variety in monster with random modifiers. -2015-02-19
 
-- [x] Change level ups to be you can place any amount of points in any stat. -2/20/15
+- [x] Change level ups to be you can place any amount of points in any stat. -2015-02-20
 
-- [x] Implenment a dungeon scene as main objective. -2/24/15
+- [x] Implenment a dungeon scene as main objective. -2015-02-24
 
-- [x] Random chance to run into monsters. -2/24/15
+- [x] Random chance to run into monsters. -2015-02-24
 
-- [x] Save System - 2/27/15
+- [x] Save System -2015-02-27
 
-- [x] Change healing to be done between monster fights rather than during. -3/2/15
+- [x] Change healing to be done between monster fights rather than during. -2015-03-02
+
+- [x] More actions during a battle (no ideas on what). (Added option to run away) -2015-03-06
+
+- [x] Something that allows the monster or player to move first. -2015-03-06
 
 ###Short-Term
 
-- [ ] Something that allows the monster or player to move first and chance to stun.
-
-- [ ] More actions during a battle (no ideas on what).
+- [ ] Chance to stun, during battle.
 
 - [ ] Redo the monster leveling up system (a bit wonky right now).
 
