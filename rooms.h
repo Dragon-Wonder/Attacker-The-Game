@@ -4,30 +4,36 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 2.1
+Current Revision: 2.2.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date	Revision	Changed By			Changes
-------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
+Date		Revision	Changed By		Changes
+------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-2/20/15	1.0			Patrick Rye			-Original
+2015/02/20	1.0			Patrick Rye		-Original
 =============================================================================================================================================================
-2/23/15	1.1			Patrick Rye			-Added player tile
-										-Changed the generated stairs up to generate a Player instead
-											-Basically you can never goo back up and I don't have to worry about putting the stair back when they move.
+2015/02/23	1.1			Patrick Rye		-Added player tile
+										-Changed the generated stairs up to generate a player instead
+											-Basically you can never go back up and I don't have to worry about putting the stair back when they move.
 										-Made getcell, setcell, showDungeon all public so I can access them from the main code.
 =============================================================================================================================================================
-2/26/15	1.2			Patrick Rye			-Moved player movement function here.
+2015/02/26	1.2			Patrick Rye		-Moved player movement function here.
 =============================================================================================================================================================
-2/27/15	1.3			Patrick Rye			-Added option to save on map.
+2015/02/27 	1.3			Patrick Rye		-Added option to save on map.
 =============================================================================================================================================================
-3/2/15	1.4			Patrick Rye			-Moved healing to happening between battles.
+2015/03/02	1.4			Patrick Rye		-Moved healing to happening between battles.
 =============================================================================================================================================================
-3/2/15	1.5			Patrick Rye			-General code improvement.
+2015/03/02	1.5			Patrick Rye		-General code improvement.
 										-Fixed two player bug.
 =============================================================================================================================================================
-3/3/15	2.0			Patrick Rye			-Added debug mode.
+2015/03/03	2.0			Patrick Rye		-Added debug mode.
 =============================================================================================================================================================
-3/4/15	2.1 		Patrick Rye			-Changed save to 'V' rather then 'P'.
+2015/03/04	2.1 		Patrick Rye		-Changed save to 'V' rather then 'P'.
+=============================================================================================================================================================
+2015/03/05	2.2			Patrick Rye		-Changed some debug commands.
+										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
+=============================================================================================================================================================
+2015/03/06	2.2.1		Patrick Rye		-Changed system("pause") to getchar();
+										-Added more pauses.
 =============================================================================================================================================================	
 */
 int intPlayerX; //Player position in X and Y.
@@ -638,10 +644,11 @@ class Dungeon
 				cout<<"STR: "<<intPlayerStatsTemp[0]<<endl<<"CONS: "<<intPlayerStatsTemp[1]<<endl;
 				cout<<"DEF: "<<intPlayerStatsTemp[2]<<endl<<"DEX: "<<intPlayerStatsTemp[3]<<endl;
 				cout<<"LUK: "<<intPlayerStatsTemp[4]<<endl;
-				system("pause");
+				getchar();
 				return 'F';
 				break;
-			case '&' : //Debug code to go straight to stairs.
+			/*Debug commands & invalid choice here*/
+			case 'L' : //Debug code to go straight to stairs.
 				if (blRoomsDebugMode)
 				{for (int y = 0; y < 20; y++){for (int x = 0; x < 80; x++){
 					if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
