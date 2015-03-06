@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 2.3.1
+Current Revision: 3.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -65,6 +65,12 @@ Date		Revision	Changed By		Changes
 2015/03/06	2.3.1		Patrick Rye		-Changed system("pause") to getchar();
 										-Added more pauses.
 =============================================================================================================================================================
+2015/03/06	3.0			Patrick Rye		-Added chance for stun.
+										-Redid monster levelling.
+										-Redid health calculation.
+										-Redid damage calculation.
+										-Added some variability to attack damage.
+=============================================================================================================================================================		
 */
 
 /*
@@ -79,7 +85,7 @@ For Stat Arrays
 /*********************************************************************************************************/
 /*A quick note on the base stats, a stat cannot be lower than 6, as a modifier might reduce the value by 5 points.
   The base stat point should also add up to be 100. */
-int MonsterBaseStats[5] = {25,25,10,25,15}; //A base array for the monsters 
+int MonsterBaseStats[5] = {20,20,20,20,20}; //A base array for the monsters 
 const int ZombieBaseStats[5] = {25,25,10,25,15};
 const int SkeletonBaseStats[5] = {35,18,6,35,6};
 const int WitchBaseStats[5] = {15,15,20,20,30};
@@ -101,6 +107,14 @@ int PlayerStats[5] = {5,5,5,5,5};
 int intBattleLevel = 1;
 bool blBattleDebugMode = false;
 /*********************************************************************************************************/
+void SetBattleDebugMode(bool isDebug) {blBattleDebugMode = isDebug;}
+/*********************************************************************************************************/
+
+bool StunCheck(int intAttackerLuck, int intDefenderLuck)
+{
+	if (intDefenderLuck < intAttackerLuck) {if(rand()% 101 < (intAttackerLuck - intDefenderLuck) / 3) {return true;}}
+	return false;
+}
 
 bool MonsterAttack(int MonsterDamage, double MonsterMuli, bool ishealing)
 {
@@ -179,17 +193,32 @@ int CalculateHealth(int HealthLevel, int ConsStat)
 {
 	//A simple function for calculating health.
 	//In its own function so future changes will be changed everywhere.
-	return floor((23*((5.25+0.5625*HealthLevel+0.00375*pow(HealthLevel,2))+(1+0.066*HealthLevel)*(ConsStat/16))));
+	double HealthTemp = 0;
+	HealthTemp = (0.9722 * pow(HealthLevel, 2) )+( 0.4167 * HealthLevel) + 48.611;
+	HealthTemp += 23.979*exp(0.01414 * ConsStat);
+	return floor(HealthTemp);
 }
 
 int CalculateDamage(int DamageLevel, int StrStat, int DefStat)
 {
-	//A simple function for calculating damage
+	//A simple function for calculating damage.
 	//In its own function so future changes will be changed everywhere.
-	return floor(((((2 * (DamageLevel/5) + 2) * ((10*DamageLevel)/DefStat))*(StrStat))+5));
+	int DamageTemp = 0;
+	int intMinDamage = floor((MonsterHealth[1]+5+PlayerHealth[1])/20) + 1;
+	StrStat += rand() % DamageLevel;
+	DefStat += rand() % DamageLevel;
+	if (DefStat > StrStat) {return intMinDamage;}
+	else if (DefStat == StrStat) {return intMinDamage + rand() % (DamageLevel *2);}
+	else
+	{
+		DamageTemp = floor((StrStat - DefStat)*1.75);
+		DamageTemp += intMinDamage;
+		DamageTemp += rand() % (DamageLevel *2);
+		return DamageTemp;
+	}
+	
+	return intMinDamage;
 }
-
-void SetBattleDebugMode(bool isDebug) {blBattleDebugMode = isDebug;}
 
 void RandomMonster()
 {
@@ -301,6 +330,31 @@ void RandomMonsterModifier()
 //End of random monster modifier.	
 }
 
+void LevelUpMonster()
+{
+	//Function to level up the monster.
+	int StatUpgradeChance[5] = {0,0,0,0,0};
+	int intStatPoints = (intBattleLevel - 1) *5; //How many stat points the monster gets.
+	int intRandomStatChoice = 0;
+	
+	StatUpgradeChance[0] = MonsterBaseStats[0];
+	for (int i = 0; i < 5; i++) {MonsterStats[i] = MonsterBaseStats[i];}
+	for (int i = 1; i < 5; i++) {StatUpgradeChance[i] = StatUpgradeChance[i - 1] + MonsterBaseStats[i];}
+	for (int i = 0; i < intStatPoints; i++) //Random place points in the different stats.
+	{
+		intRandomStatChoice = rand() % 101;
+		if (intRandomStatChoice < StatUpgradeChance[0]) {MonsterStats[0] += 1;}
+		else if (intRandomStatChoice < StatUpgradeChance[1]) {MonsterStats[1] += 1;}
+		else if (intRandomStatChoice < StatUpgradeChance[2]) {MonsterStats[2] += 1;}
+		else if (intRandomStatChoice < StatUpgradeChance[3]) {MonsterStats[3] += 1;}
+		else {MonsterStats[4] += 1;}
+	}
+	if (blBattleDebugMode) {for(int i = 0; i < 5; i++ ) {cout<<endl<<MonsterStats[i];}}
+	//Recalculate healths and re-heal them
+    MonsterHealth[1] = floor(CalculateHealth(intBattleLevel,MonsterStats[1])/2);
+    MonsterHealth[0] = MonsterHealth[1];
+}
+
 void LevelUpFunction()
 {
 	//Holds function for levelling up.
@@ -387,13 +441,8 @@ char BattleScene()
     double douPlayerHealAmount;
 	char chrPlayerBattleChoice;
 	
-	//Recalculate all of the stats needed.
-    //Update monster stats to new level.
-	for (int i=0; i<5; i++) {MonsterStats[i] = floor(((intBattleLevel-1)*4+MonsterBaseStats[i]));/*cout<<endl<<MonsterStats[i];*/ /*Debugging line*/}
+	LevelUpMonster();
 	
-    //Recalculate healths and re-heal them
-    MonsterHealth[1] = floor(CalculateHealth(intBattleLevel,MonsterStats[1])/3);
-    MonsterHealth[0] = MonsterHealth[1];
     //Recalculate amount player heals for.
     douPlayerHealAmount = floor(PlayerHealth[1]/10);
     BattleGoto:
@@ -447,16 +496,25 @@ char BattleScene()
 				//Monster attacks first.
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
 				if (blPlayerDead) {return 'F';}
-				blMonsterDead = PlayerAttack(intPlayerDamage,douPlayerDamageMuli);
-				if (blMonsterDead) {return 'T';}
+				if (!StunCheck(MonsterStats[4],PlayerStats[4]))
+				{
+					blMonsterDead = PlayerAttack(intPlayerDamage,douPlayerDamageMuli);
+					if (blMonsterDead) {return 'T';}
+				}
+				else {cout<<endl<<"You were stunned and unable to attack.";}
 			}
 			else 
 			{
 				//Player attacks first.
 				blMonsterDead = PlayerAttack(intPlayerDamage,douPlayerDamageMuli);
 				if (blMonsterDead) {return 'T';}
-				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
-				if (blPlayerDead) {return 'F';}				
+				if (!StunCheck(PlayerStats[4],MonsterStats[4]))
+				{
+					blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
+					if (blPlayerDead) {return 'F';}		
+				}
+				else {cout<<endl<<"The "<<MonsterName<<" was stunned by your hit and unable to attack.";}
+		
 			}
             cout<<endl;
 			getchar();
@@ -471,8 +529,12 @@ char BattleScene()
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,true);
 				if (blPlayerDead) {return 'F';}
 				
-				if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
-				else {PlayerHealth[0] += douPlayerHealAmount;}
+				if (!StunCheck(MonsterStats[4],PlayerStats[4]))
+				{
+					if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
+					else {PlayerHealth[0] += douPlayerHealAmount;}
+				}
+				else {cout<<endl<<"You were stunned and unable to heal.";}
 			}
 			else
 			{
