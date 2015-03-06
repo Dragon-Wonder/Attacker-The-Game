@@ -4,25 +4,29 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.2.1
+Current Revision: 1.3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date	Revision	Changed By			Changes
-------  ---------   ------------		---------------------------------------------------------------------------------------------------------------------
+Date		Revision	Changed By		Changes
+------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-3/2/15	1.0			Patrick Rye			-Original
+2015/03/02	1.0			Patrick Rye		-Original
 =============================================================================================================================================================
-3/2/15	1.0.1		Patrick Rye			-Quick fix for version not being applied properly.
+2015/03/02	1.0.1		Patrick Rye		-Quick fix for version not being applied properly.
 =============================================================================================================================================================
-3/3/15	1.1			Patrick Rye			-General code improvement.
+2015/03/03	1.1			Patrick Rye		-General code improvement.
 										-Added more comments.
 										-Fixed bug where max player health wasn't saving properly.
 =============================================================================================================================================================
-3/4/15	1.2			Patrick Rye			-Added "sanity" checks load values and makes sure they make sense.
+2015/03/04	1.2			Patrick Rye		-Added "sanity" checks load values and makes sure they make sense.
 										-Floors all values prior to loading.
 										-Debug mode can now be set by loading from debug save.
 =============================================================================================================================================================
-3/4/15	1.2.1		Patrick Rye			-Fixed bug where loading from a debug save and then saving again might not keep debug mode.
-=============================================================================================================================================================	
+2015/03/04	1.2.1		Patrick Rye		-Fixed bug where loading from a debug save and then saving again might not keep debug mode.
+=============================================================================================================================================================
+2015/03/05	1.3			Patrick Rye 	-Made some stuff hidden unless in debug mode.
+										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
+										-Shows game version and save version if they do not match.
+=============================================================================================================================================================		
 */
 
 
@@ -42,7 +46,7 @@ int SanityChecker(int intValueLocation, int intValueCheck)
 	if (intValueLocation < 0) {return 1;}
 	else if (intValueLocation <= 4) {if (intValueCheck < 1 || intValueCheck > 256) {return 1;}} 
 	/* 256 is the highest value a stat can have assuming that they put 96 points when they created the character, 
-	and put all 20 points in that stat for the 8 level ups.*/
+	   and put all 20 points in that stat for the 8 level ups.*/
 	else if (intValueLocation <= 6) {return 0;} //Don't bother checking health values since they are just going to be recalculated later.
 	else if (intValueLocation == 7) {if (intValueCheck < 1 || intValueCheck > 10) {return 1;}} //Check the level.
 	else if (intValueLocation < 1608) {if (intValueCheck < 0 || intValueCheck > 9) {return 1;}} //Check the dungeon.
@@ -50,8 +54,6 @@ int SanityChecker(int intValueLocation, int intValueCheck)
 	
 	return 0; //Value is okay, return 0 for no error found.	
 }
-
-
 
 char savefunction()
 {
@@ -101,11 +103,10 @@ char savefunction()
 			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
 		}
 	}
-	cout<<endl<<endl<<intCheckSum;
+	if (blSaveDebugMode) {cout<<endl<<endl<<intCheckSum;}
 	if(intCheckSum >= 1608) {return 'T';} //All of the saved values are correct if it equals 1608.
 	else {return 'F';} //Some of the values are wrong, say that the save failed.
 }
-
 
 bool loadfunction()
 {
@@ -159,7 +160,7 @@ bool loadfunction()
 			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
 		}
 	}
-	cout<<endl<<endl<<intCheckSum;
+	if (blSaveDebugMode) {cout<<endl<<endl<<intCheckSum;}
 	if(intCheckSum >= 1608) {return true;} //All of the saved values are correct if it equals 1608.
 	else {return false;} //Some of the values are wrong, say that the load failed.
 	return false;
@@ -197,6 +198,7 @@ bool LoadOldSave()
 				DifferentVersion:
 				cout <<endl<<"Save version does not match the game version."<<endl;
 				cout<<"I recommend using the same save version as the game, as things could break."<<endl;
+				cout<<"Game version: "<<ProgramVerison<<endl<<"Save version: "<<SaveVerison<<"."<<endl;
 				cout<<"Do you wish to continue with the loading?"<<endl<<"Y or N"<<endl<<"> ";
 				cin>>chrPlayerChoice;
 				chrPlayerChoice = CharConvertToUpper(chrPlayerChoice);
