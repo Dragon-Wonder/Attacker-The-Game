@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 3.0b-dev4
+Current Revision: 3.0b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "3.0b-dev4"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "3.0b"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //Some constant string for different messages that appear as large ASCII text.
 const string OpeningMessage[16] = {"                                                             \n",
