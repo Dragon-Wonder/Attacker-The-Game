@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 3.1b-dev1
+Current Revision: 3.1b-dev4
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -94,7 +94,9 @@ Date		Revision	Changed By		Changes
 										-Added better winning message.
 										-Added spells.h does nothing currently just for testing.
 =============================================================================================================================================================
-2015/03/09	3.1b		Patrick Rye		-
+2015/03/09	3.1b		Patrick Rye		-Edits to spells.h, more testing on adding spells.
+										-Sets debug mode in spells.h
+										-Win / opening messages moved to basic.h
 =============================================================================================================================================================	
 */
 
@@ -112,7 +114,7 @@ Date		Revision	Changed By		Changes
 #include "basic.h" //Functions that are simple and won't need to be changed very often.
 #include "battle.h" //Functions that deal with battling, levelling up and making a player.
 #include "rooms.h" //Functions that deal with generating a dungeon.
-//#include "spells.h" //Functions that deal with spells and magic, a possible future addition.
+#include "spells.h" //Functions that deal with spells and magic, a possible future addition.
 /*********************************************************************************************************/
 using namespace std;
 Dungeon d; //Define the dungeon class as 'd' so I can use functions in there anywhere later in the code.
@@ -121,33 +123,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "3.1b-dev1"; //The current version of this program, stored in a save file later on.
-/*********************************************************************************************************/
-//Some constant string for different messages that appear as large ASCII text.
-const string OpeningMessage[16] = {"                                                             \n",
-								   ",--.   ,--.       ,--.                                       \n",
-								   "|  |   |  | ,---. |  | ,---. ,---. ,--,--,--. ,---.          \n",
-								   "|  |.'.|  || .-. :|  || .--'| .-. ||        || .-. :         \n",
-								   "|   ,'.   |\\   --.|  |\\ `--.' '-' '|  |  |  |\\   --.         \n",
-								   "'--'   '--' `----'`--' `---' `---' `--`--`--' `----'         \n",
-								   "  ,--.                                                       \n",
-								   ",-'  '-. ,---.                                               \n",
-								   "'-.  .-'| .-. |                                              \n",
-								   "  |  |  ' '-' '                                              \n",
-								   "  `--'   `---'                                               \n",
-								   "  ,---.    ,--.    ,--.                ,--.                  \n",
-								   " /  O  \\ ,-'  '-.,-'  '-. ,--,--. ,---.|  |,-. ,---. ,--.--. \n",
-								   "|  .-.  |'-.  .-''-.  .-'' ,-.  || .--'|     /| .-. :|  .--' \n",
-								   "|  | |  |  |  |    |  |  \\ '-'  |\\ `--.|  \\  \\\\   --.|  |    \n",
-								   "`--' `--'  `--'    `--'   `--`--' `---'`--'`--'`----'`--'    \n"};
-
-const string WinningMessage[6] = {"__   __            _    _ _       _ _ \n",
-								 "\\ \\ / /           | |  | (_)     | | |\n",
-								 " \\ V /___  _   _  | |  | |_ _ __ | | |\n",
-								 "  \\ // _ \\| | | | | |/\\| | | '_ \\| | |\n",
-								 "  | | (_) | |_| | \\  /\\  / | | | |_|_|\n",
-								 "  \\_/\\___/ \\__,_|  \\/  \\/|_|_| |_(_|_)\n"};
-
+const string CurrentVerison = "3.1b-dev4"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -178,9 +154,9 @@ int main()
 	//If game is not already in debug mode, checks if source code exists then put it in debug mode if it does.
 	if (!(blDebugMode)) {blDebugMode = fileexists("main.cpp"); } 
 	
-	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true);} //Sets debug mode for both rooms.h & battle.h
+	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true); SetSpellDebugMode(true);} //Sets debug mode for both rooms.h, battle.h, & spells.h
 	
-	for (int i = 0; i < 16; i++){cout<<OpeningMessage[i];}
+	ShowOpeningMessage();
 	getchar();
 	cout<<string(50,'\n');
 	
@@ -253,7 +229,7 @@ int main()
 	//End of FOR levels.
 	}
 	cout << string(50, '\n');
-	for (int i = 0; i < 6; i++) {cout<<WinningMessage[i];}
+	ShowWinningMessage();
 	getchar();
 	return 0;
 //End of main
