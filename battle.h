@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 3.1
+Current Revision: 3.1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -76,16 +76,11 @@ Date		Revision	Changed By		Changes
 										-Nerffered attack damage a bit.
 =============================================================================================================================================================
 2015/03/09	3.1			Patrick Rye		-Made structures of entities
-=============================================================================================================================================================							
-*/
-
-/*
-For Stat Arrays 
-0 = STR
-1 = CONS
-2 = DEF
-3 = DEX
-4 = LUK
+=============================================================================================================================================================
+2015/03/09	3.1.1		Patrick Rye		-Added status effects (do nothing at the moment).
+										-Added functions to get and set monster values.
+										-Moved enums to basic.h
+=============================================================================================================================================================						
 */
 /*********************************************************************************************************/
 struct entity {
@@ -97,17 +92,18 @@ struct entity {
 	int def;
 	int dex;
 	int luk;
+	int status;
 };
 /*********************************************************************************************************/
 /*A quick note on the base stats, a stat cannot be lower than 6, as a modifier might reduce the value by 5 points.
   The base stat point should also add up to be 100. */
-const entity monsters[5] = {{"Zombie",0,0,25,25,10,25,15},
-							{"Skeleton",0,0,35,18,6,25,6},
-							{"Witch",0,0,15,15,20,20,30},
-							{"Imp",0,0,15,15,15,40,15},
-							{"Golem",0,0,20,34,34,6,6}};
-entity monster = {"Generic",0,0,20,20,20,20,20};
-entity player = {"Player",0,0,20,20,20,20,20};
+const entity monsters[5] = {{"Zombie",0,0,25,25,10,25,15,effectNone},
+							{"Skeleton",0,0,35,18,6,25,6,effectNone},
+							{"Witch",0,0,15,15,20,20,30,effectNone},
+							{"Imp",0,0,15,15,15,40,15,effectNone},
+							{"Golem",0,0,20,34,34,6,6,effectNone}};
+entity monster = {"Generic",0,0,20,20,20,20,20,effectNone};
+entity player = {"Player",0,0,20,20,20,20,20,effectNone};
 /*********************************************************************************************************/
 const string MonsterNames[5] = {"Zombie","Skeleton","Witch","Imp","Golem"};
 const string PosMonsterModifiers[6] = {"Strong","Large","Massive","Fast","Lucky","Solid"};
@@ -836,25 +832,53 @@ bool startbattle(int intsLevel)
 int getbattlevalue(int intvalue)
 {
 	if (intvalue < 0) {return 0;}
-	else if (intvalue == 0) {return player.str;}
-	else if (intvalue == 1) {return player.cons;}
-	else if (intvalue == 2) {return player.def;}
-	else if (intvalue == 3) {return player.dex;}
-	else if (intvalue == 4) {return player.luk;}
-	else if (intvalue == 5) {return player.currhealth;}
-	else if (intvalue == 6) {return player.maxhealth;}
-	else {return 0;}
+	else if (intvalue == statStr) {return player.str;}
+	else if (intvalue == statCons) {return player.cons;}
+	else if (intvalue == statDef) {return player.def;}
+	else if (intvalue == statDex) {return player.dex;}
+	else if (intvalue == statLuk) {return player.luk;}
+	else if (intvalue == statCurrHealth) {return player.currhealth;}
+	else if (intvalue == statMaxHealth) {return player.maxhealth;}
+	else if (intvalue == statStatus) {return player.status;}
+	return 0;
 }
 
 void setbattlevalue(int intlocation, int intvalue)
 {
-	if (intlocation == 0) {player.str = intvalue;}
-	else if (intlocation == 1) {player.cons = intvalue;}
-	else if (intlocation == 2) {player.def = intvalue;}
-	else if (intlocation == 3) {player.dex = intvalue;}
-	else if (intlocation == 4) {player.luk = intvalue;}
-	else if (intlocation == 5) {player.currhealth = intvalue;}
-	else if (intlocation == 6) {player.maxhealth = intvalue;}
+	if (intlocation == statStr) {player.str = intvalue;}
+	else if (intlocation == statCons) {player.cons = intvalue;}
+	else if (intlocation == statDef) {player.def = intvalue;}
+	else if (intlocation == statDex) {player.dex = intvalue;}
+	else if (intlocation == statLuk) {player.luk = intvalue;}
+	else if (intlocation == statCurrHealth) {player.currhealth = intvalue;}
+	else if (intlocation == statMaxHealth) {player.maxhealth = intvalue;}
+	else if (intlocation == statStatus) {player.status = intvalue;}
+}
+
+int getmonstervalue(int intlocation)
+{
+	if (intlocation < 0) {return 0;}
+	else if (intlocation == statStr) {return monster.str;}
+	else if (intlocation == statCons) {return monster.cons;}
+	else if (intlocation == statDef) {return monster.def;}
+	else if (intlocation == statDex) {return monster.dex;}
+	else if (intlocation == statLuk) {return monster.luk;}
+	else if (intlocation == statCurrHealth) {return monster.currhealth;}
+	else if (intlocation == statMaxHealth) {return monster.maxhealth;}
+	else if (intlocation == statStatus) {return monster.status;}
+	return 0;
+}
+
+void setmonstervalue(int intlocation, int intvalue)
+{
+	if (intlocation == statStr) {monster.str = intvalue;}
+	else if (intlocation == statCons) {monster.cons = intvalue;}
+	else if (intlocation == statDef) {monster.def = intvalue;}
+	else if (intlocation == statDex) {monster.dex = intvalue;}
+	else if (intlocation == statLuk) {monster.luk = intvalue;}
+	else if (intlocation == statCurrHealth) {monster.currhealth = intvalue;}
+	else if (intlocation == statMaxHealth) {monster.maxhealth = intvalue;}
+	else if (intlocation == statStatus) {monster.status = intvalue;}
 }
 
 #endif
