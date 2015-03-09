@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.3.1
+Current Revision: 1.4
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -29,6 +29,8 @@ Date		Revision	Changed By		Changes
 =============================================================================================================================================================
 2015/03/06	1.3.1		Patrick Rye		-Changed system("pause") to getchar();
 										-Added more pauses.
+=============================================================================================================================================================
+2015/03/09	1.4			Patrick Rye		-Added status saving.
 =============================================================================================================================================================		
 */
 
@@ -51,8 +53,9 @@ int SanityChecker(int intValueLocation, int intValueCheck)
 	/* 256 is the highest value a stat can have assuming that they put 96 points when they created the character, 
 	   and put all 20 points in that stat for the 8 level ups.*/
 	else if (intValueLocation <= 6) {return 0;} //Don't bother checking health values since they are just going to be recalculated later.
-	else if (intValueLocation == 7) {if (intValueCheck < 1 || intValueCheck > 10) {return 1;}} //Check the level.
-	else if (intValueLocation < 1608) {if (intValueCheck < 0 || intValueCheck > 9) {return 1;}} //Check the dungeon.
+		else if (intValueLocation == 7) {if (intValueCheck < 0 || intValueCheck > 4) {return 1;}} //Check the current status
+	else if (intValueLocation == 8) {if (intValueCheck < 1 || intValueCheck > 10) {return 1;}} //Check the level.
+	else if (intValueLocation < 1609) {if (intValueCheck < 0 || intValueCheck > 9) {return 1;}} //Check the dungeon.
 	else {return 1;} //Invalid number on array.
 	
 	return 0; //Value is okay, return 0 for no error found.	
@@ -67,16 +70,16 @@ char savefunction()
 	F = False, save failed.
 	*/
 	int intCheckSum = 0;
-	int arrbattlesave[7];
+	int arrbattlesave[8];
 	int arrmainsave[1]; //An array of all the values needed to be saved from main.cpp, its an array in the case that later I add more stuff to be saved.
 	arrmainsave[0] = getmainvalue(0);
 	int arrroomsave[80][20];
-	for (int i = 0; i <= 6; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
+	for (int i = 0; i < 8; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
 	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
 	ofstream savefile;
 	savefile.open ("save.bif");
 	
-	for (int i = 0; i < 7; i++) {savefile << arrbattlesave[i] << "\n";} 
+	for (int i = 0; i < 8; i++) {savefile << arrbattlesave[i] << "\n";} 
 
 	for (int i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
 
@@ -89,15 +92,15 @@ char savefunction()
 	//Save will now attempt to "load" the save it just made and compare it to the data available.
 	//Checks to see if save is correct or not.
 	ifstream loadfile("save.bif");
-	int arrloadnumbers[1608];
-	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
+	int arrloadnumbers[1609];
+	for(int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 9; i++)
 	{
-		if(i<7) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
-		else if (i == 7) {if (arrloadnumbers[i]==getmainvalue(0)) {intCheckSum++;}}
+		if(i < 8) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
+		else {if (arrloadnumbers[i]==getmainvalue(0)) {intCheckSum++;}}
 	} 
-	int num = 7;
+	int num = 8;
 	for (int y = 0; y < 20; y++)
 	{
 		for (int x = 0; x < 80; x++)
@@ -107,32 +110,32 @@ char savefunction()
 		}
 	}
 	if (blSaveDebugMode) {cout<<endl<<endl<<intCheckSum;}
-	if(intCheckSum >= 1608) {return 'T';} //All of the saved values are correct if it equals 1608.
+	if(intCheckSum >= 1609) {return 'T';} //All of the saved values are correct if it equals 1608.
 	else {return 'F';} //Some of the values are wrong, say that the save failed.
 }
 
 bool loadfunction()
 {
 	ifstream loadfile("save.bif");
-	int arrloadnumbers[1608];
-	for(int i = 0; i < 1608; i++) {loadfile>>arrloadnumbers[i];}
+	int arrloadnumbers[1609];
+	for(int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
 	
 	//Floor all the values in the array.
-	for (int i = 0; i < 1608; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
+	for (int i = 0; i < 1609; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
 	
 	int intNumOfErrors = 0; //Keeps track of how many errors it find, if greater than 1 cancel load.
 	
-	for (int i = 0; i < 1608; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
+	for (int i = 0; i < 1609; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
 	
 	if (intNumOfErrors > 0) {return false;} //If any errors found, cancel load with a false.
 	
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 9; i++)
 	{
-		if(i<7) {setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
-		else if (i == 7) {setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
+		if(i < 8) {setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
+		else {setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
 	}
-	int num = 7;
+	int num = 8;
 	for (int y = 0; y < 20; y++)
 	{
 		for (int x = 0; x < 80; x++)
@@ -146,15 +149,15 @@ bool loadfunction()
 	
 	//Double check that all the values loaded are correct.
 	ifstream checkfile("save.bif");
-	for(int i = 0; i < 1608; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
+	for(int i = 0; i < 1609; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
 	checkfile.close();
 	int intCheckSum = 0;
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 9; i++)
 	{
-		if(i<7) {if (arrloadnumbers[i]==getbattlevalue(i)){intCheckSum++;}}
-		else if (i == 7) {if (arrloadnumbers[i]==getmainvalue(1)) {intCheckSum++;}}
+		if(i < 8) {if (arrloadnumbers[i]==getbattlevalue(i)){intCheckSum++;}}
+		else if (i == 8) {if (arrloadnumbers[i]==getmainvalue(1)) {intCheckSum++;}}
 	} 
-	num = 7;
+	num = 8;
 	for (int y = 0; y < 20; y++)
 	{
 		for (int x = 0; x < 80; x++)
@@ -164,7 +167,7 @@ bool loadfunction()
 		}
 	}
 	if (blSaveDebugMode) {cout<<endl<<endl<<intCheckSum;}
-	if(intCheckSum >= 1608) {return true;} //All of the saved values are correct if it equals 1608.
+	if(intCheckSum >= 1609) {return true;} //All of the saved values are correct if it equals 1609.
 	else {return false;} //Some of the values are wrong, say that the load failed.
 	return false;
 }
@@ -179,7 +182,7 @@ bool LoadOldSave()
 	
 	ifstream checkfileverison;
 	checkfileverison.open ("save.bif");
-	for(int i = 0; i < 1608; ++i)
+	for(int i = 0; i < 1609; ++i)
 		getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, DebugModeLine);
