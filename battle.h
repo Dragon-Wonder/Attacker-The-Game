@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 3.0
+Current Revision: 3.0.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -70,7 +70,11 @@ Date		Revision	Changed By		Changes
 										-Redid health calculation.
 										-Redid damage calculation.
 										-Added some variability to attack damage.
-=============================================================================================================================================================		
+=============================================================================================================================================================
+2015/03/09	3.0.1		Patrick Rye		-Changed some text to better reflect certain changes.
+										-The less health something has the less damage it will do.
+										-Nerffered attack damage a bit.
+=============================================================================================================================================================					
 */
 
 /*
@@ -110,10 +114,41 @@ bool blBattleDebugMode = false;
 void SetBattleDebugMode(bool isDebug) {blBattleDebugMode = isDebug;}
 /*********************************************************************************************************/
 
+
+
 bool StunCheck(int intAttackerLuck, int intDefenderLuck)
 {
 	if (intDefenderLuck < intAttackerLuck) {if(rand()% 101 < (intAttackerLuck - intDefenderLuck) / 3) {return true;}}
 	return false;
+}
+
+float DamageHealthPercent(int CurrentHealth, int MaximumHealth)
+{
+	/*Function that returns a percentage value that will be multiplied by the damage.
+	  The value will vary with health so that the less health something has
+	  The less damage it will do.
+	  The max value it return is about 1.01 or something similar, the min value
+	  is about 0.64 */
+	
+	float HealthPercent = CurrentHealth / MaximumHealth;
+	float TempValue = 0;
+	TempValue -= 0.8981 * pow(HealthPercent, 3);
+	TempValue += 1.297 * pow(HealthPercent, 2);
+	TempValue -= 0.0358 * HealthPercent;
+	TempValue += 0.64;
+	return TempValue;
+}
+
+string HitName()
+{
+	/*Outputs a string that represents an attack,
+	   for example rather than just "hit" over and over,
+	   you could get "stabbed" "hit"*/
+	const string HitStringArray[5] = {"hit","stabbed","cut","slashed","damaged"};
+	string TempString;
+	TempString = HitStringArray[rand() % 5];
+	if (TempString != "") {return TempString;}
+	return "hit";
 }
 
 bool MonsterAttack(int MonsterDamage, double MonsterMuli, bool ishealing)
@@ -122,6 +157,7 @@ bool MonsterAttack(int MonsterDamage, double MonsterMuli, bool ishealing)
 	//Only returns true if player died.
 	//Is in its own function so I can call it a couple of different places.
 	cout<<endl;
+	MonsterDamage = floor(MonsterDamage * DamageHealthPercent(MonsterHealth[0],MonsterHealth[1])); //Reduce damage based on health.
 	if (ishealing) {floor(MonsterDamage /= 2);} //if player is healing reduce damage.
 	if (MonsterDamage != 0)
 	{
@@ -140,10 +176,11 @@ bool PlayerAttack(int PlayerDamage, double PlayerMuli)
 	//Only returns true if monster died.
 	//Is in its own function so I can call it a couple of different places.
 	cout<<endl;
+	PlayerDamage = floor(PlayerDamage * DamageHealthPercent(PlayerHealth[0],PlayerHealth[1])); //Reduce damage based on health.
 	if (PlayerDamage != 0)
 	{
 		if (PlayerMuli > 1){cout<<"You got a crit on the "<<MonsterName<<"! ";}
-		cout<<"You hit the "<<MonsterName<<" for "<<PlayerDamage<<".";
+		cout<<"You "<<HitName()<<" the "<<MonsterName<<" for "<<PlayerDamage<<".";
 	}
 	else {cout<<"The "<<MonsterName<<" dodged your attack.";}
 	MonsterHealth[0] -= PlayerDamage;
@@ -204,7 +241,7 @@ int CalculateDamage(int DamageLevel, int StrStat, int DefStat)
 	//A simple function for calculating damage.
 	//In its own function so future changes will be changed everywhere.
 	int DamageTemp = 0;
-	int intMinDamage = floor((MonsterHealth[1]+5+PlayerHealth[1])/20) + 1;
+	int intMinDamage = floor((MonsterHealth[1]+PlayerHealth[1])/20) + 1;
 	StrStat += rand() % DamageLevel;
 	DefStat += rand() % DamageLevel;
 	if (DefStat > StrStat) {return intMinDamage;}
@@ -628,7 +665,7 @@ char PlayerInitialize()
 	cout<<"In this game there are five stats that effect different elements of the game.";
 	cout<<endl<<"Strength (STR) - Effects how much damage you do when you attack."<<endl;
 	cout<<"Constitution (CONS) - Effects how much health you have."<<endl;
-	cout<<"Dexterity (DEX) - Effects if your chance to dodge."<<endl;
+	cout<<"Dexterity (DEX) - Effects if your chance to dodge, and if you attack first."<<endl;
 	cout<<"Defence (DEF) - Effects how much damage you take."<<endl;
 	cout<<"Luck (LUK) - The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters."<<endl;
 	int intSkillPointsLeft = 100;
