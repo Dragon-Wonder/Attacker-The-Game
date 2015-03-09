@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 2.5ß
+Current Revision: 3.0b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -89,6 +89,10 @@ Date		Revision	Changed By		Changes
 										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
 										-Added better opening message.
 										-Replaced all system("pause") with getchar();
+=============================================================================================================================================================
+2015/03/06	3.0b		Patrick Rye		-Redid some calculations in battle.h
+										-Added better winning message.
+										-Added spells.h does nothing currently just for testing.
 =============================================================================================================================================================	
 */
 
@@ -106,6 +110,7 @@ Date		Revision	Changed By		Changes
 #include "basic.h" //Functions that are simple and won't need to be changed very often.
 #include "battle.h" //Functions that deal with battling, levelling up and making a player.
 #include "rooms.h" //Functions that deal with generating a dungeon.
+//#include "spells.h" //Functions that deal with spells and magic, a possible future addition.
 /*********************************************************************************************************/
 using namespace std;
 Dungeon d; //Define the dungeon class as 'd' so I can use functions in there anywhere later in the code.
@@ -114,8 +119,9 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "2.5ß"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "3.0b"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
+//Some constant string for different messages that appear as large ASCII text.
 const string OpeningMessage[16] = {"                                                             \n",
 								   ",--.   ,--.       ,--.                                       \n",
 								   "|  |   |  | ,---. |  | ,---. ,---. ,--,--,--. ,---.          \n",
@@ -132,6 +138,14 @@ const string OpeningMessage[16] = {"                                            
 								   "|  .-.  |'-.  .-''-.  .-'' ,-.  || .--'|     /| .-. :|  .--' \n",
 								   "|  | |  |  |  |    |  |  \\ '-'  |\\ `--.|  \\  \\\\   --.|  |    \n",
 								   "`--' `--'  `--'    `--'   `--`--' `---'`--'`--'`----'`--'    \n"};
+
+const string WinningMessage[6] = {"__   __            _    _ _       _ _ \n",
+								 "\\ \\ / /           | |  | (_)     | | |\n",
+								 " \\ V /___  _   _  | |  | |_ _ __ | | |\n",
+								 "  \\ // _ \\| | | | | |/\\| | | '_ \\| | |\n",
+								 "  | | (_) | |_| | \\  /\\  / | | | |_|_|\n",
+								 "  \\_/\\___/ \\__,_|  \\/  \\/|_|_| |_(_|_)\n"};
+
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -237,7 +251,7 @@ int main()
 	//End of FOR levels.
 	}
 	cout << string(50, '\n');
-	cout<<"You win!!";
+	for (int i = 0; i < 6; i++) {cout<<WinningMessage[i];}
 	getchar();
 	return 0;
 //End of main
