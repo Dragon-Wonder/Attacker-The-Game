@@ -29,7 +29,7 @@ For more information, please refer to <http://unlicense.org>
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 3.1b
+Current Revision: 4.0b-dev2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -97,6 +97,8 @@ Date		Revision	Changed By		Changes
 2015/03/09	3.1b		Patrick Rye		-Edits to spells.h, more testing on adding spells.
 										-Sets debug mode in spells.h
 										-Win / opening messages moved to basic.h
+=============================================================================================================================================================
+2015/03/10	4.0b		Patrick Rye		-Implemented status effects.
 =============================================================================================================================================================	
 */
 
@@ -123,7 +125,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "3.1b"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "4.0b-dev2"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
