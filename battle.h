@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 3.0.1
+Current Revision: 3.1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -74,47 +74,48 @@ Date		Revision	Changed By		Changes
 2015/03/09	3.0.1		Patrick Rye		-Changed some text to better reflect certain changes.
 										-The less health something has the less damage it will do.
 										-Nerffered attack damage a bit.
-=============================================================================================================================================================					
+=============================================================================================================================================================
+2015/03/09	3.1			Patrick Rye		-Made structures of entities
+=============================================================================================================================================================
+2015/03/09	3.1.1		Patrick Rye		-Added status effects (do nothing at the moment).
+										-Added functions to get and set monster values.
+										-Moved enums to basic.h
+=============================================================================================================================================================						
 */
-
-/*
-For Stat Arrays 
-0 = STR
-1 = CONS
-2 = DEF
-3 = DEX
-4 = LUK
-*/
-
+/*********************************************************************************************************/
+struct entity {
+	string name;
+	int currhealth;
+	int maxhealth;
+	int str;
+	int cons;
+	int def;
+	int dex;
+	int luk;
+	int status;
+};
 /*********************************************************************************************************/
 /*A quick note on the base stats, a stat cannot be lower than 6, as a modifier might reduce the value by 5 points.
   The base stat point should also add up to be 100. */
-int MonsterBaseStats[5] = {20,20,20,20,20}; //A base array for the monsters 
-const int ZombieBaseStats[5] = {25,25,10,25,15};
-const int SkeletonBaseStats[5] = {35,18,6,35,6};
-const int WitchBaseStats[5] = {15,15,20,20,30};
-const int ImpBaseStats[5] = {15,15,15,40,15};
-const int GolemBaseStats[5] = {20,34,34,6,6};
+const entity monsters[5] = {{"Zombie",0,0,25,25,10,25,15,effectNone},
+							{"Skeleton",0,0,35,18,6,25,6,effectNone},
+							{"Witch",0,0,15,15,20,20,30,effectNone},
+							{"Imp",0,0,15,15,15,40,15,effectNone},
+							{"Golem",0,0,20,34,34,6,6,effectNone}};
+entity monster = {"Generic",0,0,20,20,20,20,20,effectNone};
+entity player = {"Player",0,0,20,20,20,20,20,effectNone};
 /*********************************************************************************************************/
 const string MonsterNames[5] = {"Zombie","Skeleton","Witch","Imp","Golem"};
-const string PosMonsterModifiers[7] = {"Strong","Large","Massive","Fast","Lucky","Powerful","Solid"};
+const string PosMonsterModifiers[6] = {"Strong","Large","Massive","Fast","Lucky","Solid"};
 const string NegMonsterModifiers[5] = {"Weak","Small","Tiny","Slow","Unlucky"};
 /*********************************************************************************************************/
-string MonsterName;
 string MonsterModifier;
-/*********************************************************************************************************/
-int PlayerHealth[2] = {0,300}; //An array 0 is current health 1 is max.
-int MonsterHealth[2] = {0,300}; //An array 0 is current health 1 is max
-int MonsterStats[5] = {6,6,6,6,6};
-int PlayerStats[5] = {5,5,5,5,5};
 /*********************************************************************************************************/
 int intBattleLevel = 1;
 bool blBattleDebugMode = false;
 /*********************************************************************************************************/
 void SetBattleDebugMode(bool isDebug) {blBattleDebugMode = isDebug;}
 /*********************************************************************************************************/
-
-
 
 bool StunCheck(int intAttackerLuck, int intDefenderLuck)
 {
@@ -157,16 +158,16 @@ bool MonsterAttack(int MonsterDamage, double MonsterMuli, bool ishealing)
 	//Only returns true if player died.
 	//Is in its own function so I can call it a couple of different places.
 	cout<<endl;
-	MonsterDamage = floor(MonsterDamage * DamageHealthPercent(MonsterHealth[0],MonsterHealth[1])); //Reduce damage based on health.
+	MonsterDamage = floor(MonsterDamage * DamageHealthPercent(monster.currhealth,monster.maxhealth)); //Reduce damage based on health.
 	if (ishealing) {floor(MonsterDamage /= 2);} //if player is healing reduce damage.
 	if (MonsterDamage != 0)
 	{
-		if (MonsterMuli > 1){cout<<"The "<<MonsterName<<" got a crit on you! ";}
-		cout<<"The "<<MonsterName<<" hit you for "<<MonsterDamage<<".";
+		if (MonsterMuli > 1){cout<<"The "<<monster.name<<" got a crit on you! ";}
+		cout<<"The "<<monster.name<<" hit you for "<<MonsterDamage<<".";
 	}
-	else {cout<<"You dodged the "<<MonsterName<<"'s attack!";}
-	PlayerHealth[0] -= MonsterDamage;
-	if (PlayerHealth[0] <= 0) {return true;}
+	else {cout<<"You dodged the "<<monster.name<<"'s attack!";}
+	player.currhealth -= MonsterDamage;
+	if (player.currhealth <= 0) {return true;}
 	return false;
 }
 
@@ -176,15 +177,15 @@ bool PlayerAttack(int PlayerDamage, double PlayerMuli)
 	//Only returns true if monster died.
 	//Is in its own function so I can call it a couple of different places.
 	cout<<endl;
-	PlayerDamage = floor(PlayerDamage * DamageHealthPercent(PlayerHealth[0],PlayerHealth[1])); //Reduce damage based on health.
+	PlayerDamage = floor(PlayerDamage * DamageHealthPercent(player.currhealth,player.maxhealth)); //Reduce damage based on health.
 	if (PlayerDamage != 0)
 	{
-		if (PlayerMuli > 1){cout<<"You got a crit on the "<<MonsterName<<"! ";}
-		cout<<"You "<<HitName()<<" the "<<MonsterName<<" for "<<PlayerDamage<<".";
+		if (PlayerMuli > 1){cout<<"You got a crit on the "<<monster.name<<"! ";}
+		cout<<"You "<<HitName()<<" the "<<monster.name<<" for "<<PlayerDamage<<".";
 	}
-	else {cout<<"The "<<MonsterName<<" dodged your attack.";}
-	MonsterHealth[0] -= PlayerDamage;
-	if (MonsterHealth[0]<=0) {return true;}
+	else {cout<<"The "<<monster.name<<" dodged your attack.";}
+	monster.currhealth -= PlayerDamage;
+	if (monster.currhealth<=0) {return true;}
 	return false;
 }
 
@@ -241,7 +242,7 @@ int CalculateDamage(int DamageLevel, int StrStat, int DefStat)
 	//A simple function for calculating damage.
 	//In its own function so future changes will be changed everywhere.
 	int DamageTemp = 0;
-	int intMinDamage = floor((MonsterHealth[1]+PlayerHealth[1])/20) + 1;
+	int intMinDamage = floor((monster.maxhealth+player.maxhealth)/20) + 1;
 	StrStat += rand() % DamageLevel;
 	DefStat += rand() % DamageLevel;
 	if (DefStat > StrStat) {return intMinDamage;}
@@ -264,18 +265,14 @@ void RandomMonster()
 	int intRandomMonsterNumber;
 	
 	intRandomMonsterNumber = rand() % 5;
-	MonsterName = MonsterNames[intRandomMonsterNumber];
-	if (MonsterName == "Witch") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=WitchBaseStats[i];}}
-	else if (MonsterName == "Imp") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=ImpBaseStats[i];}}
-	else if (MonsterName == "Skeleton") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=SkeletonBaseStats[i];}}
-	else if (MonsterName == "Zombie") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=ZombieBaseStats[i];}}
-	else if (MonsterName == "Golem") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]=GolemBaseStats[i];}} 
-	else
-	{
-		//In the event that the name wasn't found default to zombie
-		MonsterName = "Zombie";
-		for (int i=0; i <=4; i++) {MonsterBaseStats[i]=ZombieBaseStats[i];}
-	}
+	monster.name = monsters[intRandomMonsterNumber].name;
+	monster.str = monsters[intRandomMonsterNumber].str;
+	monster.cons = monsters[intRandomMonsterNumber].cons;
+	monster.def = monsters[intRandomMonsterNumber].def;
+	monster.dex = monsters[intRandomMonsterNumber].dex;
+	monster.luk = monsters[intRandomMonsterNumber].luk;
+	//monster.maxhealth = CalculateHealth(intBattleLevel, monster.cons);
+	//monster.currhealth = monster.maxhealth;
 }
 
 void RandomMonsterModifier()
@@ -293,42 +290,41 @@ void RandomMonsterModifier()
 	intPRandomNumber = rand() % 20; //0 - 19
 	intRandomNumber = rand() % 100 + 1; //1 - 100
 	
-	if (MonsterStats[4] + intMRandomNumber > PlayerStats[4]+intPRandomNumber)
+	if (monster.luk + intMRandomNumber > player.luk+intPRandomNumber)
 	{
 		//Monster has better chance of spawning with a positive effect
 		if (intRandomNumber < 60){MonsterModifier = "";}
 		else if (intRandomNumber < 90)
 		{
-			intRandomModifier = rand() %7; //0 - 6
+			intRandomModifier = rand() %6; //0 - 5
 			MonsterModifier = PosMonsterModifiers[intRandomModifier];
-			if (MonsterModifier == "Strong") {MonsterBaseStats[0]+=5;}
-			else if (MonsterModifier == "Large") {MonsterBaseStats[1]+=5;}
+			if (MonsterModifier == "Strong") {monster.str+=5;}
+			else if (MonsterModifier == "Large") {monster.cons+=5;}
 			else if (MonsterModifier == "Massive")
 			{
-				MonsterBaseStats[1]+=5;
-				MonsterBaseStats[0]+=5;
-				MonsterBaseStats[3]-=5;
+				monster.cons+=5;
+				monster.str+=5;
+				monster.dex-=5;
 			}
-			else if (MonsterModifier == "Fast") {MonsterBaseStats[3]+=5;}
-			else if (MonsterModifier == "Lucky") {MonsterBaseStats[4]+=5;}
-			else if (MonsterModifier == "Powerful") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]+=5;}}
-			else if (MonsterModifier == "Solid") {MonsterBaseStats[1]+=5;}
+			else if (MonsterModifier == "Fast") {monster.dex+=5;}
+			else if (MonsterModifier == "Lucky") {monster.luk+=5;}
+			else if (MonsterModifier == "Solid") {monster.cons+=5;}
 			else {MonsterModifier="";}
 		}
 		else if (intRandomNumber <=100)
 		{
 			intRandomModifier = rand() %5; //0 - 4
 			MonsterModifier = NegMonsterModifiers[intRandomModifier];
-			if(MonsterModifier == "Weak") {MonsterBaseStats[0]-=5;}
-			else if (MonsterModifier == "Small") {MonsterBaseStats[1]-=5;}
-			else if (MonsterModifier == "Tiny") {MonsterBaseStats[2]-=5;}
-			else if (MonsterModifier == "Slow") {MonsterBaseStats[3]-=5;}
-			else if (MonsterModifier == "Unlucky") {MonsterBaseStats[4]-=5;}
+			if(MonsterModifier == "Weak") {monster.str-=5;}
+			else if (MonsterModifier == "Small") {monster.cons-=5;}
+			else if (MonsterModifier == "Tiny") {monster.def-=5;}
+			else if (MonsterModifier == "Slow") {monster.dex-=5;}
+			else if (MonsterModifier == "Unlucky") {monster.luk-=5;}
 			else {MonsterModifier="";}
 		}
 		else {/*This shouldn't happen but just in case.*/MonsterModifier="";}
 	}
-	else if (MonsterStats[4] + intMRandomNumber < PlayerStats[4]+intPRandomNumber)
+	else if (monster.luk + intMRandomNumber < player.luk+intPRandomNumber)
 	{
 		//Monster has better chance of spawning with a negative effect
 		if (intRandomNumber < 60) {MonsterModifier = "";}
@@ -336,29 +332,28 @@ void RandomMonsterModifier()
 		{
 			intRandomModifier = rand() %5; //0 - 4
 			MonsterModifier = NegMonsterModifiers[intRandomModifier];
-			if(MonsterModifier == "Weak") {MonsterBaseStats[0]-=5;}
-			else if (MonsterModifier == "Small") {MonsterBaseStats[1]-=5;}
-			else if (MonsterModifier == "Tiny") {MonsterBaseStats[2]-=5;}
-			else if (MonsterModifier == "Slow") {MonsterBaseStats[3]-=5;}
-			else if (MonsterModifier == "Unlucky") {MonsterBaseStats[4]-=5;}
+			if(MonsterModifier == "Weak") {monster.str-=5;}
+			else if (MonsterModifier == "Small") {monster.cons-=5;}
+			else if (MonsterModifier == "Tiny") {monster.def-=5;}
+			else if (MonsterModifier == "Slow") {monster.dex-=5;}
+			else if (MonsterModifier == "Unlucky") {monster.luk-=5;}
 			else {MonsterModifier="";}
 		}
 		else if (intRandomNumber <=100)
 		{
-			intRandomModifier = rand() %7; //0 - 6
+			intRandomModifier = rand() %6; //0 - 5
 			MonsterModifier = PosMonsterModifiers[intRandomModifier];
-			if (MonsterModifier == "Strong") {MonsterBaseStats[0]+=5;}
-			else if (MonsterModifier == "Large") {MonsterBaseStats[1]+=5;}
+			if (MonsterModifier == "Strong") {monster.str+=5;}
+			else if (MonsterModifier == "Large") {monster.cons+=5;}
 			else if (MonsterModifier == "Massive")
 			{
-				MonsterBaseStats[1]+=5;
-				MonsterBaseStats[0]+=5;
-				MonsterBaseStats[3]-=5;
+				monster.cons+=5;
+				monster.str+=5;
+				monster.dex-=5;
 			}
-			else if (MonsterModifier == "Fast") {MonsterBaseStats[3]+=5;}
-			else if (MonsterModifier == "Lucky") {MonsterBaseStats[4]+=5;}
-			else if (MonsterModifier == "Powerful") {for (int i=0; i <=4; i++) {MonsterBaseStats[i]+=5;}}
-			else if (MonsterModifier == "Solid") {MonsterBaseStats[1]+=5;}
+			else if (MonsterModifier == "Fast") {monster.dex+=5;}
+			else if (MonsterModifier == "Lucky") {monster.luk+=5;}
+			else if (MonsterModifier == "Solid") {monster.cons+=5;}
 			else {MonsterModifier="";}
 		}
 		else {/*This shouldn't happen but just in case.*/MonsterModifier="";}
@@ -374,29 +369,39 @@ void LevelUpMonster()
 	int intStatPoints = (intBattleLevel - 1) *5; //How many stat points the monster gets.
 	int intRandomStatChoice = 0;
 	
-	StatUpgradeChance[0] = MonsterBaseStats[0];
-	for (int i = 0; i < 5; i++) {MonsterStats[i] = MonsterBaseStats[i];}
-	for (int i = 1; i < 5; i++) {StatUpgradeChance[i] = StatUpgradeChance[i - 1] + MonsterBaseStats[i];}
+	StatUpgradeChance[0] = monster.str;
+	StatUpgradeChance[1] = monster.cons + StatUpgradeChance[0];
+	StatUpgradeChance[2] = monster.def + StatUpgradeChance[1];
+	StatUpgradeChance[3] = monster.dex + StatUpgradeChance[2];
+	StatUpgradeChance[4] = monster.luk + StatUpgradeChance[3];
+	
 	for (int i = 0; i < intStatPoints; i++) //Random place points in the different stats.
 	{
 		intRandomStatChoice = rand() % 101;
-		if (intRandomStatChoice < StatUpgradeChance[0]) {MonsterStats[0] += 1;}
-		else if (intRandomStatChoice < StatUpgradeChance[1]) {MonsterStats[1] += 1;}
-		else if (intRandomStatChoice < StatUpgradeChance[2]) {MonsterStats[2] += 1;}
-		else if (intRandomStatChoice < StatUpgradeChance[3]) {MonsterStats[3] += 1;}
-		else {MonsterStats[4] += 1;}
+		if (intRandomStatChoice < StatUpgradeChance[0]) {monster.str += 1;}
+		else if (intRandomStatChoice < StatUpgradeChance[1]) {monster.cons += 1;}
+		else if (intRandomStatChoice < StatUpgradeChance[2]) {monster.def += 1;}
+		else if (intRandomStatChoice < StatUpgradeChance[3]) {monster.dex += 1;}
+		else {monster.luk += 1;}
 	}
-	if (blBattleDebugMode) {for(int i = 0; i < 5; i++ ) {cout<<endl<<MonsterStats[i];}}
+	if (blBattleDebugMode)
+	{
+		cout<<endl<<monster.str;
+		cout<<endl<<monster.cons;
+		cout<<endl<<monster.def;
+		cout<<endl<<monster.dex;
+		cout<<endl<<monster.luk;
+		cout<<endl;
+	}
 	//Recalculate healths and re-heal them
-    MonsterHealth[1] = floor(CalculateHealth(intBattleLevel,MonsterStats[1])/2);
-    MonsterHealth[0] = MonsterHealth[1];
+    monster.maxhealth = floor(CalculateHealth(intBattleLevel,monster.cons)/2);
+    monster.currhealth = monster.maxhealth;
 }
 
 void LevelUpFunction()
 {
 	//Holds function for levelling up.
 	int intPlayerStatPoints = 20; //Player gets 20 skill points to spend how they would like.
-	int intBattleLevelUpChoice;
 	int intBattleLevelUpAmount;
 	string strLevelUpChoice;
 	cout << string(50, '\n');
@@ -406,9 +411,9 @@ void LevelUpFunction()
 	{
 		LevelUpChoice:
 		cout<<"You have "<<intPlayerStatPoints<<" left to spend."<<endl<<endl;
-		cout<<"STR: "<<PlayerStats[0]<<endl<<"CONS: "<<PlayerStats[1]<<endl;
-		cout<<"DEF: "<<PlayerStats[2]<<endl<<"DEX: "<<PlayerStats[3]<<endl;
-		cout<<"LUK: "<<PlayerStats[4]<<endl<<"NONE to not use any points.";
+		cout<<"STR: "<<player.str<<endl<<"CONS: "<<player.cons<<endl;
+		cout<<"DEF: "<<player.def<<endl<<"DEX: "<<player.dex<<endl;
+		cout<<"LUK: "<<player.luk<<endl<<"NONE to not use any points.";
 		cout<<endl<<"Enter the stat you wish to improve."<<endl;
 		
 		cout<<"> ";
@@ -416,13 +421,7 @@ void LevelUpFunction()
 		cin>>strLevelUpChoice;
 		strLevelUpChoice = ConvertToUpper(strLevelUpChoice); //Capitalize all letters in the string.
 		
-		if (strLevelUpChoice == "STR") {intBattleLevelUpChoice = 0;}
-		else if (strLevelUpChoice == "CONS") {intBattleLevelUpChoice = 1;}
-		else if (strLevelUpChoice == "DEF") {intBattleLevelUpChoice = 2;}
-		else if (strLevelUpChoice == "DEX") {intBattleLevelUpChoice = 3;}
-		else if (strLevelUpChoice == "LUK") {intBattleLevelUpChoice = 4;}
-		else if (strLevelUpChoice == "NONE") {intBattleLevelUpChoice = 9999;}
-		else 
+		if (!(strLevelUpChoice == "STR" || strLevelUpChoice == "CONS" || strLevelUpChoice == "DEF" || strLevelUpChoice == "DEX" || strLevelUpChoice == "LUK" || strLevelUpChoice == "NONE"))
 		{
 			cout << string(50, '\n');
 			cout<<endl<<"Invalid choice, try again."<<endl;
@@ -451,15 +450,20 @@ void LevelUpFunction()
 				goto LevelUpAmount;
 			}
 			
-			PlayerStats[intBattleLevelUpChoice] += intBattleLevelUpAmount;
+			if (strLevelUpChoice == "STR") {player.str += intBattleLevelUpAmount;}
+			else if (strLevelUpChoice == "CONS") {player.cons += intBattleLevelUpAmount;}
+			else if (strLevelUpChoice == "DEF") {player.def += intBattleLevelUpAmount;}
+			else if (strLevelUpChoice == "DEX") {player.dex += intBattleLevelUpAmount;}
+			else{player.luk += intBattleLevelUpAmount;}
+			
 			intPlayerStatPoints -= intBattleLevelUpAmount;
 		}
 		else {intPlayerStatPoints = 0;} //Player chose not to use rest of points so just cause the loop to end.
 		
 	} while (intPlayerStatPoints > 0);
 	//Recalculate player's health.
-    PlayerHealth[1] = CalculateHealth(intBattleLevel, PlayerStats[1]);
-    PlayerHealth[0] = PlayerHealth[1];
+    player.maxhealth = CalculateHealth(intBattleLevel, player.cons);
+    player.currhealth = player.maxhealth;
 //End of level up function.
 }
 
@@ -478,15 +482,13 @@ char BattleScene()
     double douPlayerHealAmount;
 	char chrPlayerBattleChoice;
 	
-	LevelUpMonster();
-	
     //Recalculate amount player heals for.
-    douPlayerHealAmount = floor(PlayerHealth[1]/10);
+    douPlayerHealAmount = floor(player.maxhealth/10);
     BattleGoto:
 	cout << string(10, '\n');
 
-    double douPlayerCritChance = ((PlayerStats[4])/20 + rand() %3) * 4; 
-    double douMonsterCritChance =((MonsterStats[4])/20 + rand() %3) * 4;
+    double douPlayerCritChance = ((player.luk)/20 + rand() %3) * 4; 
+    double douMonsterCritChance =((monster.luk)/20 + rand() %3) * 4;
 	
     double douMonsterDamageMuli = 1;
     double douPlayerDamageMuli = 1;
@@ -502,17 +504,17 @@ char BattleScene()
     if (rand() % 101 <= douPlayerCritChance) {douPlayerDamageMuli = 1.375;}
     if (rand() % 101 <= douMonsterCritChance) {douMonsterDamageMuli = 1.375;}
 	
-	if(DodgeCheck(PlayerStats[3],PlayerStats[4])) {douMonsterDamageMuli = 0;}
-    if(DodgeCheck(MonsterStats[3],MonsterStats[4])) {douPlayerDamageMuli = 0;}
+	if(DodgeCheck(player.dex,player.luk)) {douMonsterDamageMuli = 0;}
+    if(DodgeCheck(monster.dex,monster.luk)) {douPlayerDamageMuli = 0;}
 	
     //Calculate damage done.
-    intPlayerDamage = CalculateDamage(intBattleLevel, PlayerStats[0], MonsterStats[2]) * douPlayerDamageMuli;
-    intMonsterDamage = CalculateDamage(intBattleLevel, MonsterStats[0], PlayerStats[2]) * douMonsterDamageMuli;
+    intPlayerDamage = CalculateDamage(intBattleLevel, player.str, monster.def) * douPlayerDamageMuli;
+    intMonsterDamage = CalculateDamage(intBattleLevel, monster.str, player.def) * douMonsterDamageMuli;
 	
-    cout<<"You are now fighting a level "<<intBattleLevel<<" "<<MonsterName<<"!";
-    /*cout<<endl<<"It has "<<MonsterHealth[0]<<" out of "<<MonsterHealth[1]<<" HP left"<<endl;*/
-	cout<<endl<<"The "<<MonsterName<<" appears to be "<<StateOfBeing(MonsterHealth[0],MonsterHealth[1])<<".";
-    cout<<endl<<endl<<"You have "<<PlayerHealth[0]<<" out of "<<PlayerHealth[1]<<" HP left."<<endl;
+    cout<<"You are now fighting a level "<<intBattleLevel<<" "<<monster.name<<"!";
+    /*cout<<endl<<"It has "<<monster.currhealth<<" out of "<<monster.maxhealth<<" HP left"<<endl;*/
+	cout<<endl<<"The "<<monster.name<<" appears to be "<<StateOfBeing(monster.currhealth,monster.maxhealth)<<".";
+    cout<<endl<<endl<<"You have "<<player.currhealth<<" out of "<<player.maxhealth<<" HP left."<<endl;
     PlayerChoice:
 	
     cout<<endl<<"What you like to do?"<<endl;
@@ -528,12 +530,12 @@ char BattleScene()
     {
         case 'A' :
             cout << string(10, '\n');
-			if ((MonsterStats[3]+MonsterStats[4]/5)+rand() % 5 > (PlayerStats[3]+PlayerStats[4]/5)+rand() % 5) //See who attacks first.
+			if ((monster.dex+monster.luk/5)+rand() % 5 > (player.dex+player.luk/5)+rand() % 5) //See who attacks first.
 			{
 				//Monster attacks first.
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
 				if (blPlayerDead) {return 'F';}
-				if (!StunCheck(MonsterStats[4],PlayerStats[4]))
+				if (!StunCheck(monster.luk,player.luk))
 				{
 					blMonsterDead = PlayerAttack(intPlayerDamage,douPlayerDamageMuli);
 					if (blMonsterDead) {return 'T';}
@@ -545,12 +547,12 @@ char BattleScene()
 				//Player attacks first.
 				blMonsterDead = PlayerAttack(intPlayerDamage,douPlayerDamageMuli);
 				if (blMonsterDead) {return 'T';}
-				if (!StunCheck(PlayerStats[4],MonsterStats[4]))
+				if (!StunCheck(player.luk,monster.luk))
 				{
 					blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
 					if (blPlayerDead) {return 'F';}		
 				}
-				else {cout<<endl<<"The "<<MonsterName<<" was stunned by your hit and unable to attack.";}
+				else {cout<<endl<<"The "<<monster.name<<" was stunned by your hit and unable to attack.";}
 		
 			}
             cout<<endl;
@@ -560,24 +562,24 @@ char BattleScene()
         case 'H' :
             //Code for player healing.
 			cout << string(10, '\n');
-			if ((MonsterStats[3]+MonsterStats[4]/5)+rand() % 5 > (PlayerStats[3]+PlayerStats[4]/5)+rand() % 5) //See who attacks first.
+			if ((monster.dex+monster.luk/5)+rand() % 5 > (player.dex+player.luk/5)+rand() % 5) //See who attacks first.
 			{
 				//Monster attacks first
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,true);
 				if (blPlayerDead) {return 'F';}
 				
-				if (!StunCheck(MonsterStats[4],PlayerStats[4]))
+				if (!StunCheck(monster.luk,player.luk))
 				{
-					if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
-					else {PlayerHealth[0] += douPlayerHealAmount;}
+					if (player.currhealth+douPlayerHealAmount > player.maxhealth) {player.currhealth=player.maxhealth;}
+					else {player.currhealth += douPlayerHealAmount;}
 				}
 				else {cout<<endl<<"You were stunned and unable to heal.";}
 			}
 			else
 			{
 				//Player heals first
-				if (PlayerHealth[0]+douPlayerHealAmount > PlayerHealth[1]) {PlayerHealth[0]=PlayerHealth[1];}
-				else {PlayerHealth[0] += douPlayerHealAmount;}
+				if (player.currhealth+douPlayerHealAmount > player.maxhealth) {player.currhealth=player.maxhealth;}
+				else {player.currhealth += douPlayerHealAmount;}
 				
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,true);
 				if (blPlayerDead) {return 'F';}				
@@ -611,7 +613,7 @@ char BattleScene()
 			}
 			break;
 		case 'R' : //chance to run away.
-			if (rand() % 101 < ((PlayerStats[3] + PlayerStats[4]/6) + rand() % 10)/10 ) {return 'T';}
+			if (rand() % 101 < ((player.dex + player.luk/6) + rand() % 10)/10 ) {return 'T';}
 			else 
 			{
 				cout<<"You failed to get away."<<endl;
@@ -626,8 +628,8 @@ char BattleScene()
 			if (blBattleDebugMode)
 			{
 				cout << string(2, '\n');
-				cout<<endl<<"Monster current health: "<<MonsterHealth[0];
-				cout<<endl<<"Monster max health: "<<MonsterHealth[1];
+				cout<<endl<<"Monster current health: "<<monster.currhealth;
+				cout<<endl<<"Monster max health: "<<monster.maxhealth;
 				cout<<endl<<"Player crit chance: "<<douPlayerCritChance;
 				cout<<endl<<"Monster crit chance: "<<douMonsterCritChance;
 				cout<<endl<<"Player muli: "<<douPlayerDamageMuli;
@@ -779,15 +781,15 @@ char PlayerInitialize()
 
 	//Make an array of the player's stats for easier referencing of them later
 	RestofGame:
-	PlayerStats[0]=intStr;
-	PlayerStats[1]=intCons;
-	PlayerStats[2]=intDef;
-	PlayerStats[3]=intDex;
-	PlayerStats[4]=intLuk;
+	player.str=intStr;
+	player.cons=intCons;
+	player.def=intDef;
+	player.dex=intDex;
+	player.luk=intLuk;
 	cout << string(50, '\n');
 	
-	PlayerHealth[1] = CalculateHealth(1,PlayerStats[1]);
-    PlayerHealth[0] = PlayerHealth[1];
+	player.maxhealth = CalculateHealth(1,player.cons);
+    player.currhealth = player.maxhealth;
 	
 	return 'T';
 //End of player initialize.
@@ -798,15 +800,16 @@ bool startbattle(int intsLevel)
 	intBattleLevel = intsLevel;
 	char charBattleSceneEnding;
 	RandomMonster(); //Generate a random monster.
+	LevelUpMonster(); //Level up monster.
 	RandomMonsterModifier(); //Give monster random modifier. 
-	if (MonsterModifier != "") {MonsterName = ConvertToLower(MonsterModifier) + " " + ConvertToLower(MonsterName);} //If monster has a modifier change name to include it.
-	else {MonsterName = ConvertToLower(MonsterName);}
+	if (MonsterModifier != "") {monster.name = ConvertToLower(MonsterModifier) + " " + ConvertToLower(monster.name);} //If monster has a modifier change name to include it.
+	else {monster.name = ConvertToLower(monster.name);}
     charBattleSceneEnding = BattleScene();
 	switch(charBattleSceneEnding)
 	{
 		case 'T' :
 			cout << string(50, '\n');
-			cout<<"You beat the "<<MonsterName<<"."<<endl;
+			cout<<"You beat the "<<monster.name<<"."<<endl;
 			getchar();
             return true;
 			break;
@@ -829,17 +832,53 @@ bool startbattle(int intsLevel)
 int getbattlevalue(int intvalue)
 {
 	if (intvalue < 0) {return 0;}
-	else if (intvalue < 5) {return PlayerStats[intvalue];}
-	else if (intvalue == 5) {return PlayerHealth[0];}
-	else if (intvalue == 6) {return PlayerHealth[1];}
-	else {return 0;}
+	else if (intvalue == statStr) {return player.str;}
+	else if (intvalue == statCons) {return player.cons;}
+	else if (intvalue == statDef) {return player.def;}
+	else if (intvalue == statDex) {return player.dex;}
+	else if (intvalue == statLuk) {return player.luk;}
+	else if (intvalue == statCurrHealth) {return player.currhealth;}
+	else if (intvalue == statMaxHealth) {return player.maxhealth;}
+	else if (intvalue == statStatus) {return player.status;}
+	return 0;
 }
 
 void setbattlevalue(int intlocation, int intvalue)
 {
-	if (intlocation < 5) {PlayerStats[intlocation] = intvalue;}
-	else if (intlocation == 5) {PlayerHealth[0] = intvalue;}
-	else if (intlocation == 6) {PlayerHealth[1] = intvalue;}
+	if (intlocation == statStr) {player.str = intvalue;}
+	else if (intlocation == statCons) {player.cons = intvalue;}
+	else if (intlocation == statDef) {player.def = intvalue;}
+	else if (intlocation == statDex) {player.dex = intvalue;}
+	else if (intlocation == statLuk) {player.luk = intvalue;}
+	else if (intlocation == statCurrHealth) {player.currhealth = intvalue;}
+	else if (intlocation == statMaxHealth) {player.maxhealth = intvalue;}
+	else if (intlocation == statStatus) {player.status = intvalue;}
+}
+
+int getmonstervalue(int intlocation)
+{
+	if (intlocation < 0) {return 0;}
+	else if (intlocation == statStr) {return monster.str;}
+	else if (intlocation == statCons) {return monster.cons;}
+	else if (intlocation == statDef) {return monster.def;}
+	else if (intlocation == statDex) {return monster.dex;}
+	else if (intlocation == statLuk) {return monster.luk;}
+	else if (intlocation == statCurrHealth) {return monster.currhealth;}
+	else if (intlocation == statMaxHealth) {return monster.maxhealth;}
+	else if (intlocation == statStatus) {return monster.status;}
+	return 0;
+}
+
+void setmonstervalue(int intlocation, int intvalue)
+{
+	if (intlocation == statStr) {monster.str = intvalue;}
+	else if (intlocation == statCons) {monster.cons = intvalue;}
+	else if (intlocation == statDef) {monster.def = intvalue;}
+	else if (intlocation == statDex) {monster.dex = intvalue;}
+	else if (intlocation == statLuk) {monster.luk = intvalue;}
+	else if (intlocation == statCurrHealth) {monster.currhealth = intvalue;}
+	else if (intlocation == statMaxHealth) {monster.maxhealth = intvalue;}
+	else if (intlocation == statStatus) {monster.status = intvalue;}
 }
 
 #endif
