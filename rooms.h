@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 2.2.2
+Current Revision: 2.2.3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -36,6 +36,8 @@ Date		Revision	Changed By		Changes
 										-Added more pauses.
 =============================================================================================================================================================
 2015/03/09	2.2.2		Patrick Rye 	-Added some effects of status effects here
+=============================================================================================================================================================
+2015/03/13	2.2.3		Patrick Rye		-Implemented blindness to change how map appears.
 =============================================================================================================================================================			
 */
 int intPlayerX; //Player position in X and Y.
@@ -305,15 +307,18 @@ class Dungeon
 	}
 	public:
 	void showDungeon(){
+		int PlayerStatus = getbattlevalue(statStatus);
 		for (int y = 0; y < ysize; y++){
 			for (int x = 0; x < xsize; x++){
 				//System.out.print(getCell(x, y));
 				switch(getCell(x, y)){
 				case tileUnused:
-					printf("█");
+					if (PlayerStatus == effectBlinded) {printf(" ");}
+					else {printf("█");}
 					break;
 				case tileDirtWall:
-					printf("█");
+					if (PlayerStatus == effectBlinded) {printf(" ");}
+					else {printf("█");}
 					break;
 				case tileDirtFloor:
 					printf(" ");
@@ -325,7 +330,8 @@ class Dungeon
 					printf(" ");//░
 					break;
 				case tileDoor:
-					printf("$");
+					if (PlayerStatus == effectBlinded) {printf(" ");}
+					else {printf("$");}
 					break;
 				case tileUpStairs:
 					printf("<");
@@ -334,7 +340,8 @@ class Dungeon
 					printf(">");
 					break;
 				case tileChest:
-					printf("@");
+					if (PlayerStatus == effectBlinded) {printf(" ");}
+					else {printf("@");}
 					break;
 				case tilePlayer:
 					printf("†");
@@ -593,20 +600,21 @@ class Dungeon
 		int Status = getbattlevalue(statStatus);
 		const char Dir[4] = {'N','S','E','W'};
 		//If player is confused they move a random direction.
-		if (Status == effectConfused && (chrPlayerDirection == 'N' || chrPlayerDirection == 'E' || chrPlayerDirection == 'W' ||chrPlayerDirection == 'S')) 
+		
+		if (Status != effectNone)
 		{
-			if (RemoveStatusEffect(getbattlevalue(statLuk),effectConfused, getbattlevalue(statStatusCounter))) 
+			if (RemoveStatusEffect(getbattlevalue(statLuk),Status, getbattlevalue(statStatusCounter))) 
 			{
-				cout<<endl<<EndOfEffectString("player",effectConfused);
+				cout<<endl<<EndOfEffectString("player",Status);
 				setbattlevalue(statStatus,effectNone);
 				setbattlevalue(statStatusCounter,0);
 			}
-			else 
-			{
+			else {setbattlevalue(statStatusCounter,getbattlevalue(statStatusCounter)+1);}
+		}
+		if (Status == effectConfused && (chrPlayerDirection == 'N' || chrPlayerDirection == 'E' || chrPlayerDirection == 'W' ||chrPlayerDirection == 'S')) 
+		{
 				chrPlayerDirection = Dir[rand() % 4];
 				cout<<endl<<"You are confused and don't know where to go.";
-				setbattlevalue(statStatusCounter,getbattlevalue(statStatusCounter)+1);
-			}
 		}
 		playerfind();
 		intPlayerNewX = intPlayerX;
@@ -674,7 +682,7 @@ class Dungeon
 				else if (Status == effectBleeding) {strStatus = "Bleeding";}
 				else if (Status == effectConfused) {strStatus = "Confused";}
 				else {strStatus = "ERROR";}
-
+				cout<<"Current status effect: "<<strStatus<<endl;
 				getchar();
 				return 'F';
 				break;
