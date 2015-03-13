@@ -7,8 +7,12 @@ Current Revision: 1.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================	
-2015/03/09	1.0			Patrick Rye		-Original
+=============================================================================================================================================================			
+-------------------------------------------------------------------------------------------------------------------------------------------------------------									
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+=============================================================================================================================================================		
+2015/03/13	1.0			Patrick Rye		-Original
 =============================================================================================================================================================
 */
 /*********************************************************************************************************/
@@ -37,11 +41,7 @@ const spell basespells[7] = {{"Spell Fail",0,0,typeHeal,elementNone,effectNone},
 void init_spell(string SpellCast)
 {
 	int n;
-	for (int i = 0; i < 7; i++)
-	{
-		if (SpellCast == basespells[i].name) {n = i;}
-		else {n = 0;} //A catch if it cannot find spell name, then sets it to 0, which is fail spell. 
-	}
+	for (int i = 0; i < 7; i++) {if (SpellCast == basespells[i].name) {n = i;}}
 	
 	int playerLuk = getbattlevalue(statLuk);
 	int CurrPHealth = getbattlevalue(statCurrHealth);
@@ -54,9 +54,14 @@ void init_spell(string SpellCast)
 	switch (basespells[n].type)
 	{
 		case typeHeal :
-			if (PStatus != effectNone){ //If player has an effect chance to remove it.
-				if (rand() % 101 <= playerLuk) {setbattlevalue(statStatus,effectNone);} }
-			
+			if (PStatus != effectNone) //If player has an effect chance to remove it.
+			{
+				if (rand() % 101 <= playerLuk) 
+				{
+					setbattlevalue(statStatus,effectNone);
+					cout<<endl<<EndOfEffectString("player",PStatus)<<endl;
+				} 
+			}
 			if (CurrPHealth + basespells[n].damage >= MaxPHealth) {setbattlevalue(statMaxHealth,MaxPHealth);}
 			else {setbattlevalue(statCurrHealth,CurrPHealth + basespells[n].damage);}
 			cout<<endl<<"You heal yourself for "<<basespells[n].damage<<". ";
@@ -64,6 +69,7 @@ void init_spell(string SpellCast)
 		case typeEffect :
 			if (MStatus != effectNone) {cout<<"Spell fails. "; break;}
 			setmonstervalue(statStatus,basespells[n].effect);
+			cout<<endl<<StartOfEffectString("monster",basespells[n].effect)<<endl;
 			break;
 		case typeDamage :
 			if (basespells[n].effect != effectNone) {if (rand() % 101 <= playerLuk) {setmonstervalue(statStatus,basespells[n].effect);}}
