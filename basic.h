@@ -4,29 +4,17 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions that are pretty basic and likely won't change very often or at all.
-Current Revision: 2.1.4
+Current Revision: 1.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
+=============================================================================================================================================================			
+-------------------------------------------------------------------------------------------------------------------------------------------------------------									
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+=============================================================================================================================================================
+	
 =============================================================================================================================================================	
-2015/02/20	1.0			Patrick Rye		-Original from 3.1a
-=============================================================================================================================================================
-2015/03/02	2.0			Patrick Rye		-Renamed to Basic.h
-										-Added save file checker function.
-=============================================================================================================================================================
-2015/03/02	2.1			Patrick Rye		-Changed save file checker to be able to check for any file name.
-=============================================================================================================================================================
-2015/03/04	2.1.1		Patrick Rye		-Removed save exists function as it was replaced by file exists.
-=============================================================================================================================================================
-2015/03/05	2.1.2 		Patrick Rye		-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
-=============================================================================================================================================================
-2015/03/09	2.1.3		Patrick Rye		-Moved win / opening messages here.
-										-Moved enums here.
-=============================================================================================================================================================
-2015/03/09	2.1.4		Patrick Rye		-Added more effects.
-										-Updated some other stuff.
-										-Function to return string of start / end of status effect.
-=============================================================================================================================================================		
 */
 
 /*********************************************************************************************************/
@@ -66,7 +54,7 @@ enum effects
 	effectWet,
 	effectPoison,
 	effectBleeding,
-	effectConfused
+	effectConfused,
 };
 
 enum stats
@@ -114,14 +102,6 @@ bool DodgeCheck(int LUK, int DEX)
     double douDodgeChance = ((DEX/2)+(LUK/6)/4);
 	if(rand() % 101 <= douDodgeChance) {return true;}
 	else {return false;}
-}
-
-bool RemoveStatusEffect(int TargetLuk, int CurrentEffect, int EffectTurns)
-{
-	//Check if status effect should be removed based on turns and luck.
-	if (EffectTurns >= 5) {return true;} //Get rid of effect if it has been there for more than 5 turns.
-	if (rand() % 101 <= (TargetLuk)  + (EffectTurns *2.5) - (intBattleLevel * 2)) {return true;}
-	return false;
 }
 
 float DamageHealthPercent(int CurrentHealth, int MaximumHealth)
@@ -211,7 +191,7 @@ string EndOfEffectString(std::string Target, int Effect)
 				return "Your body ejects the last of the poison.";
 				break;
 			case effectBleeding :
-				return "Your bleeding wounds being to close.";
+				return "Your bleeding wounds begin to close.";
 				break;
 			case effectConfused :
 				return "Your head is now clear.";
