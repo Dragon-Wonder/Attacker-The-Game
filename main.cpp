@@ -1,78 +1,16 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 4.0b
+Current Revision: 1.0c-dev1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================			
 -------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM ALPHA TO BETA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-2015/02/24	1.0b		Patrick Rye		-Moved from V5.0-alpha to V1.0-beta
-										-Fixed level up so it happens when you get to a new level.
-										-Allowed exit on map.
-										-Fixed opening text to reflect recent changes in the game.
-										-Grammar and spelling fixes (yay, made it several revisions without having to do this. :) ).
-=============================================================================================================================================================
-2015/02/24	1.1b		Patrick Rye		-Attempted to allow movement on map through arrow keys.
-										-Could not get this to work and broke everything. Rolling back to previous version.
-										-Keeping this attempt in the record and will try to implement it again later.
-=============================================================================================================================================================
-2015/02/25	1.2b		Patrick Rye		-Grammar and spelling fixes. ((╯°□°)╯︵ ┻━┻)
-										-Cleaned up code some more.
-										-Changed some if statements to case switches.
-										-Added breaks to case switches.
-=============================================================================================================================================================
-2015/02/26	1.3b		Patrick Rye		-Moved player movement to the room.h
-=============================================================================================================================================================
-2015/02/27	2.0b		Patrick Rye		-Added a save function, for testing purposes.
-										-Added load function.
-										-Added function to see if file exists.
-=============================================================================================================================================================
-2015/02/27	2.1b		Patrick Rye		-Moved save checker to basic.h
-										-Renamed casechecker.h to basic.h
-										-Added more comments explaining parts of the code.
-										-Changed some names of functions to better reflect what they do.
-										-Health is now carried between battles.
-										-Moved healing to be able to happen between battles.
-										-Added fail check for load function.
-=============================================================================================================================================================
-2015/03/02	2.2b		Patrick Rye		-Improved code a bit.
-										-Added version number tracker.
-										-Prompt for loading save.
-										-Prompt for incorrect save version.
-										-Moved saving and loading functions to its own header.
-=============================================================================================================================================================
-2015/03/02	2.2.1b		Patrick Rye		-Quick fix for version not being applied properly.
-=============================================================================================================================================================
-2015/03/03	2.3b		Patrick Rye		-Added more comments.
-										-Changed some wording to better explain stuff.
-										-Added a debug mode to game, detects if source code exists.
-										-Grammar & spelling fixes.
-=============================================================================================================================================================
-2015/03/04	2.4b		Patrick Rye		-Debug mode can be set by loading a debug save.
-										-Grammar & spelling fixes.
-										-Improved map menu.
-										-Changed save to 'V' rather than 'P'.
-=============================================================================================================================================================
-2015/03/06	2.5ß		Patrick Rye		-Changed some debug commands.
-										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
-										-Added better opening message.
-										-Replaced all system("pause") with getchar();
-=============================================================================================================================================================
-2015/03/06	3.0b		Patrick Rye		-Redid some calculations in battle.h
-										-Added better winning message.
-										-Added spells.h does nothing currently just for testing.
-=============================================================================================================================================================
-2015/03/09	3.1b		Patrick Rye		-Edits to spells.h, more testing on adding spells.
-										-Sets debug mode in spells.h
-										-Win / opening messages moved to basic.h
-=============================================================================================================================================================
-2015/03/10	4.0b		Patrick Rye		-Implemented status effects.
-										-Doubled monsters that can appear.
-										-Removed license from this file as I just discovered that it is included with a source download.
+
 =============================================================================================================================================================	
 */
 
@@ -99,7 +37,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "4.0b"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "1.0c-dev1"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
