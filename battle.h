@@ -3,95 +3,16 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 4.1.1
+Current Revision: 1.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================	
-2015/02/23	1.0			Patrick Rye		-Original
+=============================================================================================================================================================			
+-------------------------------------------------------------------------------------------------------------------------------------------------------------									
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================
-2015/02/24	1.1			Patrick Rye		-Changed system("cls") to cout << string(50, '\n');
-=============================================================================================================================================================
-2015/02/24	1.2			Patrick Rye		-Moved level up to happen when you change levels.
-										-Fixed bug that would cause endless loop is you entered non integer numbers for starting stats.
-											-Bug has been there since the start I just didn't know how to fix it till now.
-										-Fixed bug where player could enter values below 1 for stats.
-										-Fixed bug where player could enter decimal places for stats.
-=============================================================================================================================================================
-2015/02/25	1.3			Patrick Rye		-Improved look of the code by adding separators.
-										-Reduced chance for dodges and crits (cut by half).
-										-Grammar and spelling fixes. (Whelp back to the old grim I guess).
-										-Added breaks to case switches (kinda surprised it worked before).
-=============================================================================================================================================================
-2015/02/26	1.4			Patrick Rye		-General code improvement.
-										-Fixed losing message to better represent changes to objectives.
-										-Grammar and spelling fixes.
-=============================================================================================================================================================
-2015/02/27	1.5			Patrick Rye		-Added function that saves needed values.
-										-Changed health arrays from doubles to integers.
-=============================================================================================================================================================
-2015/03/02	1.6			Patrick Rye		-Changed name of some functions to better reflect what they do.
-										-Changed health to carry over between battles.
-										-Moved health calculating to its own function.
-										-Moved damage calculating to its own function.
-=============================================================================================================================================================
-2015/03/02	1.7			Patrick Rye		-Improved code.
-										-Grammar and spelling fixes.
-										-Moved dodge check to its own function.
-=============================================================================================================================================================
-2015/03/03	2.0			Patrick Rye		-Grammar and spelling fixes.
-										-Initialized certain variables with values.
-										-Nerffered monster health, now 1/3 of a player's with the same stats.
-										-Added debug mode.
-										-Floored damage done when healing.
-=============================================================================================================================================================
-2015/03/04	2.1			Patrick Rye		-Added new monster, Golem.
-										-Changed monster base stats so that they total to 100.
-										-Floored monster health.
-=============================================================================================================================================================
-2015/03/04	2.2			Patrick Rye		-Change battle menu a bit.
-										-Exit is now 'X' instead of 'E'.
-										-Changed help to 'P' instead of 'Q'
-										-Added function which can randomly return a string giving a description of the state of the monster based on current health.
-										-During battle the status of the monster is replaced with description.
-=============================================================================================================================================================
-2015/03/06	2.3			Patrick Rye		-General code improvement.
-										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
-										-Changed battles so that the monster or player will apply damage first, depending on dexterity.
-										-Added option to run away from battle.
-										-Moved player attacking and monster attacking to their own functions.
-										-Changed battle start to return a boolean.
-=============================================================================================================================================================
-2015/03/06	2.3.1		Patrick Rye		-Changed system("pause") to getchar();
-										-Added more pauses.
-=============================================================================================================================================================
-2015/03/06	3.0			Patrick Rye		-Added chance for stun.
-										-Redid monster levelling.
-										-Redid health calculation.
-										-Redid damage calculation.
-										-Added some variability to attack damage.
-=============================================================================================================================================================
-2015/03/09	3.0.1		Patrick Rye		-Changed some text to better reflect certain changes.
-										-The less health something has the less damage it will do.
-										-Nerffered attack damage a bit.
-=============================================================================================================================================================
-2015/03/09	3.1			Patrick Rye		-Made structures of entities
-=============================================================================================================================================================
-2015/03/09	3.1.1		Patrick Rye		-Added status effects (do nothing at the moment).
-										-Added functions to get and set monster values.
-										-Moved enums to basic.h
-=============================================================================================================================================================
-2015/03/09  4.0			Patrick Rye		-Implemented status effects.
-										-Moved functions that do not need to be kept here to basic.h
-=============================================================================================================================================================
-2015/03/10	4.1			Patrick Rye		-Made a structure for attacks.
-										-Added monster, Murloc, Angel, Demon, harpy, elf, ghost, and undead mutant.
-										-Added modifiers spineless & heavily-armoured.
-=============================================================================================================================================================
-2015/03/13	4.1.1		Patrick Rye		-Made it so different monsters can cause different effects.
-										-Finished implementing status effects.
-										-Added Thunder Spider (I needed an energy monster but I'm not super creative so yea....)
-										-Nerffered monster damage a bit.
+	
 =============================================================================================================================================================				
 */
 /*********************************************************************************************************/
