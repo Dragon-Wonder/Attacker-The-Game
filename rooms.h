@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 2.2.1
+Current Revision: 2.2.3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,11 @@ Date		Revision	Changed By		Changes
 =============================================================================================================================================================
 2015/03/06	2.2.1		Patrick Rye		-Changed system("pause") to getchar();
 										-Added more pauses.
-=============================================================================================================================================================	
+=============================================================================================================================================================
+2015/03/09	2.2.2		Patrick Rye 	-Added some effects of status effects here
+=============================================================================================================================================================
+2015/03/13	2.2.3		Patrick Rye		-Implemented blindness to change how map appears.
+=============================================================================================================================================================			
 */
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
@@ -303,15 +307,18 @@ class Dungeon
 	}
 	public:
 	void showDungeon(){
+		int PlayerStatus = getbattlevalue(statStatus);
 		for (int y = 0; y < ysize; y++){
 			for (int x = 0; x < xsize; x++){
 				//System.out.print(getCell(x, y));
 				switch(getCell(x, y)){
 				case tileUnused:
-					printf("█");
+					if (PlayerStatus == effectBlinded) {printf(" ");}
+					else {printf("█");}
 					break;
 				case tileDirtWall:
-					printf("█");
+					if (PlayerStatus == effectBlinded) {printf(" ");}
+					else {printf("█");}
 					break;
 				case tileDirtFloor:
 					printf(" ");
@@ -323,7 +330,8 @@ class Dungeon
 					printf(" ");//░
 					break;
 				case tileDoor:
-					printf("$");
+					if (PlayerStatus == effectBlinded) {printf(" ");}
+					else {printf("$");}
 					break;
 				case tileUpStairs:
 					printf("<");
@@ -332,7 +340,8 @@ class Dungeon
 					printf(">");
 					break;
 				case tileChest:
-					printf("@");
+					if (PlayerStatus == effectBlinded) {printf(" ");}
+					else {printf("@");}
 					break;
 				case tilePlayer:
 					printf("†");
@@ -574,7 +583,7 @@ class Dungeon
 		{
 			for (int x2 = 0; x2 < 80; x2++)
 			{
-				if (getCell(x2,y2)==9) //Finds where player is.
+				if (getCell(x2,y2) == tilePlayer) //Finds where player is.
 				{
 					intPlayerX = x2;
 					intPlayerY = y2;
@@ -588,9 +597,29 @@ class Dungeon
 	public:
 	char PlayerMovement(char chrPlayerDirection)
 	{
+		int Status = getbattlevalue(statStatus);
+		const char Dir[4] = {'N','S','E','W'};
+		//If player is confused they move a random direction.
+		
+		if (Status != effectNone)
+		{
+			if (RemoveStatusEffect(getbattlevalue(statLuk),Status, getbattlevalue(statStatusCounter))) 
+			{
+				cout<<endl<<EndOfEffectString("player",Status);
+				setbattlevalue(statStatus,effectNone);
+				setbattlevalue(statStatusCounter,0);
+			}
+			else {setbattlevalue(statStatusCounter,getbattlevalue(statStatusCounter)+1);}
+		}
+		if (Status == effectConfused && (chrPlayerDirection == 'N' || chrPlayerDirection == 'E' || chrPlayerDirection == 'W' ||chrPlayerDirection == 'S')) 
+		{
+				chrPlayerDirection = Dir[rand() % 4];
+				cout<<endl<<"You are confused and don't know where to go.";
+		}
 		playerfind();
 		intPlayerNewX = intPlayerX;
 		intPlayerNewY = intPlayerY;
+		string strStatus;
 		switch (chrPlayerDirection)
 		{
 			case 'N' : //Player wants to go up.
@@ -625,14 +654,14 @@ class Dungeon
 				break;
 			case 'H' : //Player wants to heal.
 				int intPlayerCurrHealth;
-				intPlayerCurrHealth = getbattlevalue(5);
+				intPlayerCurrHealth = getbattlevalue(statCurrHealth);
 				int intPlayerMaxHealth;
-				intPlayerMaxHealth = getbattlevalue(6);
+				intPlayerMaxHealth = getbattlevalue(statMaxHealth);
 				int intPlayerHealAmount;
 				intPlayerHealAmount = floor(intPlayerMaxHealth/10);
 				if (intPlayerCurrHealth + intPlayerHealAmount >= intPlayerMaxHealth) {intPlayerCurrHealth = intPlayerMaxHealth;}
 				else {intPlayerCurrHealth += intPlayerHealAmount;}
-				setbattlevalue(5,intPlayerCurrHealth); //Set player current health to the new amount.
+				setbattlevalue(statCurrHealth,intPlayerCurrHealth); //Set player current health to the new amount.
 				cout<<endl<<"Your health is now: "<<intPlayerCurrHealth<<" out of "<<intPlayerMaxHealth<<".";
 				return 'F'; //Return F that player did not find exit.
 				break;
@@ -644,6 +673,16 @@ class Dungeon
 				cout<<"STR: "<<intPlayerStatsTemp[0]<<endl<<"CONS: "<<intPlayerStatsTemp[1]<<endl;
 				cout<<"DEF: "<<intPlayerStatsTemp[2]<<endl<<"DEX: "<<intPlayerStatsTemp[3]<<endl;
 				cout<<"LUK: "<<intPlayerStatsTemp[4]<<endl;
+				if (Status == effectNone) {strStatus = "NONE";}
+				else if (Status == effectBlinded) {strStatus = "Blinded";}
+				else if (Status == effectFrozen) {strStatus = "Frozen";}
+				else if (Status == effectBurned) {strStatus = "Burned";}
+				else if (Status == effectWet) {strStatus = "Wet";}
+				else if (Status == effectPoison) {strStatus = "Poisoned";}
+				else if (Status == effectBleeding) {strStatus = "Bleeding";}
+				else if (Status == effectConfused) {strStatus = "Confused";}
+				else {strStatus = "ERROR";}
+				cout<<"Current status effect: "<<strStatus<<endl;
 				getchar();
 				return 'F';
 				break;

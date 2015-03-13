@@ -1,35 +1,7 @@
 /*
- ---------------------------------------------------------------------------
-This is free and unencumbered software released into the public domain.
-
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
-
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to <http://unlicense.org>
----------------------------------------------------------------------------
-*/
-/*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 3.1b
+Current Revision: 4.0b
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -97,6 +69,10 @@ Date		Revision	Changed By		Changes
 2015/03/09	3.1b		Patrick Rye		-Edits to spells.h, more testing on adding spells.
 										-Sets debug mode in spells.h
 										-Win / opening messages moved to basic.h
+=============================================================================================================================================================
+2015/03/10	4.0b		Patrick Rye		-Implemented status effects.
+										-Doubled monsters that can appear.
+										-Removed license from this file as I just discovered that it is included with a source download.
 =============================================================================================================================================================	
 */
 
@@ -123,7 +99,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 int intMainLevel; //The level of the dungeon.
 int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "3.1b"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "4.0b"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
