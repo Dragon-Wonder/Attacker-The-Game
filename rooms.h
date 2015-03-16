@@ -13,7 +13,8 @@ Date		Revision	Changed By		Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-
+2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
+										-Changed some int to smaller variables because they don't need to be that big.		
 =============================================================================================================================================================			
 */
 int intPlayerX; //Player position in X and Y.
@@ -21,7 +22,7 @@ int intPlayerY;
 int intPlayerNewX; //Player position in X and Y.
 int intPlayerNewY;
  
-int intTempTile = 6; //Value to hold what the cell that the player is moving into is.
+unsigned char intTempTile = 6; //Value to hold what the cell that the player is moving into is.
  
 bool blRoomsDebugMode = false;
  
