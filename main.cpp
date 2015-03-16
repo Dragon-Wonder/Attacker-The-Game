@@ -1,7 +1,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.0c-dev1
+Current Revision: 1.0c-dev3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -10,7 +10,9 @@ Date		Revision	Changed By		Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-
+2015/03/13	1.0c		Patrick Rye		-Move from beta revisions to gamma revisions.
+										-Changed some int to smaller variables because they don't need to be that big.
+										-Fixed bug where new dungeon wasn't generating properly. (This is what happens when you don't play test changes for a while).
 =============================================================================================================================================================	
 */
 
@@ -34,21 +36,21 @@ using namespace std;
 Dungeon d; //Define the dungeon class as 'd' so I can use functions in there anywhere later in the code.
 /*********************************************************************************************************/
 //Make all the global variables that I need.
-int intMainLevel; //The level of the dungeon.
-int intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
+short intMainLevel = 1; //The level of the dungeon.
+short intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "1.0c-dev1"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "1.0c-dev3"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
 //Or to set values from a load.
-int getmainvalue(int intvalue)
+short getmainvalue(unsigned short intvalue)
 {
 	if(intvalue == 0 ) {return intMainLevel;}
 	else if (intvalue == 1) {return intLevelStart;}
 	else {return 1;}
 }
-void setmainvalue(int intlocation, int intvalue) {if (intlocation == 0) {intLevelStart = intvalue;}}
+void setmainvalue(unsigned short intlocation, unsigned short intvalue) {if (intlocation == 0) {intLevelStart = intvalue;}}
 void setdebugmode(bool blsetdebugmode) {blDebugMode = blsetdebugmode;}
 #include "save.h" //A header to hold functions related to saving and loading.
 /*********************************************************************************************************/
@@ -99,7 +101,7 @@ int main()
 		charExitFind = 'F';
 		cout<<endl;
 		if (blOldSave && intMainLevel == intLevelStart) {/*d.playerfind();*/ d.showDungeon();} //If old save and the level of that save, just load old dungeon.
-		else {Dungeon d;/*Generates dungeon.*/} //If it is not old game OR a different level of old game, make new dungeon.
+		else {d.cmain();/*Generates dungeon.*/} //If it is not old game OR a different level of old game, make new dungeon.
 		
 		do
 		{
