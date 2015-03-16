@@ -13,7 +13,8 @@ Date		Revision	Changed By		Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================
-	
+2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
+										-Changed some int to smaller variables because they don't need to be that big.	
 =============================================================================================================================================================	
 */
 
@@ -94,7 +95,7 @@ enum spelltypes
 
 using namespace std;
 
-bool DodgeCheck(int LUK, int DEX)
+bool DodgeCheck(unsigned short LUK, unsigned short DEX)
 {
 	//The way I worked out this dodge calc is that if the Dex and Luk both equal 150 (which isn't possible under the current levelling up system),
 	//then they have a 25% chance to dodge. I also wanted Dex to factor into 75% of the chance and Luk only 25%
@@ -104,7 +105,7 @@ bool DodgeCheck(int LUK, int DEX)
 	else {return false;}
 }
 
-float DamageHealthPercent(int CurrentHealth, int MaximumHealth)
+float DamageHealthPercent(short CurrentHealth, short MaximumHealth)
 {
 	/*Function that returns a percentage value that will be multiplied by the damage.
 	  The value will vary with health so that the less health something has
@@ -133,20 +134,20 @@ string HitName()
 	return "hit";
 }
 
-bool StunCheck(int intAttackerLuck, int intDefenderLuck)
+bool StunCheck(unsigned short intAttackerLuck, unsigned short intDefenderLuck)
 {
 	if (intDefenderLuck < intAttackerLuck) {if(rand()% 101 < (intAttackerLuck - intDefenderLuck) / 3) {return true;}}
 	return false;
 }
 
-string StateOfBeing(int intCurrHealth, int intMaxHealth)
+string StateOfBeing(short intCurrHealth, short intMaxHealth)
 {
 	/*Outputs a string that gives a description of how the monster is doing
 	  Example: at full health can return "Healthy"
 	  while below 10% of max health it might return "dying" or "badly wounded"*/
-	long flHealthPercent = (intCurrHealth * 100)/intMaxHealth;
+	float flHealthPercent = (intCurrHealth * 100)/intMaxHealth;
 	string strState;
-	int intRandomState;
+	unsigned short intRandomState;
 	
 	const string FullHealthOutput[3] = {"steady","well","healthy"};
 	const string SeventyPHealthOutput[3] = {"wounded","damaged","hurt"};
@@ -167,7 +168,7 @@ string StateOfBeing(int intCurrHealth, int intMaxHealth)
 	return strState;
 }
 
-string EndOfEffectString(std::string Target, int Effect)
+string EndOfEffectString(std::string Target, unsigned short Effect)
 {
 	string TempStr = "";
 	//Returns string describing status effect ending.
@@ -251,7 +252,7 @@ string EndOfEffectString(std::string Target, int Effect)
 	return "ERROR";
 }
 
-string StartOfEffectString(std::string Target, int Effect)
+string StartOfEffectString(std::string Target, unsigned short Effect)
 {
 	string TempStr = "";
 	//Returns string describing status effect ending.
@@ -346,7 +347,7 @@ std::string ConvertToUpper(std::string& str)
 	//Thanks to codekiddy for his post at http://www.cplusplus.com/forum/beginner/70692/
 	std::locale settings;
 	std::string converted;
-	for(short i = 0; i < str.size(); ++i) {converted += (toupper(str[i], settings));}
+	for(unsigned short i = 0; i < str.size(); ++i) {converted += (toupper(str[i], settings));}
 	return converted;
 }
 
@@ -354,7 +355,7 @@ std::string ConvertToLower(std::string& str)
 {
 	std::locale settings;
 	std::string converted;
-	for(short i = 0; i < str.size(); ++i) {converted += (tolower(str[i], settings));}
+	for(unsigned short i = 0; i < str.size(); ++i) {converted += (tolower(str[i], settings));}
 	return converted;
 }
 
@@ -363,7 +364,7 @@ std::string ProperCase(std::string& str)
 	std::locale settings;
 	std::string converted;
 	converted+= (toupper(str[1], settings));
-	for(short i = 1; i < str.size(); ++i) {converted += (tolower(str[i], settings));}
+	for(unsigned short i = 1; i < str.size(); ++i) {converted += (tolower(str[i], settings));}
 	return converted;
 }
 
@@ -376,8 +377,8 @@ char CharConvertToUpper(char chrCheck)
 	return converted;
 }
 
-void ShowOpeningMessage() {for (int i = 0; i < 16; i++){cout<<OpeningMessage[i];}}
+void ShowOpeningMessage() {for (unsigned short i = 0; i < 16; i++){cout<<OpeningMessage[i];}}
 
-void ShowWinningMessage() {for (int i = 0; i < 6; i++) {cout<<WinningMessage[i];}}
+void ShowWinningMessage() {for (unsigned short i = 0; i < 6; i++) {cout<<WinningMessage[i];}}
 
 #endif //If header was already called load nothing
