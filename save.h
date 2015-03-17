@@ -27,7 +27,7 @@ bool blSaveDebugMode = false;
 //and place it in the variable here called ProgramVerison for purposes of calling it in this header.
 void PassProgramVerison(const string Verison) {ProgramVerison = Verison;}
 
-unsigned short SanityChecker(unsigned short intValueLocation, int intValueCheck)
+unsigned char SanityChecker(unsigned int intValueLocation, int intValueCheck)
 {
 	/*Checks sanity of load.
 	If load is trying to call a room that doesn't exist, stats that should not be possible
@@ -53,21 +53,21 @@ char savefunction()
 	T = True, save succeeded.
 	F = False, save failed.
 	*/
-	short intCheckSum = 0;
+	int intCheckSum = 0;
 	int arrbattlesave[8];
 	int arrmainsave[1]; //An array of all the values needed to be saved from main.cpp, its an array in the case that later I add more stuff to be saved.
 	arrmainsave[0] = getmainvalue(0);
 	int arrroomsave[80][20];
-	for (unsigned short i = 0; i < 8; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
-	for (unsigned short y = 0; y < 20; y++) {for (unsigned short x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
+	for (unsigned char i = 0; i < 8; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
+	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
 	ofstream savefile;
 	savefile.open ("save.bif");
 	
-	for (unsigned short i = 0; i < 8; i++) {savefile << arrbattlesave[i] << "\n";} 
+	for (unsigned char i = 0; i < 8; i++) {savefile << arrbattlesave[i] << "\n";} 
 
-	for (unsigned short i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
+	for (unsigned char i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
 
-	for (unsigned short y = 0; y < 20; y++) {for (unsigned short x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
+	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
 	
 	savefile << ProgramVerison; //Writes version number at the very bottom of save.
 	if (fileexists("main.cpp") || blSaveDebugMode) {savefile <<"\n"<<"DEBUG";} //Check if source code is present and write DEBUG at end of save if it does.
@@ -77,17 +77,17 @@ char savefunction()
 	//Checks to see if save is correct or not.
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1609];
-	for(unsigned short i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
+	for(unsigned int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
-	for (unsigned short i = 0; i < 9; i++)
+	for (unsigned char i = 0; i < 9; i++)
 	{
 		if(i < 8) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
 		else {if (arrloadnumbers[i]==getmainvalue(0)) {intCheckSum++;}}
 	} 
-	unsigned short num = 8;
-	for (unsigned short y = 0; y < 20; y++)
+	unsigned int num = 8;
+	for (unsigned char y = 0; y < 20; y++)
 	{
-		for (unsigned short x = 0; x < 80; x++)
+		for (unsigned char x = 0; x < 80; x++)
 		{
 			num ++;
 			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
@@ -102,27 +102,27 @@ bool loadfunction()
 {
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1609];
-	for(unsigned short i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
+	for(unsigned int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
 	
 	//Floor all the values in the array.
-	for (unsigned short i = 0; i < 1609; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
+	for (unsigned int i = 0; i < 1609; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
 	
-	unsigned short intNumOfErrors = 0; //Keeps track of how many errors it find, if greater than 1 cancel load.
+	unsigned int intNumOfErrors = 0; //Keeps track of how many errors it find, if greater than 1 cancel load.
 	
-	for (unsigned short i = 0; i < 1609; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
+	for (unsigned int i = 0; i < 1609; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
 	
 	if (intNumOfErrors > 0) {return false;} //If any errors found, cancel load with a false.
 	
-	for (unsigned short i = 0; i < 9; i++)
+	for (unsigned char i = 0; i < 9; i++)
 	{
 		if(i < 8) {setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
 		else {setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
 	}
-	unsigned short num = 8;
-	for (unsigned short y = 0; y < 20; y++)
+	unsigned int num = 8;
+	for (unsigned char y = 0; y < 20; y++)
 	{
-		for (unsigned short x = 0; x < 80; x++)
+		for (unsigned char x = 0; x < 80; x++)
 		{
 			num ++;
 			d.setCell(x,y,arrloadnumbers[num]);
@@ -133,18 +133,18 @@ bool loadfunction()
 	
 	//Double check that all the values loaded are correct.
 	ifstream checkfile("save.bif");
-	for(unsigned short i = 0; i < 1609; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
+	for(unsigned int i = 0; i < 1609; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
 	checkfile.close();
-	unsigned short intCheckSum = 0;
-	for (unsigned short i = 0; i < 9; i++)
+	unsigned int intCheckSum = 0;
+	for (unsigned char i = 0; i < 9; i++)
 	{
 		if(i < 8) {if (arrloadnumbers[i]==getbattlevalue(i)){intCheckSum++;}}
 		else if (i == 8) {if (arrloadnumbers[i]==getmainvalue(1)) {intCheckSum++;}}
 	} 
 	num = 8;
-	for (unsigned short y = 0; y < 20; y++)
+	for (unsigned char y = 0; y < 20; y++)
 	{
-		for (unsigned short x = 0; x < 80; x++)
+		for (unsigned char x = 0; x < 80; x++)
 		{
 			num ++;
 			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
@@ -166,7 +166,7 @@ bool LoadOldSave()
 	
 	ifstream checkfileverison;
 	checkfileverison.open ("save.bif");
-	for(unsigned short i = 0; i < 1609; ++i)
+	for(unsigned int i = 0; i < 1609; ++i)
 		getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, DebugModeLine);
