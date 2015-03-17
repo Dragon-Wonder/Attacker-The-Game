@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to spells and magic, a possible future addition.
-Current Revision: 1.0
+Current Revision: 1.0.2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -16,6 +16,10 @@ Date		Revision	Changed By		Changes
 										-Added more stuff to spells.
 										-Changed some int to smaller variables because they don't need to be that big.	
 =============================================================================================================================================================
+2015/03/16	1.0.1		Patrick Rye		-Added more spells.
+=============================================================================================================================================================
+2015/03/17	1.0.2		Patrick Rye 	-More damage for elements that are farther apart.
+=============================================================================================================================================================
 */
 /*********************************************************************************************************/
 bool blSpellsDebugMode = false;
@@ -24,37 +28,40 @@ void SetSpellDebugMode(bool bldebugmode) {blSpellsDebugMode = bldebugmode;}
 /*********************************************************************************************************/
 struct spell {
 	string name; //Name of spell
-	unsigned short damage; //Base damage / heal.
-	unsigned short cost; //Base cost.
-	unsigned short type; //Type, damage, healing or effect
-	unsigned short element; //Element of spell, currently does nothing.
-	unsigned short effect; //Effect that can be caused by spell
+	unsigned char damage; //Base damage / heal.
+	unsigned char cost; //Base cost.
+	unsigned char type; //Type, damage, healing or effect
+	unsigned char element; //Element of spell, currently does nothing.
+	unsigned char effect; //Effect that can be caused by spell
 };
 /*********************************************************************************************************/
-const spell basespells[7] = {{"spell fail",0,0,100,elementNone,effectNone},
+const spell basespells[8] = {{"spell fail",0,0,100,elementNone,effectNone},
 							{"fireball",15,5,typeDamage,elementFire,effectBurned},
 							{"heal",50,20,typeHeal,elementNone,effectNone},
 							{"blind",0,5,typeEffect,elementNone,effectBlinded},
 							{"shock",25,0,typeDamage,elementEnergy,effectNone},
 							{"blizzard",22,0,typeDamage,elementIce,effectFrozen},
-							{"water",10,10,typeEffect,elementWater,effectWet}};
+							{"water",10,10,typeEffect,elementWater,effectWet},
+							{"confusion",0,10,typeEffect,elementLight,effectConfused}};
 /*********************************************************************************************************/
 
 void init_spell(string SpellCast)
 {
-	unsigned short n;
-	for (unsigned short i = 0; i < 7; i++) {if (SpellCast == basespells[i].name) {n = i;}}
+	unsigned char n;
+	for (unsigned char i = 0; i < 8; i++) {if (SpellCast == basespells[i].name) {n = i;}}
 	if (n < 0 || n > 6) {n = 0;}
-	unsigned short playerLuk = getbattlevalue(statLuk);
-	unsigned short monsterdef = getmonstervalue(statDef);
-	unsigned short playerStr = getbattlevalue(statStr);
-	short CurrPHealth = getbattlevalue(statCurrHealth);
-	short MaxPHealth = getbattlevalue(statMaxHealth);
-	unsigned short PStatus = getbattlevalue(statStatus);
-	unsigned short MStatus = getmonstervalue(statStatus);
-	unsigned short MHealth = getmonstervalue(statCurrHealth);
-	unsigned short SpellDamage;
-	unsigned short SpellStrength;
+	unsigned char playerLuk = getbattlevalue(statLuk);
+	unsigned char monsterdef = getmonstervalue(statDef);
+	unsigned char playerStr = getbattlevalue(statStr);
+	int CurrPHealth = getbattlevalue(statCurrHealth);
+	int MaxPHealth = getbattlevalue(statMaxHealth);
+	unsigned char PStatus = getbattlevalue(statStatus);
+	unsigned char MStatus = getmonstervalue(statStatus);
+	int MHealth = getmonstervalue(statCurrHealth);
+	unsigned char MElement = getmonstervalue(statElement);
+	unsigned int SpellDamage;
+	float ElementalMulti = ElementMulti(basespells[n].element,MElement);
+	unsigned char SpellStrength;
 	
 	if(blSpellsDebugMode) {cout<<"You cast "<<basespells[n].name;}
 	
@@ -71,7 +78,7 @@ void init_spell(string SpellCast)
 			}
 			if (CurrPHealth + basespells[n].damage >= MaxPHealth) {setbattlevalue(statCurrHealth,MaxPHealth);}
 			else {setbattlevalue(statCurrHealth,CurrPHealth + basespells[n].damage);}
-			cout<<endl<<"You heal yourself for "<<basespells[n].damage<<". ";
+			cout<<endl<<"You heal yourself for "<<(int)basespells[n].damage<<". ";
 			break;
 		case typeEffect :
 			if (MStatus != effectNone) {cout<<endl<<"Spell fails. "; break;}
@@ -87,6 +94,7 @@ void init_spell(string SpellCast)
 				cout<<endl<<StartOfEffectString("monster",basespells[n].effect);
 			}
 			SpellDamage = CalculateDamage(6,SpellStrength,monsterdef);
+			SpellDamage = floor(SpellDamage * ElementalMulti);
 			if (MStatus == effectWet && basespells[n].element == elementEnergy) {SpellDamage = floor(SpellDamage * 1.5);}
 			cout<<endl<<"You cast "<<basespells[n].name<<" and hit the monster for "<<SpellDamage<<".";
 			MHealth -= SpellDamage;
