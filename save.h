@@ -4,33 +4,17 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.4
+Current Revision: 1.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
+=============================================================================================================================================================			
+-------------------------------------------------------------------------------------------------------------------------------------------------------------									
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
 =============================================================================================================================================================	
-2015/03/02	1.0			Patrick Rye		-Original
-=============================================================================================================================================================
-2015/03/02	1.0.1		Patrick Rye		-Quick fix for version not being applied properly.
-=============================================================================================================================================================
-2015/03/03	1.1			Patrick Rye		-General code improvement.
-										-Added more comments.
-										-Fixed bug where max player health wasn't saving properly.
-=============================================================================================================================================================
-2015/03/04	1.2			Patrick Rye		-Added "sanity" checks load values and makes sure they make sense.
-										-Floors all values prior to loading.
-										-Debug mode can now be set by loading from debug save.
-=============================================================================================================================================================
-2015/03/04	1.2.1		Patrick Rye		-Fixed bug where loading from a debug save and then saving again might not keep debug mode.
-=============================================================================================================================================================
-2015/03/05	1.3			Patrick Rye 	-Made some stuff hidden unless in debug mode.
-										-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
-										-Shows game version and save version if they do not match.
-=============================================================================================================================================================
-2015/03/06	1.3.1		Patrick Rye		-Changed system("pause") to getchar();
-										-Added more pauses.
-=============================================================================================================================================================
-2015/03/09	1.4			Patrick Rye		-Added status saving.
+2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
+										-Changed some int to smaller variables because they don't need to be that big.		
 =============================================================================================================================================================		
 */
 
@@ -43,13 +27,13 @@ bool blSaveDebugMode = false;
 //and place it in the variable here called ProgramVerison for purposes of calling it in this header.
 void PassProgramVerison(const string Verison) {ProgramVerison = Verison;}
 
-int SanityChecker(int intValueLocation, int intValueCheck)
+unsigned char SanityChecker(unsigned int intValueLocation, int intValueCheck)
 {
 	/*Checks sanity of load.
 	If load is trying to call a room that doesn't exist, stats that should not be possible
 	or a level that is too high return a 1 for an error, otherwise return 0 for no error.*/
 	if (intValueLocation < 0) {return 1;}
-	else if (intValueLocation <= 4) {if (intValueCheck < 1 || intValueCheck > 256) {return 1;}} 
+	else if (intValueLocation <= 4) {if (intValueCheck < 1 || intValueCheck > 254) {return 1;}} 
 	/* 256 is the highest value a stat can have assuming that they put 96 points when they created the character, 
 	   and put all 20 points in that stat for the 8 level ups.*/
 	else if (intValueLocation <= 6) {return 0;} //Don't bother checking health values since they are just going to be recalculated later.
@@ -74,16 +58,16 @@ char savefunction()
 	int arrmainsave[1]; //An array of all the values needed to be saved from main.cpp, its an array in the case that later I add more stuff to be saved.
 	arrmainsave[0] = getmainvalue(0);
 	int arrroomsave[80][20];
-	for (int i = 0; i < 8; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
-	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
+	for (unsigned char i = 0; i < 8; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
+	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
 	ofstream savefile;
 	savefile.open ("save.bif");
 	
-	for (int i = 0; i < 8; i++) {savefile << arrbattlesave[i] << "\n";} 
+	for (unsigned char i = 0; i < 8; i++) {savefile << arrbattlesave[i] << "\n";} 
 
-	for (int i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
+	for (unsigned char i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
 
-	for (int y = 0; y < 20; y++) {for (int x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
+	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
 	
 	savefile << ProgramVerison; //Writes version number at the very bottom of save.
 	if (fileexists("main.cpp") || blSaveDebugMode) {savefile <<"\n"<<"DEBUG";} //Check if source code is present and write DEBUG at end of save if it does.
@@ -93,17 +77,17 @@ char savefunction()
 	//Checks to see if save is correct or not.
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1609];
-	for(int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
+	for(unsigned int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
-	for (int i = 0; i < 9; i++)
+	for (unsigned char i = 0; i < 9; i++)
 	{
 		if(i < 8) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
 		else {if (arrloadnumbers[i]==getmainvalue(0)) {intCheckSum++;}}
 	} 
-	int num = 8;
-	for (int y = 0; y < 20; y++)
+	unsigned int num = 8;
+	for (unsigned char y = 0; y < 20; y++)
 	{
-		for (int x = 0; x < 80; x++)
+		for (unsigned char x = 0; x < 80; x++)
 		{
 			num ++;
 			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
@@ -118,27 +102,27 @@ bool loadfunction()
 {
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1609];
-	for(int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
+	for(unsigned int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
 	
 	//Floor all the values in the array.
-	for (int i = 0; i < 1609; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
+	for (unsigned int i = 0; i < 1609; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
 	
-	int intNumOfErrors = 0; //Keeps track of how many errors it find, if greater than 1 cancel load.
+	unsigned int intNumOfErrors = 0; //Keeps track of how many errors it find, if greater than 1 cancel load.
 	
-	for (int i = 0; i < 1609; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
+	for (unsigned int i = 0; i < 1609; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
 	
 	if (intNumOfErrors > 0) {return false;} //If any errors found, cancel load with a false.
 	
-	for (int i = 0; i < 9; i++)
+	for (unsigned char i = 0; i < 9; i++)
 	{
 		if(i < 8) {setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
 		else {setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
 	}
-	int num = 8;
-	for (int y = 0; y < 20; y++)
+	unsigned int num = 8;
+	for (unsigned char y = 0; y < 20; y++)
 	{
-		for (int x = 0; x < 80; x++)
+		for (unsigned char x = 0; x < 80; x++)
 		{
 			num ++;
 			d.setCell(x,y,arrloadnumbers[num]);
@@ -149,18 +133,18 @@ bool loadfunction()
 	
 	//Double check that all the values loaded are correct.
 	ifstream checkfile("save.bif");
-	for(int i = 0; i < 1609; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
+	for(unsigned int i = 0; i < 1609; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
 	checkfile.close();
-	int intCheckSum = 0;
-	for (int i = 0; i < 9; i++)
+	unsigned int intCheckSum = 0;
+	for (unsigned char i = 0; i < 9; i++)
 	{
 		if(i < 8) {if (arrloadnumbers[i]==getbattlevalue(i)){intCheckSum++;}}
 		else if (i == 8) {if (arrloadnumbers[i]==getmainvalue(1)) {intCheckSum++;}}
 	} 
 	num = 8;
-	for (int y = 0; y < 20; y++)
+	for (unsigned char y = 0; y < 20; y++)
 	{
-		for (int x = 0; x < 80; x++)
+		for (unsigned char x = 0; x < 80; x++)
 		{
 			num ++;
 			if (arrloadnumbers[num]==d.getCell(x,y)) {intCheckSum++;}
@@ -182,7 +166,7 @@ bool LoadOldSave()
 	
 	ifstream checkfileverison;
 	checkfileverison.open ("save.bif");
-	for(int i = 0; i < 1609; ++i)
+	for(unsigned int i = 0; i < 1609; ++i)
 		getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, DebugModeLine);

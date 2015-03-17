@@ -4,29 +4,25 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions that are pretty basic and likely won't change very often or at all.
-Current Revision: 2.1.4
+Current Revision: 1.0.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
+=============================================================================================================================================================			
+-------------------------------------------------------------------------------------------------------------------------------------------------------------									
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+=============================================================================================================================================================
+2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
+										-Changed some int to smaller variables because they don't need to be that big.	
+=============================================================================================================================================================
+2015/03/17	1.0.1		Patrick Rye 	-Changed order of elements
+										-Made function that shows bar representing health.
+										-Made function that returns multiplier depending on attacking and defending elements.
+										-Added function which returns string name of element
+										-Added function which returns string name of status
 =============================================================================================================================================================	
-2015/02/20	1.0			Patrick Rye		-Original from 3.1a
-=============================================================================================================================================================
-2015/03/02	2.0			Patrick Rye		-Renamed to Basic.h
-										-Added save file checker function.
-=============================================================================================================================================================
-2015/03/02	2.1			Patrick Rye		-Changed save file checker to be able to check for any file name.
-=============================================================================================================================================================
-2015/03/04	2.1.1		Patrick Rye		-Removed save exists function as it was replaced by file exists.
-=============================================================================================================================================================
-2015/03/05	2.1.2 		Patrick Rye		-Changed change log date format from MM/DD/YY to YYYY/MM/DD because I like it better.
-=============================================================================================================================================================
-2015/03/09	2.1.3		Patrick Rye		-Moved win / opening messages here.
-										-Moved enums here.
-=============================================================================================================================================================
-2015/03/09	2.1.4		Patrick Rye		-Added more effects.
-										-Updated some other stuff.
-										-Function to return string of start / end of status effect.
-=============================================================================================================================================================		
+	
 */
 
 /*********************************************************************************************************/
@@ -66,7 +62,7 @@ enum effects
 	effectWet,
 	effectPoison,
 	effectBleeding,
-	effectConfused
+	effectConfused,
 };
 
 enum stats
@@ -80,19 +76,20 @@ enum stats
 	statMaxHealth,
 	statStatus,
 	statStatusCounter,
+	statElement
 };
 
 enum elements
 {
-	elementFire = 0,
-	elementIce,
-	elementEnergy,
-	elementDarkness,
-	elementLight,
-	elementEarth,
+	elementLight = 0,
 	elementWind,
+	elementIce,
 	elementWater,
-	elementPhysical, //Currently does nothing. (Will factor in when I make elemental weaknesses)
+	elementDarkness,
+	elementEarth,
+	elementFire,
+	elementEnergy,
+	elementPhysical,
 	elementNone //For spells that don't do damage.
 };
 
@@ -106,25 +103,110 @@ enum spelltypes
 
 using namespace std;
 
-bool DodgeCheck(int LUK, int DEX)
+string StatusName(unsigned char effect)
+{
+	switch (effect)
+	{
+		case effectNone :
+			return "no status";
+		case effectBlinded :
+			return "blinded";
+		case effectFrozen :
+			return "frozen";
+		case effectBurned :
+			return "burned";
+		case effectWet :
+			return "wet";
+		case effectPoison :
+			return "poisoned";
+		case effectBleeding :
+			return "bleeding";
+		case effectConfused :
+			return "confused";
+	};
+	return "ERROR";
+}
+
+string ElementName(unsigned char element)
+{
+	switch (element)
+	{
+		case elementLight :
+			return "light";
+		case elementWind :
+			return "wind";
+		case elementIce :
+			return "ice";
+		case elementWater :
+			return "water";
+		case elementDarkness :
+			return "darkness";
+		case elementEarth :
+			return "earth";
+		case elementFire :
+			return "fire";
+		case elementEnergy :
+			return "energy";
+		case elementPhysical :
+			return "physical";
+		case elementNone :
+			return "none";
+	};
+	return "ERROR";
+}
+
+string BarMarker(unsigned int CurrentValue, unsigned int MaxValue)
+{
+	string TempHealthBar = "<";
+	int HealthPercent = floor((CurrentValue * 100)/MaxValue);
+	for (unsigned char Bar = 0; Bar < 20; Bar++)
+	{
+		if (HealthPercent >= 5) {TempHealthBar += "=";}
+		else {TempHealthBar += " ";}
+		HealthPercent -= 5;
+	}
+	TempHealthBar += ">";
+	//cout<<TempHealthBar<<endl;
+	return TempHealthBar;
+}
+
+float ElementMulti(unsigned char AttackingElement, unsigned char DefendingElement)
+{
+	/*The further away two elements are the more damage that they do to each other.
+	  For example a fire attack on an ice monster will be 125% damage, while a fire
+	  attack on fire monster will only do 75% damage. 2 Spaces away will do normal damage
+	  And None elements or physical do normal damage as well.*/
+	if (AttackingElement == elementNone || DefendingElement == elementNone) {return 1.0;}
+	if (AttackingElement == elementPhysical || DefendingElement == elementPhysical) {return 1.0;}
+	switch (abs(AttackingElement - DefendingElement))
+	{
+		case 0 :
+			return 0.75;
+		case 1 :
+			return 0.875;
+		case 2 :
+			return 1;
+		case 3 :
+			return 1.125;
+		case 4 :
+			return 1.25;
+		default : 
+			return 1;
+	};
+	return 1;
+}
+
+bool DodgeCheck(unsigned char LUK, unsigned char DEX)
 {
 	//The way I worked out this dodge calc is that if the Dex and Luk both equal 150 (which isn't possible under the current levelling up system),
 	//then they have a 25% chance to dodge. I also wanted Dex to factor into 75% of the chance and Luk only 25%
 	//Can return true, that they dodged or false that they did not.
-    double douDodgeChance = ((DEX/2)+(LUK/6)/4);
+    float douDodgeChance = ((DEX/2)+(LUK/6)/4);
 	if(rand() % 101 <= douDodgeChance) {return true;}
 	else {return false;}
 }
 
-bool RemoveStatusEffect(int TargetLuk, int CurrentEffect, int EffectTurns)
-{
-	//Check if status effect should be removed based on turns and luck.
-	if (EffectTurns >= 5) {return true;} //Get rid of effect if it has been there for more than 5 turns.
-	if (rand() % 101 <= (TargetLuk)  + (EffectTurns *2.5) - (intBattleLevel * 2)) {return true;}
-	return false;
-}
-
-float DamageHealthPercent(int CurrentHealth, int MaximumHealth)
+float DamageHealthPercent(unsigned int CurrentHealth, unsigned int MaximumHealth)
 {
 	/*Function that returns a percentage value that will be multiplied by the damage.
 	  The value will vary with health so that the less health something has
@@ -153,20 +235,20 @@ string HitName()
 	return "hit";
 }
 
-bool StunCheck(int intAttackerLuck, int intDefenderLuck)
+bool StunCheck(unsigned char intAttackerLuck, unsigned char intDefenderLuck)
 {
 	if (intDefenderLuck < intAttackerLuck) {if(rand()% 101 < (intAttackerLuck - intDefenderLuck) / 3) {return true;}}
 	return false;
 }
 
-string StateOfBeing(int intCurrHealth, int intMaxHealth)
+string StateOfBeing(unsigned int intCurrHealth, unsigned int intMaxHealth)
 {
 	/*Outputs a string that gives a description of how the monster is doing
 	  Example: at full health can return "Healthy"
 	  while below 10% of max health it might return "dying" or "badly wounded"*/
-	long flHealthPercent = (intCurrHealth * 100)/intMaxHealth;
+	float flHealthPercent = (intCurrHealth * 100)/intMaxHealth;
 	string strState;
-	int intRandomState;
+	unsigned char intRandomState;
 	
 	const string FullHealthOutput[3] = {"steady","well","healthy"};
 	const string SeventyPHealthOutput[3] = {"wounded","damaged","hurt"};
@@ -187,7 +269,7 @@ string StateOfBeing(int intCurrHealth, int intMaxHealth)
 	return strState;
 }
 
-string EndOfEffectString(std::string Target, int Effect)
+string EndOfEffectString(std::string Target, unsigned char Effect)
 {
 	string TempStr = "";
 	//Returns string describing status effect ending.
@@ -211,7 +293,7 @@ string EndOfEffectString(std::string Target, int Effect)
 				return "Your body ejects the last of the poison.";
 				break;
 			case effectBleeding :
-				return "Your bleeding wounds being to close.";
+				return "Your bleeding wounds begin to close.";
 				break;
 			case effectConfused :
 				return "Your head is now clear.";
@@ -271,7 +353,7 @@ string EndOfEffectString(std::string Target, int Effect)
 	return "ERROR";
 }
 
-string StartOfEffectString(std::string Target, int Effect)
+string StartOfEffectString(std::string Target, unsigned char Effect)
 {
 	string TempStr = "";
 	//Returns string describing status effect ending.
@@ -355,7 +437,7 @@ string StartOfEffectString(std::string Target, int Effect)
 	return "ERROR";
 }
 
-bool fileexists(const char *fileName)
+inline bool fileexists(const char *fileName)
 {
     std::ifstream infile(fileName);
     return infile.good();
@@ -366,7 +448,7 @@ std::string ConvertToUpper(std::string& str)
 	//Thanks to codekiddy for his post at http://www.cplusplus.com/forum/beginner/70692/
 	std::locale settings;
 	std::string converted;
-	for(short i = 0; i < str.size(); ++i) {converted += (toupper(str[i], settings));}
+	for(unsigned char i = 0; i < str.size(); ++i) {converted += (toupper(str[i], settings));}
 	return converted;
 }
 
@@ -374,7 +456,7 @@ std::string ConvertToLower(std::string& str)
 {
 	std::locale settings;
 	std::string converted;
-	for(short i = 0; i < str.size(); ++i) {converted += (tolower(str[i], settings));}
+	for(unsigned char i = 0; i < str.size(); ++i) {converted += (tolower(str[i], settings));}
 	return converted;
 }
 
@@ -383,7 +465,7 @@ std::string ProperCase(std::string& str)
 	std::locale settings;
 	std::string converted;
 	converted+= (toupper(str[1], settings));
-	for(short i = 1; i < str.size(); ++i) {converted += (tolower(str[i], settings));}
+	for(unsigned char i = 1; i < str.size(); ++i) {converted += (tolower(str[i], settings));}
 	return converted;
 }
 
@@ -396,8 +478,8 @@ char CharConvertToUpper(char chrCheck)
 	return converted;
 }
 
-void ShowOpeningMessage() {for (int i = 0; i < 16; i++){cout<<OpeningMessage[i];}}
+inline void ShowOpeningMessage() {for (unsigned char i = 0; i < 16; i++){cout<<OpeningMessage[i];}}
 
-void ShowWinningMessage() {for (int i = 0; i < 6; i++) {cout<<WinningMessage[i];}}
+inline void ShowWinningMessage() {for (unsigned char i = 0; i < 6; i++) {cout<<WinningMessage[i];}}
 
 #endif //If header was already called load nothing
