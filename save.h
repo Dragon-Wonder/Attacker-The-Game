@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.0
+Current Revision: 1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -15,13 +15,15 @@ Date		Revision	Changed By		Changes
 =============================================================================================================================================================	
 2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
 										-Changed some int to smaller variables because they don't need to be that big.		
-=============================================================================================================================================================		
+=============================================================================================================================================================
+2015/03/17	1.0.1		Patrick Rye		-Grammar & spelling fixes.
+										-Fixed bug where I forgot to update sanity checker for new statuses
+=============================================================================================================================================================
+2015/03/18	1.1			Patrick Rye 	-Now saves and loads keys, status counter, current & max mana.
+=============================================================================================================================================================
 */
-
-
 string ProgramVerison;
 bool blSaveDebugMode = false;
-
 
 //This function is needed to pass the version of the program (a constant string in main.cpp)
 //and place it in the variable here called ProgramVerison for purposes of calling it in this header.
@@ -34,14 +36,15 @@ unsigned char SanityChecker(unsigned int intValueLocation, int intValueCheck)
 	or a level that is too high return a 1 for an error, otherwise return 0 for no error.*/
 	if (intValueLocation < 0) {return 1;}
 	else if (intValueLocation <= 4) {if (intValueCheck < 1 || intValueCheck > 254) {return 1;}} 
-	/* 256 is the highest value a stat can have assuming that they put 96 points when they created the character, 
-	   and put all 20 points in that stat for the 8 level ups.*/
+	/* 255 is the highest possible value for stats as they are all unsigned char and that is the max value*/
 	else if (intValueLocation <= 6) {return 0;} //Don't bother checking health values since they are just going to be recalculated later.
-		else if (intValueLocation == 7) {if (intValueCheck < 0 || intValueCheck > 4) {return 1;}} //Check the current status
-	else if (intValueLocation == 8) {if (intValueCheck < 1 || intValueCheck > 10) {return 1;}} //Check the level.
-	else if (intValueLocation < 1609) {if (intValueCheck < 0 || intValueCheck > 9) {return 1;}} //Check the dungeon.
+	else if (intValueLocation == 7) {if (intValueCheck < 0 || intValueCheck > 7) {return 1;}} //Check the current status
+	else if (intValueLocation == 8) {if (intValueCheck < 0 || intValueCheck > 7) {return 1;}} //Checks status counter
+	else if (intValueLocation == 9) {if (intValueCheck < 0 || intValueCheck > 254) {return 1;}} //Check number of keys
+	else if (intValueLocation <= 11) {return 0;} //Don't bother checking mana values since they are just going to be recalculated later.
+	else if (intValueLocation == 12) {if (intValueCheck < 1 || intValueCheck > 10) {return 1;}} //Check the level.
+	else if (intValueLocation < 1613) {if (intValueCheck < 0 || intValueCheck > 9) {return 1;}} //Check the dungeon.
 	else {return 1;} //Invalid number on array.
-	
 	return 0; //Value is okay, return 0 for no error found.	
 }
 
@@ -54,37 +57,32 @@ char savefunction()
 	F = False, save failed.
 	*/
 	int intCheckSum = 0;
-	int arrbattlesave[8];
+	int arrbattlesave[12];
 	int arrmainsave[1]; //An array of all the values needed to be saved from main.cpp, its an array in the case that later I add more stuff to be saved.
 	arrmainsave[0] = getmainvalue(0);
 	int arrroomsave[80][20];
-	for (unsigned char i = 0; i < 8; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
+	for (unsigned char i = 0; i < 12; i++) {arrbattlesave[i] = getbattlevalue(i);} //Build array of player stats, and player health.
 	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
 	ofstream savefile;
 	savefile.open ("save.bif");
-	
-	for (unsigned char i = 0; i < 8; i++) {savefile << arrbattlesave[i] << "\n";} 
-
+	for (unsigned char i = 0; i < 12; i++) {savefile << arrbattlesave[i] << "\n";} 
 	for (unsigned char i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
-
 	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
-	
 	savefile << ProgramVerison; //Writes version number at the very bottom of save.
 	if (fileexists("main.cpp") || blSaveDebugMode) {savefile <<"\n"<<"DEBUG";} //Check if source code is present and write DEBUG at end of save if it does.
 	savefile.close();
-	
 	//Save will now attempt to "load" the save it just made and compare it to the data available.
 	//Checks to see if save is correct or not.
 	ifstream loadfile("save.bif");
-	int arrloadnumbers[1609];
-	for(unsigned int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
+	int arrloadnumbers[1613];
+	for(unsigned int i = 0; i < 1613; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
-	for (unsigned char i = 0; i < 9; i++)
+	for (unsigned char i = 0; i < 13; i++)
 	{
-		if(i < 8) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
+		if(i < 12) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
 		else {if (arrloadnumbers[i]==getmainvalue(0)) {intCheckSum++;}}
 	} 
-	unsigned int num = 8;
+	unsigned int num = 12;
 	for (unsigned char y = 0; y < 20; y++)
 	{
 		for (unsigned char x = 0; x < 80; x++)
@@ -94,54 +92,46 @@ char savefunction()
 		}
 	}
 	if (blSaveDebugMode) {cout<<endl<<endl<<intCheckSum;}
-	if(intCheckSum >= 1609) {return 'T';} //All of the saved values are correct if it equals 1608.
+	if(intCheckSum >= 1613) {return 'T';} //All of the saved values are correct if it equals 1608.
 	else {return 'F';} //Some of the values are wrong, say that the save failed.
 }
 
 bool loadfunction()
 {
 	ifstream loadfile("save.bif");
-	int arrloadnumbers[1609];
-	for(unsigned int i = 0; i < 1609; i++) {loadfile>>arrloadnumbers[i];}
+	int arrloadnumbers[1613];
+	for(unsigned int i = 0; i < 1613; i++) {loadfile>>arrloadnumbers[i];}
 	loadfile.close();
-	
 	//Floor all the values in the array.
-	for (unsigned int i = 0; i < 1609; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
-	
+	for (unsigned int i = 0; i < 1613; i++ ) {arrloadnumbers[i]=floor(arrloadnumbers[i]);}
 	unsigned int intNumOfErrors = 0; //Keeps track of how many errors it find, if greater than 1 cancel load.
-	
-	for (unsigned int i = 0; i < 1609; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
-	
+	for (unsigned int i = 0; i < 1613; i++) {intNumOfErrors += SanityChecker(i,arrloadnumbers[i]);} //Checks sanity of the load.
 	if (intNumOfErrors > 0) {return false;} //If any errors found, cancel load with a false.
-	
-	for (unsigned char i = 0; i < 9; i++)
+	for (unsigned char i = 0; i < 13; i++)
 	{
-		if(i < 8) {setbattlevalue(i,arrloadnumbers[i]);/*cout<<arrloadnumbers[i]<<endl;*/}
-		else {setmainvalue(0, arrloadnumbers[i]);/*cout<<intLevelStart<<endl;*/}
+		if(i < 12) {setbattlevalue(i,arrloadnumbers[i]);}
+		else {setmainvalue(0, arrloadnumbers[i]);}
 	}
-	unsigned int num = 8;
+	unsigned int num = 12;
 	for (unsigned char y = 0; y < 20; y++)
 	{
 		for (unsigned char x = 0; x < 80; x++)
 		{
 			num ++;
 			d.setCell(x,y,arrloadnumbers[num]);
-			//cout<<arrloadnumbers[num];
 		}
 	}
-	//d.showDungeon();
-	
 	//Double check that all the values loaded are correct.
 	ifstream checkfile("save.bif");
-	for(unsigned int i = 0; i < 1609; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
+	for(unsigned int i = 0; i < 1613; i++) {checkfile>>arrloadnumbers[i];} //Rebuild the array.
 	checkfile.close();
 	unsigned int intCheckSum = 0;
-	for (unsigned char i = 0; i < 9; i++)
+	for (unsigned char i = 0; i < 13; i++)
 	{
-		if(i < 8) {if (arrloadnumbers[i]==getbattlevalue(i)){intCheckSum++;}}
-		else if (i == 8) {if (arrloadnumbers[i]==getmainvalue(1)) {intCheckSum++;}}
+		if(i < 12) {if (arrloadnumbers[i]==getbattlevalue(i)){intCheckSum++;}}
+		else if (i == 12) {if (arrloadnumbers[i]==getmainvalue(1)) {intCheckSum++;}}
 	} 
-	num = 8;
+	num = 12;
 	for (unsigned char y = 0; y < 20; y++)
 	{
 		for (unsigned char x = 0; x < 80; x++)
@@ -151,7 +141,7 @@ bool loadfunction()
 		}
 	}
 	if (blSaveDebugMode) {cout<<endl<<endl<<intCheckSum;}
-	if(intCheckSum >= 1609) {return true;} //All of the saved values are correct if it equals 1609.
+	if(intCheckSum >= 1613) {return true;} //All of the saved values are correct if it equals 1613.
 	else {return false;} //Some of the values are wrong, say that the load failed.
 	return false;
 }
@@ -160,20 +150,15 @@ bool LoadOldSave()
 {
 	bool blLoadSuccess = false;
 	char chrPlayerChoice;
-	
 	string SaveVerison;
 	string DebugModeLine;
-	
 	ifstream checkfileverison;
 	checkfileverison.open ("save.bif");
-	for(unsigned int i = 0; i < 1609; ++i)
+	for(unsigned int i = 0; i < 1613; ++i)
 		getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, SaveVerison);
 	getline(checkfileverison, DebugModeLine);
 	checkfileverison.close();
-
-	
-	
 	SaveDetected:
 	cout<<"Previous save has been detected, would you like to load?"<<endl<<"Y or N"<<endl;
 	cout<<"> ";
@@ -188,7 +173,7 @@ bool LoadOldSave()
 				DifferentVersion:
 				cout <<endl<<"Save version does not match the game version."<<endl;
 				cout<<"I recommend using the same save version as the game, as things could break."<<endl;
-				cout<<"Game version: "<<ProgramVerison<<endl<<"Save version: "<<SaveVerison<<"."<<endl;
+				cout<<"Game version: "<<ProgramVerison<<endl<<"Save version: "<<SaveVerison<<endl;
 				cout<<"Do you wish to continue with the loading?"<<endl<<"Y or N"<<endl<<"> ";
 				cin>>chrPlayerChoice;
 				chrPlayerChoice = CharConvertToUpper(chrPlayerChoice);
@@ -208,7 +193,6 @@ bool LoadOldSave()
 				}
 			}
 			else {if (DebugModeLine == "DEBUG") {setdebugmode(true); blSaveDebugMode = true;} blLoadSuccess = loadfunction();}
-			
 			if (blLoadSuccess) {return true;}
 			else 
 			{

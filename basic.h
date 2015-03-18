@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions that are pretty basic and likely won't change very often or at all.
-Current Revision: 1.0.1
+Current Revision: 1.0.2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -22,7 +22,9 @@ Date		Revision	Changed By		Changes
 										-Added function which returns string name of element
 										-Added function which returns string name of status
 =============================================================================================================================================================	
-	
+2015/03/17	1.0.2		Patrick Rye 	-Added key amount to stat
+										-Grammar & spelling fixes.
+=============================================================================================================================================================	
 */
 
 /*********************************************************************************************************/
@@ -53,7 +55,7 @@ const std::string WinningMessage[6] = {"__   __            _    _ _       _ _ \n
 								 "  \\_/\\___/ \\__,_|  \\/  \\/|_|_| |_(_|_)\n"};
 
 /*********************************************************************************************************/
-enum effects
+enum effectsplacement
 {
 	effectNone = 0,
 	effectBlinded,
@@ -65,7 +67,7 @@ enum effects
 	effectConfused,
 };
 
-enum stats
+enum statsplacement
 {
 	statStr = 0,
 	statCons,
@@ -76,10 +78,13 @@ enum stats
 	statMaxHealth,
 	statStatus,
 	statStatusCounter,
-	statElement
+	statKeys,
+	statCurrMana,
+	statMaxMana,
+	statElement,
 };
 
-enum elements
+enum elementsplacement
 {
 	elementLight = 0,
 	elementWind,
@@ -102,6 +107,16 @@ enum spelltypes
 /*********************************************************************************************************/
 
 using namespace std;
+
+unsigned int CalculateHealth(unsigned char HealthLevel, unsigned char ConsStat)
+{
+	//A simple function for calculating health.
+	//In its own function so future changes will be changed everywhere.
+	float HealthTemp = 0;
+	HealthTemp = (0.9722 * pow(HealthLevel, 2) )+( 0.4167 * HealthLevel) + 48.611;
+	HealthTemp += 23.979*exp(0.01414 * ConsStat);
+	return floor(HealthTemp);
+}
 
 string StatusName(unsigned char effect)
 {
@@ -174,8 +189,16 @@ float ElementMulti(unsigned char AttackingElement, unsigned char DefendingElemen
 {
 	/*The further away two elements are the more damage that they do to each other.
 	  For example a fire attack on an ice monster will be 125% damage, while a fire
-	  attack on fire monster will only do 75% damage. 2 Spaces away will do normal damage
-	  And None elements or physical do normal damage as well.*/
+	  attack on fire monster will only do 75% damage. 2 spaces away will do normal damage
+	  And none elements or physical do normal damage as well.*/
+	  
+	/*
+				Light
+		Energy			Wind
+	Fire					Ice
+		Earth			Water
+				Darkness
+	*/
 	if (AttackingElement == elementNone || DefendingElement == elementNone) {return 1.0;}
 	if (AttackingElement == elementPhysical || DefendingElement == elementPhysical) {return 1.0;}
 	switch (abs(AttackingElement - DefendingElement))
@@ -235,7 +258,7 @@ string HitName()
 	return "hit";
 }
 
-bool StunCheck(unsigned char intAttackerLuck, unsigned char intDefenderLuck)
+inline bool StunCheck(unsigned char intAttackerLuck, unsigned char intDefenderLuck)
 {
 	if (intDefenderLuck < intAttackerLuck) {if(rand()% 101 < (intAttackerLuck - intDefenderLuck) / 3) {return true;}}
 	return false;
@@ -296,7 +319,7 @@ string EndOfEffectString(std::string Target, unsigned char Effect)
 				return "Your bleeding wounds begin to close.";
 				break;
 			case effectConfused :
-				return "Your head is now clear.";
+				return "Your head begins to clear.";
 				break;
 			case effectNone :
 			default :
