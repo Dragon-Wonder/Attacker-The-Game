@@ -1,7 +1,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.0c
+Current Revision: 1.1c
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,11 @@ Date		Revision	Changed By		Changes
 										-Fixed bug where new dungeon wasn't generating properly. (This is what happens when you don't play test changes for a while).
 										-Made it so you have to be in debug mode to force a monster (Don't know why you would want this otherwise)
 										-General code improvement.
-=============================================================================================================================================================	
+=============================================================================================================================================================
+2015/03/17	1.1c		Patrick Rye		-Grammar & spelling fixes.
+										-Updated save.h with more values.
+										-Implemented mana system.
+=============================================================================================================================================================		
 */
 
 /*********************************************************************************************************/
@@ -29,10 +33,10 @@ Date		Revision	Changed By		Changes
 #include <cstdio>
 #include <ctime>
 /*********************************************************************************************************/
-#include "basic.h" //Functions that are simple and won't need to be changed very often.
+#include "basic.h" //Functions that are simple, referenced many places and/or won't need to be changed very often.
 #include "battle.h" //Functions that deal with battling, levelling up and making a player.
-#include "rooms.h" //Functions that deal with generating a dungeon.
-#include "spells.h" //Functions that deal with spells and magic
+#include "rooms.h" //Functions that deal with generating a dungeon, and moving through it.
+#include "spells.h" //Functions that deal with spells and magic.
 /*********************************************************************************************************/
 using namespace std;
 Dungeon d; //Define the dungeon class as 'd' so I can use functions in there anywhere later in the code.
@@ -41,7 +45,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 unsigned char intMainLevel = 1; //The level of the dungeon.
 unsigned char intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "1.0c"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "1.1c"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -66,14 +70,11 @@ int main()
 	char charExitFind;
 	bool blOldSave = false;
 	char chrPlayerMade = 'F';
-
 	char chrSaveSuccess = 'N'; //N means that save has not been run.
-	
 	//If game is not already in debug mode, checks if source code exists then put it in debug mode if it does.
 	if (!(blDebugMode)) {blDebugMode = fileexists("main.cpp"); } 
-	
-	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true); SetSpellDebugMode(true);} //Sets debug mode for both rooms.h, battle.h, & spells.h
-	
+	//Sets debug mode for rooms.h, battle.h, & spells.h
+	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true); SetSpellDebugMode(true);}
 	ShowOpeningMessage();
 	getchar();
 	cout<<string(50,'\n');
@@ -117,7 +118,6 @@ int main()
 			cout<<"> ";
 			cin>>charPlayerDirection;
 			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
-			
 			charExitFind = d.PlayerMovement(charPlayerDirection);
 			if (charExitFind == 'E') {return 0;} //If we get an error exit program.
 			if (charExitFind == 'S') {chrSaveSuccess = savefunction();} //Save the game.
@@ -140,6 +140,7 @@ int main()
 				{
 					cout << string(50, '\n');
 					blBattleEnding = startbattle(intMainLevel); //Starts battle.
+					setbattlevalue(statKeys,getbattlevalue(statKeys) + getmonstervalue(statKeys)); //Give player a key if monster had one.
 					if(!blBattleEnding) {return 0;} //Player lost battle.
 				}
 			}
