@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.0.2
+Current Revision: 1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -19,6 +19,8 @@ Date		Revision	Changed By		Changes
 2015/03/16	1.0.1		Patrick Rye 	-Changed player tile to be @ rather then +
 										-Changed chest tile to be # rather then @
 =============================================================================================================================================================
+2015/03/17	1.1			Patrick Rye		-Stuff
+=============================================================================================================================================================			
 */
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
@@ -28,16 +30,7 @@ int intPlayerNewY;
 //unsigned char DungeonDoorCount = 0;
 
 unsigned char intTempTile = 6; //Value to hold what the cell that the player is moving into is.
-/*
-enum doortype {
-	typeUnlocked = 0,
-	typeLocked
-}
-struct door {
-	unsigned char type;
-	unsigned char extra;
-};
-*/
+
 bool blRoomsDebugMode = false;
  
 void SetRoomDebugMode(bool isDebug) {blRoomsDebugMode = isDebug;} 
