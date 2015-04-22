@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to spells and magic, a possible future addition.
-Current Revision: 1.1
+Current Revision: 1.1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -23,6 +23,8 @@ Date		Revision	Changed By		Changes
 2015/03/17	1.0.3		Patrick Rye		-Added more spells.
 =============================================================================================================================================================
 2015/03/18	1.1			Patrick Rye		-Implemented mana system.
+=============================================================================================================================================================
+2015/04/17	1.1.1		Patrick Rye		-Now gets monster name for status effect outputs.
 =============================================================================================================================================================
 */
 /*********************************************************************************************************/
@@ -67,6 +69,7 @@ void init_spell(string SpellCast)
 	unsigned char MStatus = getmonstervalue(statStatus);
 	int MHealth = getmonstervalue(statCurrHealth);
 	unsigned char MElement = getmonstervalue(statElement);
+	string strMonsterName = getMonsterName();
 	unsigned int SpellDamage;
 	float ElementalMulti = ElementMulti(basespells[n].element,MElement);
 	unsigned char SpellStrength;
@@ -94,7 +97,7 @@ void init_spell(string SpellCast)
 			case typeEffect :
 				if (MStatus != effectNone) {cout<<endl<<"Spell fails. "; break;}
 				setmonstervalue(statStatus,basespells[n].effect);
-				cout<<endl<<StartOfEffectString("monster",basespells[n].effect)<<endl;
+				cout<<endl<<StartOfEffectString(strMonsterName,basespells[n].effect)<<endl;
 				break;
 			case typeDamage :
 				SpellStrength = floor(basespells[n].damage + playerStr/2);
@@ -102,12 +105,12 @@ void init_spell(string SpellCast)
 				{
 					setmonstervalue(statStatus,basespells[n].effect); 
 					setmonstervalue(statStatusCounter,0);
-					cout<<endl<<StartOfEffectString("monster",basespells[n].effect);
+					cout<<endl<<StartOfEffectString(strMonsterName,basespells[n].effect);
 				}
 				SpellDamage = CalculateDamage(6,SpellStrength,monsterdef);
 				SpellDamage = floor(SpellDamage * ElementalMulti);
 				if (MStatus == effectWet && basespells[n].element == elementEnergy) {SpellDamage = floor(SpellDamage * 1.5);}
-				cout<<endl<<"You cast "<<basespells[n].name<<" and hit the monster for "<<SpellDamage<<".";
+				cout<<endl<<"You cast "<<basespells[n].name<<" and hit the " <<strMonsterName<< " for "<<SpellDamage<<".";
 				MHealth -= SpellDamage;
 				setmonstervalue(statCurrHealth,MHealth);
 				break;
