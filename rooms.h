@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.0
+Current Revision: 1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -15,6 +15,11 @@ Date		Revision	Changed By		Changes
 =============================================================================================================================================================	
 2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
 										-Changed some int to smaller variables because they don't need to be that big.		
+=============================================================================================================================================================
+2015/03/16	1.0.1		Patrick Rye 	-Changed player tile to be @ rather then +
+										-Changed chest tile to be # rather then @
+=============================================================================================================================================================
+2015/03/17	1.1			Patrick Rye		-Stuff
 =============================================================================================================================================================			
 */
 int intPlayerX; //Player position in X and Y.
@@ -22,12 +27,14 @@ int intPlayerY;
 int intPlayerNewX; //Player position in X and Y.
 int intPlayerNewY;
  
+//unsigned char DungeonDoorCount = 0;
+
 unsigned char intTempTile = 6; //Value to hold what the cell that the player is moving into is.
- 
+
 bool blRoomsDebugMode = false;
  
 void SetRoomDebugMode(bool isDebug) {blRoomsDebugMode = isDebug;} 
- 
+
 class Dungeon
 {
     int xmax;
@@ -318,10 +325,10 @@ class Dungeon
 					break;
 				case tileChest:
 					if (PlayerStatus == effectBlinded) {printf(" ");}
-					else {printf("@");}
+					else {printf("#");}
 					break;
 				case tilePlayer:
-					printf("†");
+					printf("@");
 					break;
 				};
 			}
@@ -538,6 +545,7 @@ class Dungeon
 			intTempTile = tileUpStairs;
             if(createDungeon(x, y, dungeon_objects))
             showDungeon();
+		
             //std::cin.get();
         //}
 		return dungeon_map;
@@ -550,6 +558,8 @@ class Dungeon
         dungeon_map = new int[x * y];
 
         if(createDungeon(x, y, dungeon_objects)) {showDungeon();}
+		//DungeonDoorCount = countDoors(x,y);
+		
 		playerfind();
 	//PostPlayerFind:
     }
@@ -574,7 +584,7 @@ class Dungeon
 	public:
 	char PlayerMovement(char chrPlayerDirection)
 	{
-		int Status = getbattlevalue(statStatus);
+		unsigned char Status = getbattlevalue(statStatus);
 		const char Dir[4] = {'N','S','E','W'};
 		//If player is confused they move a random direction.
 		
@@ -630,11 +640,11 @@ class Dungeon
 				return 'S'; //Player is asking to save, return S for save.
 				break;
 			case 'H' : //Player wants to heal.
-				int intPlayerCurrHealth;
+				unsigned int intPlayerCurrHealth;
 				intPlayerCurrHealth = getbattlevalue(statCurrHealth);
-				int intPlayerMaxHealth;
+				unsigned int intPlayerMaxHealth;
 				intPlayerMaxHealth = getbattlevalue(statMaxHealth);
-				int intPlayerHealAmount;
+				unsigned int intPlayerHealAmount;
 				intPlayerHealAmount = floor(intPlayerMaxHealth/10);
 				if (intPlayerCurrHealth + intPlayerHealAmount >= intPlayerMaxHealth) {intPlayerCurrHealth = intPlayerMaxHealth;}
 				else {intPlayerCurrHealth += intPlayerHealAmount;}
@@ -719,8 +729,13 @@ class Dungeon
 		}
 	//End of PlayerMovement function.
 	}
-	
-	
+	/*
+	unsigned char countDoors(int dxmax, int dymax)
+	{
+		unsigned char TempDoorCount = 0;
+		for (unsigned int x = 0; x <= dxmax; x++) {for (unsigned int y = 0; y <= dymax; y++) {if (getCell(x,y) == tileDoor) {TempDoorCount++;}}}
+		return TempDoorCount;
+	}*/
 public:
     Dungeon()
     {

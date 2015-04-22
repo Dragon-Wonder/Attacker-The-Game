@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.1.1
+Current Revision: 1.1.2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -29,33 +29,42 @@ Date		Revision	Changed By		Changes
 										-Added help description for cast spell.
 										-Implemented mana system.
 										-Redid how health, stats, status, and inventory is called.
-=============================================================================================================================================================					
+=============================================================================================================================================================
+2015/04/17	1.1.2		Patrick Rye		-Added more comments
+										-Added ability to get monster name.
+=============================================================================================================================================================										
 */
 /*********************************************************************************************************/
+//Structure for different attacks used
 struct attack {
-	string name;
-	unsigned char element;
+	string name; //Name of attack, kinda useless
+	unsigned char element; //Element of attack, for calc multi later
 	unsigned char basedamage; //Nothing at the moment, just here to try some stuff later.
-	string hit;
+	string hit; //Text that appears when the attack lands
 };
 
+//Structure for Mana and Health
 struct healthmana {
-	int current;
-	unsigned int max;
+	int current; //Current amount
+	unsigned int max; //Max amount
 };
 
+//Structure for stats
 struct stats {
-	unsigned char str;
-	unsigned char cons;
-	unsigned char def;
-	unsigned char dex;
-	unsigned char luk;
+	unsigned char str; //Strength (damage)
+	unsigned char cons; //Constitution (health)
+	unsigned char def; //Defence (damage taken)
+	unsigned char dex; //Dexterity (speed)
+	unsigned char luk; //Luck (randomness)
 };
 
+//Structure for status
 struct status {
-	unsigned char effect;
+	unsigned int effect; //Effect Number based on enum
 	unsigned char counter;//Keeps track of turns with effect for increased chance of it going away.
 };
+
+//Structure for items
 /*
 struct item {
 	//Will expand as this becomes more relevant
@@ -63,6 +72,7 @@ struct item {
 	unsigned char amount;
 };
 
+//Structure for inventory
 struct inventory {
 	item item1;
 	item item2;
@@ -71,12 +81,14 @@ struct inventory {
 	item item5;
 };
 */
+
+//Structure for entities such as player and monsters
 struct entity {
-	string name;
-	healthmana health;
-	healthmana mana;
-	stats stats;
-	status status;
+	string name; //Name of entity
+	healthmana health; //Max and Current Health
+	healthmana mana; //Max and Current Mana (only used for players atm)
+	stats stats; //Entity Stats
+	status status; //Entity status
 	unsigned char element; //Element that the monster is. (for player is just physical)
 	attack attack; //Attack that it uses.
 	unsigned char keys; //Currently does nothing.
@@ -212,6 +224,8 @@ unsigned int CalculateDamage(unsigned char DamageLevel, unsigned char StrStat, u
 	return intMinDamage;
 }
 
+std::string getMonsterName() {return monster.name;}
+
 /*********************************************************************************************************/
 #include "spells.h"
 /*********************************************************************************************************/
@@ -226,6 +240,8 @@ bool RemoveStatusEffect(unsigned char TargetLuk, unsigned char CurrentEffect, un
 
 inline void ApplyPoisonDamage()
 {
+	//Applys poison damage if player or monster is poisoned
+	//Poison does 1/20 of the MAX health of player ot monster
 	unsigned int PoisonDamage = 0;
 	if (player.status.effect == effectPoison)
 	{
@@ -243,6 +259,8 @@ inline void ApplyPoisonDamage()
 
 inline void ApplyBleedingDamage()
 {
+	//Applys bleeding damage if player or monster is bleeding
+	//Bleeding does 1/7 of CURRENT health of player or monster
 	unsigned int BleedDamage = 0;
 	if (player.status.effect == effectBleeding)
 	{
@@ -266,7 +284,7 @@ bool MonsterAttack(unsigned int MonsterDamage, float MonsterMuli, bool ishealing
 	float ElementalMulti = ElementMulti(monster.attack.element,player.element);
 	cout<<endl;
 	MonsterDamage = floor(MonsterDamage * DamageHealthPercent(monster.health.current,monster.health.max) * ElementalMulti);//Reduce damage based on health.
-	if (ishealing) {floor(MonsterDamage /= 2);} //if player is healing reduce damage.
+	if (ishealing) {floor(MonsterDamage /= 3);} //if player is healing reduce damage.
 	unsigned char MonsterEffect;
 	switch (monster.attack.element)
 	{
@@ -506,7 +524,7 @@ void LevelUpMonster()
 		cout<<endl;
 	}
 	//Recalculate healths and re-heal them
-    monster.health.max = floor(CalculateHealth(intBattleLevel,monster.stats.cons)/2);
+    monster.health.max = floor(CalculateHealth(intBattleLevel,monster.stats.cons)/3);
     monster.health.current = monster.health.max;
 }
 
@@ -514,7 +532,7 @@ void LevelUpFunction()
 {
 	//Holds function for levelling up.
 	unsigned char intPlayerStatPoints = 20; //Player gets 20 skill points to spend how they would like.
-	unsigned char intBattleLevelUpAmount;
+	unsigned int intBattleLevelUpAmount;
 	string strLevelUpChoice;
 	player.status.effect = effectNone; //Get rid of effect on level up.
 	player.status.counter = 0;
@@ -598,7 +616,7 @@ char BattleScene()
 	cout << string(10, '\n');
     float douPlayerCritChance = ((player.stats.luk)/20 + rand() %3) * 4; 
     float douMonsterCritChance =((monster.stats.luk)/20 + rand() %3) * 4;
-    float douMonsterDamageMuli = 0.9;
+    float douMonsterDamageMuli = 0.85;
     float douPlayerDamageMuli = 1;
     unsigned int intPlayerDamage = 0;
     unsigned int intMonsterDamage = 0;
