@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions that are pretty basic and likely won't change very often or at all.
-Current Revision: 1.0.2
+Current Revision: 1.0.3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
