@@ -1,7 +1,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.1c
+Current Revision: 1.2c-dev2
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -19,7 +19,9 @@ Date		Revision	Changed By		Changes
 2015/03/17	1.1c		Patrick Rye		-Grammar & spelling fixes.
 										-Updated save.h with more values.
 										-Implemented mana system.
-=============================================================================================================================================================		
+=============================================================================================================================================================
+2015/03/18	1.2c		Patrick Rye		-Removed unneeded libraries.
+=============================================================================================================================================================				
 */
 
 /*********************************************************************************************************/
@@ -27,11 +29,8 @@ Date		Revision	Changed By		Changes
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <stdio.h>
 #include <cstdlib>
-#include <cmath>
-#include <locale>
-#include <cstdio>
-#include <ctime>
 /*********************************************************************************************************/
 #include "basic.h" //Functions that are simple, referenced many places and/or won't need to be changed very often.
 #include "battle.h" //Functions that deal with battling, levelling up and making a player.
@@ -45,7 +44,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 unsigned char intMainLevel = 1; //The level of the dungeon.
 unsigned char intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "1.1c"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "1.2c"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
