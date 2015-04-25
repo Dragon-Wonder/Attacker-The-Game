@@ -3,7 +3,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.1.2
+Current Revision: 1.1.3
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -32,6 +32,8 @@ Date		Revision	Changed By		Changes
 =============================================================================================================================================================
 2015/04/17	1.1.2		Patrick Rye		-Added more comments
 										-Added ability to get monster name.
+=============================================================================================================================================================
+2015/04/25	1.1.3		Patrick Rye		-Fixed some small bugs.
 =============================================================================================================================================================										
 */
 /*********************************************************************************************************/
@@ -884,6 +886,7 @@ char PlayerInitialize()
 	cout<<"Defence (DEF) - Effects how much damage you take."<<endl;
 	cout<<"Luck (LUK) - The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters."<<endl;
 	unsigned char intSkillPointsLeft = 100;
+	StatsGoto:
 	cout<<"You have "<< (int)intSkillPointsLeft <<" points to spend however you desire on these five stats, however each stat must have at least 1 point."<<endl;
 	do 
 	{
@@ -896,6 +899,11 @@ char PlayerInitialize()
 		}
 		intStr = floor(intStr);
 	}while (intStr < 1);
+	if (intStr >= intSkillPointsLeft)
+	{
+		cout<<"\nYou used too many points please try again!\n";
+		goto StatsGoto;
+	}
 	intSkillPointsLeft -= intStr;
 	//A check to see if they put too many points into a stat
 	//Since each stat must have at least 1 point
@@ -916,6 +924,11 @@ char PlayerInitialize()
 		}
 		intCons = floor(intCons);
 	}while (intCons <1);
+	if (intCons >= intSkillPointsLeft)
+	{
+		cout<<"\nYou used too many points please try again!\n";
+		goto StatsGoto;
+	}
 	intSkillPointsLeft -= intCons;
 	if(intSkillPointsLeft < 3)
 	{
@@ -934,6 +947,11 @@ char PlayerInitialize()
 		}
 		intDef = floor(intDef);
 	}while (intDef <1);
+	if (intDef >= intSkillPointsLeft)
+	{
+		cout<<"\nYou used too many points please try again!\n";
+		goto StatsGoto;
+	}
 	intSkillPointsLeft -= intDef;
 	if(intSkillPointsLeft < 2)
 	{
@@ -952,6 +970,11 @@ char PlayerInitialize()
 		}
 		intDex = floor(intDex);
 	}while (intDex < 1);
+	if (intDex >= intSkillPointsLeft)
+	{
+		cout<<"\nYou used too many points please try again!\n";
+		goto StatsGoto;
+	}
 	intSkillPointsLeft -= intDex;
 	if(intSkillPointsLeft < 1)
 	{
