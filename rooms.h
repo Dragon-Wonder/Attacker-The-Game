@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 1.1
+Current Revision: 2.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -20,7 +20,9 @@ Date		Revision	Changed By		Changes
 										-Changed chest tile to be # rather then @
 =============================================================================================================================================================
 2015/03/17	1.1			Patrick Rye		-Stuff
-=============================================================================================================================================================			
+=============================================================================================================================================================
+2015/07/06	2.0			Patrick Rye		-Added Locked Doors which can be broken down, picked, or unlocked with a key
+=============================================================================================================================================================				
 */
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
@@ -63,7 +65,8 @@ class Dungeon
         tileUpStairs, //6
         tileDownStairs, //7
         tileChest, //8
-		tilePlayer //9
+		tilePlayer, //9
+		tileLockedDoor //10
     };
  
     std::string msgXSize;
@@ -330,6 +333,9 @@ class Dungeon
 				case tilePlayer:
 					printf("@");
 					break;
+				case tileLockedDoor:
+					printf("!");
+					break;
 				};
 			}
 			//if (xsize <= xmax) printf("\n");
@@ -448,7 +454,8 @@ class Dungeon
 						currentFeatures++; //add to our quota
  
 						//then we mark the wall opening with a door
-						setCell(newx, newy, tileDoor);
+						if(rand() % 101 <= 15) {setCell(newx, newy, tileLockedDoor);}
+						else {setCell(newx, newy, tileDoor);}
  
 						//clean up infront of the door so we can reach it
 						setCell((newx+xmod), (newy+ymod), tileDirtFloor);
@@ -459,7 +466,8 @@ class Dungeon
 						//same thing here, add to the quota and a door
 						currentFeatures++;
  
-						setCell(newx, newy, tileDoor);
+						if(rand() % 101 <= 15) {setCell(newx, newy, tileLockedDoor);}
+						else {setCell(newx, newy, tileDoor);}
 					}
 				}
 			}
@@ -486,22 +494,22 @@ class Dungeon
 				//check if we can reach the spot
 				if (getCell(newx, newy+1) == tileDirtFloor || getCell(newx, newy+1) == tileCorridor){
 				//north
-					if (getCell(newx, newy+1) != tileDoor)
+					if (getCell(newx, newy+1) != tileDoor || getCell(newx, newy+1) != tileLockedDoor)
 					ways--;
 				}
 				if (getCell(newx-1, newy) == tileDirtFloor || getCell(newx-1, newy) == tileCorridor){
 				//east
-					if (getCell(newx-1, newy) != tileDoor)
+					if (getCell(newx-1, newy) != tileDoor || getCell(newx-1, newy) != tileLockedDoor)
 					ways--;
 				}
 				if (getCell(newx, newy-1) == tileDirtFloor || getCell(newx, newy-1) == tileCorridor){
 				//south
-					if (getCell(newx, newy-1) != tileDoor)
+					if (getCell(newx, newy-1) != tileDoor || getCell(newx, newy-1) != tileLockedDoor)
 					ways--;
 				}
 				if (getCell(newx+1, newy) == tileDirtFloor || getCell(newx+1, newy) == tileCorridor){
 				//west
-					if (getCell(newx+1, newy) != tileDoor)
+					if (getCell(newx+1, newy) != tileDoor || getCell(newx+1, newy) != tileLockedDoor)
 					ways--;
 				}
  
@@ -720,6 +728,97 @@ class Dungeon
 				setCell(intPlayerX,intPlayerY,tilePlayer); //Move the player.
 				return'F'; //Return a false, as they did not find the exit.
 				break;
+			case tileLockedDoor:
+				//Player Encounters a Locked Door
+				LockedDoorStart:
+				printf("\n\n\n\n\nThis door is locked!\nWhat do you want to do?");
+				printf("\n[B]reak it\n");
+				printf("[U]se Key\n");
+				printf("[P]ick Lock\n");
+				printf("[L]eave\n");
+				
+				cin>>chrPlayerDirection;
+				chrPlayerDirection = CharConvertToUpper(chrPlayerDirection);
+				
+				switch(chrPlayerDirection)
+				{
+					case 'L' :
+						//Player does not attempt to unlocked door return F
+						return 'F';
+						break;
+					case 'B' :
+						//Player attempts to break the door.
+						if(getbattlevalue(statStr) >= 60) 
+						{
+							//Player breaks down the door
+							printf("\nYou back up several paces from the door to get a running start. You run at the door, full speed, and ram the door. The wooden door breaks easily under your massive strength.\n\n");
+							getchar();
+							setCell(intPlayerX,intPlayerY,intTempTile); //Set old location back to what it was.
+							intTempTile = tileCorridor; //Set the temp value to a blank spot because the door was broken down.
+							intPlayerY = intPlayerNewY;
+							intPlayerX = intPlayerNewX;
+							setCell(intPlayerX,intPlayerY,tilePlayer); //Move the player.
+							return 'F';
+						}
+						else
+						{
+							//Player fails to break down the door
+							printf("\nYou slam into the door as hard as you can, but it does not budge.\n");
+							goto LockedDoorStart;
+						}
+						break;
+					case 'U' :
+						//Player uses key if they have one
+						if(getbattlevalue(statKeys) > 0)
+						{
+							//Player has at least one key.
+							printf("You used a key to unlock the door. You now have %d keys\n\n",getbattlevalue(statKeys) - 1);
+							getchar();
+							setbattlevalue(statKeys,getbattlevalue(statKeys) - 1);
+							setCell(intPlayerX,intPlayerY,intTempTile); //Set old location back to what it was.
+							intTempTile = tileDoor; //Set the temp value to a normal door since player unlocked it.
+							intPlayerY = intPlayerNewY;
+							intPlayerX = intPlayerNewX;
+							setCell(intPlayerX,intPlayerY,tilePlayer); //Move the player.
+							return 'F';
+						}
+						else
+						{
+							//Player does not have any keys.
+							printf("\nYou do not have any keys!\nFight monsters until you get one.\n");
+							getchar();
+							goto LockedDoorStart;
+						}
+						break;
+					case 'P' :
+						//Player attempts to pick the lock
+						if(getbattlevalue(statLuk) >= 60) 
+						{
+							//Player picks the lock.
+							printf("\nYou move your lock-pick around a hear a *CLICK* you opened the door without any issue.\n");
+							getchar();
+							setCell(intPlayerX,intPlayerY,intTempTile); //Set old location back to what it was.
+							intTempTile = tileDoor; //Set the temp value to a normal door since player unlocked it.
+							intPlayerY = intPlayerNewY;
+							intPlayerX = intPlayerNewX;
+							setCell(intPlayerX,intPlayerY,tilePlayer); //Move the player.
+							return 'F';
+						}
+						else
+						{
+							//Player fails to pick the lock.
+							printf("\nYou fiddle with the lock, but you break your lock-pick before the lock gives.\n");
+							goto LockedDoorStart;
+						}
+						break;
+						break;
+					default:
+						printf("\nYou have selected an invalid option, please try again.\n\n\n");
+						goto LockedDoorStart;
+						break;
+				}
+				
+				
 			default :
 				//Player is stepping on a tile that should never exist, if I remember to add it.
 				//Therefore just return a false.
@@ -729,13 +828,8 @@ class Dungeon
 		}
 	//End of PlayerMovement function.
 	}
-	/*
-	unsigned char countDoors(int dxmax, int dymax)
-	{
-		unsigned char TempDoorCount = 0;
-		for (unsigned int x = 0; x <= dxmax; x++) {for (unsigned int y = 0; y <= dymax; y++) {if (getCell(x,y) == tileDoor) {TempDoorCount++;}}}
-		return TempDoorCount;
-	}*/
+
+	
 public:
     Dungeon()
     {
