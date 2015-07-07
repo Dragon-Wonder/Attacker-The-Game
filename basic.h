@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions that are pretty basic and likely won't change very often or at all.
-Current Revision: 1.0.3
+Current Revision: 2.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -24,7 +24,9 @@ Date		Revision	Changed By		Changes
 =============================================================================================================================================================	
 2015/03/17	1.0.2		Patrick Rye 	-Added key amount to stat
 										-Grammar & spelling fixes.
-=============================================================================================================================================================	
+=============================================================================================================================================================
+2015/07/07	2.0			Patrick Rye		-Changed cout to printf.
+=============================================================================================================================================================
 */
 
 /*********************************************************************************************************/
@@ -501,8 +503,8 @@ char CharConvertToUpper(char chrCheck)
 	return converted;
 }
 
-inline void ShowOpeningMessage() {for (unsigned char i = 0; i < 16; i++){cout<<OpeningMessage[i];}}
+inline void ShowOpeningMessage() {for (unsigned char i = 0; i < 16; i++){printf("%s",OpeningMessage[i].c_str());}}
 
-inline void ShowWinningMessage() {for (unsigned char i = 0; i < 6; i++) {cout<<WinningMessage[i];}}
+inline void ShowWinningMessage() {for (unsigned char i = 0; i < 6; i++) {printf("%s",WinningMessage[i].c_str());}}
 
 #endif //If header was already called load nothing
