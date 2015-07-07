@@ -4,7 +4,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A header to hold functions related to saving and loading.
-Current Revision: 1.1
+Current Revision: 2.0
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -20,6 +20,8 @@ Date		Revision	Changed By		Changes
 										-Fixed bug where I forgot to update sanity checker for new statuses
 =============================================================================================================================================================
 2015/03/18	1.1			Patrick Rye 	-Now saves and loads keys, status counter, current & max mana.
+=============================================================================================================================================================
+2015/07/06	2.0			Patrick Rye		-Updated the Sanity checker number for rooms to account for the new locked doors
 =============================================================================================================================================================
 */
 string ProgramVerison;
@@ -43,7 +45,7 @@ unsigned char SanityChecker(unsigned int intValueLocation, int intValueCheck)
 	else if (intValueLocation == 9) {if (intValueCheck < 0 || intValueCheck > 254) {return 1;}} //Check number of keys
 	else if (intValueLocation <= 11) {return 0;} //Don't bother checking mana values since they are just going to be recalculated later.
 	else if (intValueLocation == 12) {if (intValueCheck < 1 || intValueCheck > 10) {return 1;}} //Check the level.
-	else if (intValueLocation < 1613) {if (intValueCheck < 0 || intValueCheck > 9) {return 1;}} //Check the dungeon.
+	else if (intValueLocation < 1613) {if (intValueCheck < 0 || intValueCheck > 10) {return 1;}} //Check the dungeon.
 	else {return 1;} //Invalid number on array.
 	return 0; //Value is okay, return 0 for no error found.	
 }
