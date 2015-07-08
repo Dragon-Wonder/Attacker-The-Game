@@ -24,12 +24,13 @@ Date		Revision	Changed By		Changes
 2015/07/06	2.0			Patrick Rye		-Added Locked Doors which can be broken down, picked, or unlocked with a key
 =============================================================================================================================================================
 2015/07/07	2.1			Patrick Rye		-Changed all cout to printf
-										-Changed all cin to scanf
 										-Changed Tiles to be stored in hex
 										-Cleaned up code.
 =============================================================================================================================================================
 2015/07/08	2.1.1		Patrick Rye		-Corrected a misplaced bracket which was causing compiling issues.
-=============================================================================================================================================================				
+=============================================================================================================================================================
+2015/07/08	2.1.2		Patrick Rye		-Changed scanf back to cin due to an issue that I will fix later.
+=============================================================================================================================================================					
 */
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
@@ -574,7 +575,8 @@ class Dungeon
 			case 'X' : //Player wants to exit game.
 				for(int i = 0; i < 48; i++) {printf("\n");}
 				printf("Are you sure you want to exit the game?\nAll progress will be lost.\nY or N\n> ");
-				scanf("%c",&chrPlayerDirection);
+				cin>>chrPlayerDirection;
+				//scanf("%c",&chrPlayerDirection);
 				chrPlayerDirection = CharConvertToUpper(chrPlayerDirection);
 				switch (chrPlayerDirection)
 				{
@@ -677,7 +679,8 @@ class Dungeon
 				printf("[P]ick Lock\n");
 				printf("[L]eave\n");
 				
-				scanf("%c",&chrPlayerDirection);
+				cin>>chrPlayerDirection;
+				//scanf("%c",&chrPlayerDirection);
 				chrPlayerDirection = CharConvertToUpper(chrPlayerDirection);
 				
 				switch(chrPlayerDirection)
