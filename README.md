@@ -21,7 +21,7 @@ You must go through 10 randomly generated dungeons fighting monsters along the w
 
 During each battle you may 'Attack' in which case you and the monster both trade blows. You can 'Heal' for 10% of you maxmium health and the monster does less damage or exit the game.
 
-On each level you are trying to get the the down stairs which is represented by "<". While the player is a "@". Doors are "$" currently they don't do anything special, but that will likely change in a furture verison.
+On each level you are trying to get the the down stairs which is represented by "<". While the player is a "@". Doors are "$" & "!" "$" doors are unlocked and can just be walked through. "!" howvere are locked. You can currently try to break down the door if your strength is greater than 60, pick the lock if your Luck is greater than 60. Or you can use keys which can be found after defeating some monsters.
 
 Like I said there is not a lot to the game as of right now but that is partly why I'm putting the game here so I can get feedback and ideas on how to improve the game.
 
