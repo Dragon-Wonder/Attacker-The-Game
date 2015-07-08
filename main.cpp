@@ -1,7 +1,7 @@
 /*
 Made By: Patrick J. Rye
 Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.4c-dev3
+Current Revision: 1.4c
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 unsigned char intMainLevel = 1; //The level of the dungeon.
 unsigned char intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "1.4c-dev3"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = "1.4c"; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
