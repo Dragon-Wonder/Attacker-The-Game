@@ -4,7 +4,7 @@
 Made By: Patrick J. Rye
 Purpose: A header to hold all the functions related to rooms, their generation and such.
 Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 2.1
+Current Revision: 2.1.1
 Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
 Date		Revision	Changed By		Changes
 ------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
@@ -27,6 +27,8 @@ Date		Revision	Changed By		Changes
 										-Changed all cin to scanf
 										-Changed Tiles to be stored in hex
 										-Cleaned up code.
+=============================================================================================================================================================
+2015/07/08	2.1.1		Patrick Rye		-Corrected a misplaced bracket which was causing compiling issues.
 =============================================================================================================================================================				
 */
 int intPlayerX; //Player position in X and Y.
@@ -570,7 +572,7 @@ class Dungeon
 				intPlayerNewX -= 1;
 				break;
 			case 'X' : //Player wants to exit game.
-				for(int i = 0; i < 48; i++) {printf("\n");
+				for(int i = 0; i < 48; i++) {printf("\n");}
 				printf("Are you sure you want to exit the game?\nAll progress will be lost.\nY or N\n> ");
 				scanf("%c",&chrPlayerDirection);
 				chrPlayerDirection = CharConvertToUpper(chrPlayerDirection);
