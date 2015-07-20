@@ -1,3 +1,15 @@
+#Abandoned
+As of 2015-07-20 I have decided to abandon this project. I accomplished what I wanted to with this project, which was to learn more about c++. Now the code is at a point where if I want to expand it significantly I would basically have to rewrite it from the beginning. When I do try to do this I run into some many errors and bugs that it is not worth trying to fix it to me. 
+
+This all being said I am going to leave the source code here in case anyone wants to use it. (Not likely since it is pretty crappy). If anyone wants to take over the project (once again why) I'd happily give it to them.
+
+I may still do and update every now and again but because of work and other projects as well as a lack of motivation at the moment, I don't really care to continute this project anymore.
+
+I might start another game at some point, this time a little more focused on the actual game as opposed to learning to code like I did with this one. Maybe in C next time, or C++ or hey maybe I'll learn another language and write it in that. I don't know. What I do know is the next project will be a lot better than this one.
+
+
+
+
 # Attacker: The Game
 A game I am working on as a way to teach myself c++ putting it here mainly to have a version in a central location, but also to get feedback and help if I get any.
 
