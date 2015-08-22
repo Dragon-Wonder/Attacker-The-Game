@@ -1,32 +1,5 @@
 #ifndef _SPELLS_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
 #define _SPELLS_H_INCLUDED__
-/*
-Made By: Patrick J. Rye
-Purpose: A header to hold functions related to spells and magic, a possible future addition.
-Current Revision: 1.1.1
-Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date		Revision	Changed By		Changes
-------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================			
--------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================		
-2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
-										-Added more stuff to spells.
-										-Changed some int to smaller variables because they don't need to be that big.	
-=============================================================================================================================================================
-2015/03/16	1.0.1		Patrick Rye		-Added more spells.
-=============================================================================================================================================================
-2015/03/17	1.0.2		Patrick Rye 	-More damage for elements that are farther apart.
-=============================================================================================================================================================
-2015/03/17	1.0.3		Patrick Rye		-Added more spells.
-=============================================================================================================================================================
-2015/03/18	1.1			Patrick Rye		-Implemented mana system.
-=============================================================================================================================================================
-2015/04/17	1.1.1		Patrick Rye		-Now gets monster name for status effect outputs.
-=============================================================================================================================================================
-*/
 /*********************************************************************************************************/
 bool blSpellsDebugMode = false;
 /*********************************************************************************************************/
@@ -84,11 +57,11 @@ void init_spell(string SpellCast)
 			case typeHeal :
 				if (PStatus != effectNone) //If player has an effect chance to remove it.
 				{
-					if (rand() % 101 <= playerLuk) 
+					if (rand() % 101 <= playerLuk)
 					{
 						setbattlevalue(statStatus,effectNone);
 						cout<<endl<<EndOfEffectString("player",PStatus)<<endl;
-					} 
+					}
 				}
 				if (CurrPHealth + basespells[n].damage >= MaxPHealth) {setbattlevalue(statCurrHealth,MaxPHealth);}
 				else {setbattlevalue(statCurrHealth,CurrPHealth + basespells[n].damage);}
@@ -101,9 +74,9 @@ void init_spell(string SpellCast)
 				break;
 			case typeDamage :
 				SpellStrength = floor(basespells[n].damage + playerStr/2);
-				if (basespells[n].effect != effectNone && MStatus == effectNone && rand() % 101 <= playerLuk) 
+				if (basespells[n].effect != effectNone && MStatus == effectNone && rand() % 101 <= playerLuk)
 				{
-					setmonstervalue(statStatus,basespells[n].effect); 
+					setmonstervalue(statStatus,basespells[n].effect);
 					setmonstervalue(statStatusCounter,0);
 					cout<<endl<<StartOfEffectString(strMonsterName,basespells[n].effect);
 				}
@@ -114,7 +87,7 @@ void init_spell(string SpellCast)
 				MHealth -= SpellDamage;
 				setmonstervalue(statCurrHealth,MHealth);
 				break;
-			default : 
+			default :
 				cout<<endl<<"Spell failed to cast.";
 				break;
 		//End of switch

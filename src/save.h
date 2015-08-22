@@ -1,29 +1,7 @@
 #ifndef _SAVE_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
 #define _SAVE_H_INCLUDED__
 
-/*
-Made By: Patrick J. Rye
-Purpose: A header to hold functions related to saving and loading.
-Current Revision: 2.0
-Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date		Revision	Changed By		Changes
-------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================			
--------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================	
-2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
-										-Changed some int to smaller variables because they don't need to be that big.		
-=============================================================================================================================================================
-2015/03/17	1.0.1		Patrick Rye		-Grammar & spelling fixes.
-										-Fixed bug where I forgot to update sanity checker for new statuses
-=============================================================================================================================================================
-2015/03/18	1.1			Patrick Rye 	-Now saves and loads keys, status counter, current & max mana.
-=============================================================================================================================================================
-2015/07/06	2.0			Patrick Rye		-Updated the Sanity checker number for rooms to account for the new locked doors
-=============================================================================================================================================================
-*/
+
 string ProgramVerison;
 bool blSaveDebugMode = false;
 
@@ -37,7 +15,7 @@ unsigned char SanityChecker(unsigned int intValueLocation, int intValueCheck)
 	If load is trying to call a room that doesn't exist, stats that should not be possible
 	or a level that is too high return a 1 for an error, otherwise return 0 for no error.*/
 	if (intValueLocation < 0) {return 1;}
-	else if (intValueLocation <= 4) {if (intValueCheck < 1 || intValueCheck > 254) {return 1;}} 
+	else if (intValueLocation <= 4) {if (intValueCheck < 1 || intValueCheck > 254) {return 1;}}
 	/* 255 is the highest possible value for stats as they are all unsigned char and that is the max value*/
 	else if (intValueLocation <= 6) {return 0;} //Don't bother checking health values since they are just going to be recalculated later.
 	else if (intValueLocation == 7) {if (intValueCheck < 0 || intValueCheck > 7) {return 1;}} //Check the current status
@@ -47,7 +25,7 @@ unsigned char SanityChecker(unsigned int intValueLocation, int intValueCheck)
 	else if (intValueLocation == 12) {if (intValueCheck < 1 || intValueCheck > 10) {return 1;}} //Check the level.
 	else if (intValueLocation < 1613) {if (intValueCheck < 0 || intValueCheck > 10) {return 1;}} //Check the dungeon.
 	else {return 1;} //Invalid number on array.
-	return 0; //Value is okay, return 0 for no error found.	
+	return 0; //Value is okay, return 0 for no error found.
 }
 
 char savefunction()
@@ -67,7 +45,7 @@ char savefunction()
 	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {arrroomsave[x][y] = d.getCell(x,y);}} //Build array of the dungeon.
 	ofstream savefile;
 	savefile.open ("save.bif");
-	for (unsigned char i = 0; i < 12; i++) {savefile << arrbattlesave[i] << "\n";} 
+	for (unsigned char i = 0; i < 12; i++) {savefile << arrbattlesave[i] << "\n";}
 	for (unsigned char i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
 	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
 	savefile << ProgramVerison; //Writes version number at the very bottom of save.
@@ -83,7 +61,7 @@ char savefunction()
 	{
 		if(i < 12) {if (arrloadnumbers[i]==arrbattlesave[i]){intCheckSum++;}}
 		else {if (arrloadnumbers[i]==getmainvalue(0)) {intCheckSum++;}}
-	} 
+	}
 	unsigned int num = 12;
 	for (unsigned char y = 0; y < 20; y++)
 	{
@@ -132,7 +110,7 @@ bool loadfunction()
 	{
 		if(i < 12) {if (arrloadnumbers[i]==getbattlevalue(i)){intCheckSum++;}}
 		else if (i == 12) {if (arrloadnumbers[i]==getmainvalue(1)) {intCheckSum++;}}
-	} 
+	}
 	num = 12;
 	for (unsigned char y = 0; y < 20; y++)
 	{
@@ -196,7 +174,7 @@ bool LoadOldSave()
 			}
 			else {if (DebugModeLine == "DEBUG") {setdebugmode(true); blSaveDebugMode = true;} blLoadSuccess = loadfunction();}
 			if (blLoadSuccess) {return true;}
-			else 
+			else
 			{
 				cout<<endl<<"Unable to load save, possibly corrupted."<<endl;
 				getchar();

@@ -1,44 +1,12 @@
 #ifndef _ROOMS_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
 #define _ROOMS_H_INCLUDED__
-/*
-Made By: Patrick J. Rye
-Purpose: A header to hold all the functions related to rooms, their generation and such.
-Source: http://www.roguebasin.com/index.php?title=C%2B%2B_Example_of_Dungeon-Building_Algorithm
-Current Revision: 2.1.1
-Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date		Revision	Changed By		Changes
-------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================			
--------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================	
-2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
-										-Changed some int to smaller variables because they don't need to be that big.		
-=============================================================================================================================================================
-2015/03/16	1.0.1		Patrick Rye 	-Changed player tile to be @ rather then +
-										-Changed chest tile to be # rather then @
-=============================================================================================================================================================
-2015/03/17	1.1			Patrick Rye		-Stuff
-=============================================================================================================================================================
-2015/07/06	2.0			Patrick Rye		-Added Locked Doors which can be broken down, picked, or unlocked with a key
-=============================================================================================================================================================
-2015/07/07	2.1			Patrick Rye		-Changed all cout to printf
-										-Changed Tiles to be stored in hex
-										-Cleaned up code.
-=============================================================================================================================================================
-2015/07/08	2.1.1		Patrick Rye		-Corrected a misplaced bracket which was causing compiling issues.
-=============================================================================================================================================================
-2015/07/08	2.1.2		Patrick Rye		-Changed scanf back to cin due to an issue that I will fix later.
-=============================================================================================================================================================					
-*/
 int intPlayerX; //Player position in X and Y.
 int intPlayerY;
 int intPlayerNewX; //Player position in X and Y.
 int intPlayerNewY;
 unsigned char intTempTile = 0x6; //Value to hold what the cell that the player is moving into is.
 bool blRoomsDebugMode = false;
-void SetRoomDebugMode(bool isDebug) {blRoomsDebugMode = isDebug;} 
+void SetRoomDebugMode(bool isDebug) {blRoomsDebugMode = isDebug;}
 class Dungeon
 {
     int xmax;
@@ -74,7 +42,7 @@ class Dungeon
     void setCell(int x, int y, int celltype) {dungeon_map[x + xsize * y] = celltype;}
 	public:
     int getCell(int x, int y) {return dungeon_map[x + xsize * y];}
- 
+
     int getRand(int min, int max)
     {
         time_t seed;
@@ -85,10 +53,10 @@ class Dungeon
         int i = rand() % n;
         if(i < 0)
             i = -i;
- 
+
         return min + i;
     }
- 
+
     bool makeCorridor(int x, int y, int lenght, int direction)
     {
         int len = getRand(2, lenght);
@@ -118,7 +86,7 @@ class Dungeon
             {
                 if(y < 0 || y > ysize) return false;
                 else ytemp = y;
- 
+
                 for(xtemp = x; xtemp < (x + len); xtemp++)
                 {
                     if(xtemp < 0 || xtemp > xsize) return false;
@@ -148,12 +116,12 @@ class Dungeon
             {
                 if (ytemp < 0 || ytemp > ysize) return false;
                 else ytemp = y;
- 
+
                 for (xtemp = x; xtemp > (x-len); xtemp--){
                     if (xtemp < 0 || xtemp > xsize) return false;
                     if (getCell(xtemp, ytemp) != tileUnused) return false;
                 }
- 
+
                 for (xtemp = x; xtemp > (x-len); xtemp--){
                     setCell(xtemp, ytemp, floor);
                 }
@@ -173,7 +141,7 @@ class Dungeon
 		//choose the way it's pointing at
 		int dir = 0;
 		if (direction > 0 && direction < 4) dir = direction;
- 
+
 		switch(dir){
 		case 0:
 		//north
@@ -185,7 +153,7 @@ class Dungeon
 					if (getCell(xtemp, ytemp) != tileUnused) return false; //no space left...
 				}
 			}
- 
+
 			//we're still here, build
 			for (int ytemp = y; ytemp > (y-ylen); ytemp--){
 				for (int xtemp = (x-xlen/2); xtemp < (x+(xlen+1)/2); xtemp++){
@@ -208,15 +176,15 @@ class Dungeon
 					if (getCell(xtemp, ytemp) != tileUnused) return false;
 				}
 			}
- 
+
 			for (int ytemp = (y-ylen/2); ytemp < (y+(ylen+1)/2); ytemp++){
 				for (int xtemp = x; xtemp < (x+xlen); xtemp++){
- 
+
 					if (xtemp == x) setCell(xtemp, ytemp, wall);
 					else if (xtemp == (x+xlen-1)) setCell(xtemp, ytemp, wall);
 					else if (ytemp == (y-ylen/2)) setCell(xtemp, ytemp, wall);
 					else if (ytemp == (y+(ylen-1)/2)) setCell(xtemp, ytemp, wall);
- 
+
 					else setCell(xtemp, ytemp, floor);
 				}
 			}
@@ -230,15 +198,15 @@ class Dungeon
 					if (getCell(xtemp, ytemp) != tileUnused) return false;
 				}
 			}
- 
+
 			for (int ytemp = y; ytemp < (y+ylen); ytemp++){
 				for (int xtemp = (x-xlen/2); xtemp < (x+(xlen+1)/2); xtemp++){
- 
+
 					if (xtemp == (x-xlen/2)) setCell(xtemp, ytemp, wall);
 					else if (xtemp == (x+(xlen-1)/2)) setCell(xtemp, ytemp, wall);
 					else if (ytemp == y) setCell(xtemp, ytemp, wall);
 					else if (ytemp == (y+ylen-1)) setCell(xtemp, ytemp, wall);
- 
+
 					else setCell(xtemp, ytemp, floor);
 				}
 			}
@@ -252,21 +220,21 @@ class Dungeon
 					if (getCell(xtemp, ytemp) != tileUnused) return false;
 				}
 			}
- 
+
 			for (int ytemp = (y-ylen/2); ytemp < (y+(ylen+1)/2); ytemp++){
 				for (int xtemp = x; xtemp > (x-xlen); xtemp--){
- 
+
 					if (xtemp == x) setCell(xtemp, ytemp, wall);
 					else if (xtemp == (x-xlen+1)) setCell(xtemp, ytemp, wall);
 					else if (ytemp == (y-ylen/2)) setCell(xtemp, ytemp, wall);
 					else if (ytemp == (y+(ylen-1)/2)) setCell(xtemp, ytemp, wall);
- 
+
 					else setCell(xtemp, ytemp, floor);
 				}
 			}
 			break;
 		}
- 
+
 		//yay, all done
 		return true;
 	}
@@ -341,7 +309,7 @@ class Dungeon
 				else setCell(x, y, tileUnused);
 			}
 		}
- 
+
 		/*******************************************************************************
 		And now the code of the random-map-generation-algorithm begins!
 		*******************************************************************************/
@@ -355,7 +323,7 @@ class Dungeon
 			if (currentFeatures == objects){
 				break;
 			}
- 
+
 			//start with a random wall
 			int newx = 0;
 			int xmod = 0;
@@ -391,7 +359,7 @@ class Dungeon
 						xmod = -1;
 						ymod = 0;
 					}
- 
+
 					//check that we haven't got another door nearby, so we won't get alot of openings besides
 					//each other
 					if (validTile > -1){
@@ -404,7 +372,7 @@ class Dungeon
 						else if (getCell(newx+1, newy) == tileDoor)//west
 							validTile = -1;
 					}
- 
+
 					//if we can, jump out of the loop and continue with the rest
 					if (validTile > -1) break;
 				}
@@ -415,11 +383,11 @@ class Dungeon
 				if (feature <= chanceRoom){ //a new room
 					if (makeRoom((newx+xmod), (newy+ymod), 8, 6, validTile)){
 						currentFeatures++; //add to our quota
- 
+
 						//then we mark the wall opening with a door
 						if(rand() % 101 <= 15) {setCell(newx, newy, tileLockedDoor);}
 						else {setCell(newx, newy, tileDoor);}
- 
+
 						//clean up infront of the door so we can reach it
 						setCell((newx+xmod), (newy+ymod), tileDirtFloor);
 					}
@@ -428,19 +396,19 @@ class Dungeon
 					if (makeCorridor((newx+xmod), (newy+ymod), 6, validTile)){
 						//same thing here, add to the quota and a door
 						currentFeatures++;
- 
+
 						if(rand() % 101 <= 15) {setCell(newx, newy, tileLockedDoor);}
 						else {setCell(newx, newy, tileDoor);}
 					}
 				}
 			}
 		}
- 
- 
+
+
 		/*******************************************************************************
 		All done with the building, let's finish this one off
 		*******************************************************************************/
- 
+
 		//sprinkle out the bonus stuff (stairs, chests etc.) over the map
 		int newx = 0;
 		int newy = 0;
@@ -450,10 +418,10 @@ class Dungeon
 			for (int testing = 0; testing < 1000; testing++){
 				newx = getRand(1, xsize-1);
 				newy = getRand(1, ysize-2); //cheap bugfix, pulls down newy to 0<y<24, from 0<y<25
- 
+
 				//System.out.println("x: " + newx + "\ty: " + newy);
 				ways = 4; //the lower the better
- 
+
 				//check if we can reach the spot
 				if (getCell(newx, newy+1) == tileDirtFloor || getCell(newx, newy+1) == tileCorridor){
 				//north
@@ -475,7 +443,7 @@ class Dungeon
 					if (getCell(newx+1, newy) != tileDoor || getCell(newx+1, newy) != tileLockedDoor)
 					ways--;
 				}
- 
+
 				if (state == 0){
 					if (ways == 0){
 					//we're in state 0, let's place a Player from where they came down the stairs.
@@ -498,7 +466,7 @@ class Dungeon
 		}
 		return true;
 	}
- 
+
 	public:
     int* make_dungeon()
     {
@@ -538,10 +506,10 @@ class Dungeon
 		unsigned char Status = getbattlevalue(statStatus);
 		const char Dir[4] = {'N','S','E','W'};
 		//If player is confused they move a random direction.
-		
+
 		if (Status != effectNone)
 		{
-			if (RemoveStatusEffect(getbattlevalue(statLuk),Status, getbattlevalue(statStatusCounter))) 
+			if (RemoveStatusEffect(getbattlevalue(statLuk),Status, getbattlevalue(statStatusCounter)))
 			{
 				printf("\n%s",EndOfEffectString("player",Status).c_str());
 				setbattlevalue(statStatus,effectNone);
@@ -549,7 +517,7 @@ class Dungeon
 			}
 			else {setbattlevalue(statStatusCounter,getbattlevalue(statStatusCounter)+1);}
 		}
-		if (Status == effectConfused && (chrPlayerDirection == 'N' || chrPlayerDirection == 'E' || chrPlayerDirection == 'W' ||chrPlayerDirection == 'S')) 
+		if (Status == effectConfused && (chrPlayerDirection == 'N' || chrPlayerDirection == 'E' || chrPlayerDirection == 'W' ||chrPlayerDirection == 'S'))
 		{
 				chrPlayerDirection = Dir[rand() % 4];
 				printf("\nYou are confused and don't know where to go.");
@@ -636,7 +604,7 @@ class Dungeon
 				}} break;}
 			case 'M' :
 				if (blRoomsDebugMode) {return 'M'; break;}
-			default : 
+			default :
 				printf("\nInvalid choice, please try again.\n");
 				return 'F';
 				break;
@@ -678,11 +646,11 @@ class Dungeon
 				printf("[U]se Key\n");
 				printf("[P]ick Lock\n");
 				printf("[L]eave\n");
-				
+
 				cin>>chrPlayerDirection;
 				//scanf("%c",&chrPlayerDirection);
 				chrPlayerDirection = CharConvertToUpper(chrPlayerDirection);
-				
+
 				switch(chrPlayerDirection)
 				{
 					case 'L' :
@@ -691,7 +659,7 @@ class Dungeon
 						break;
 					case 'B' :
 						//Player attempts to break the door.
-						if(getbattlevalue(statStr) >= 60) 
+						if(getbattlevalue(statStr) >= 60)
 						{
 							//Player breaks down the door
 							printf("\nYou back up several paces from the door to get a running start. You run at the door, full speed, and ram the door. The wooden door breaks easily under your massive strength.\n\n");
@@ -735,7 +703,7 @@ class Dungeon
 						break;
 					case 'P' :
 						//Player attempts to pick the lock
-						if(getbattlevalue(statLuk) >= 60) 
+						if(getbattlevalue(statLuk) >= 60)
 						{
 							//Player picks the lock.
 							printf("\nYou move your lock-pick around a hear a *CLICK* you opened the door without any issue.\n");
@@ -760,40 +728,40 @@ class Dungeon
 						goto LockedDoorStart;
 						break;
 				}
-				
-				
+
+
 			default :
 				//Player is stepping on a tile that should never exist, if I remember to add it.
 				//Therefore just return a false.
 				return 'F';
 				break;
-		//End of switch based on next cell.	
+		//End of switch based on next cell.
 		}
 	//End of PlayerMovement function.
 	}
 
-	
+
 public:
     Dungeon()
     {
         xmax = 80;
         ymax = 20;
- 
+
         xsize = 0;
         ysize = 0;
- 
+
         objects = 0;
- 
+
         chanceRoom = 75;
         chanceCorridor = 25;
- 
+
         msgXSize = "X size of dungeon: \t";
         msgYSize = "Y size of dungeon: \t";
         msgMaxObjects = "max # of objects: \t";
         msgNumObjects = "# of objects made: \t";
         msgHelp = "";
         msgDetailedHelp = "";
- 
+
         cmain();
     }
 };

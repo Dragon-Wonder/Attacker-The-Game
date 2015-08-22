@@ -1,0 +1,21 @@
+22 August 2015
+   Released version 1.5.2c
+
+     Change log:
+        -Fixed: Version info being wrong
+        -Fixed: Compile issue
+
+22 August 2015
+   Released version 1.5.0c
+
+     Change log:
+        -Added: Version.h
+        -Removed: Change log at the start of every file
+        -Updated: Folders of the program to be cleaner
+        -Added: Code Blocks Support
+        -Added: Icon
+        -Added: Boilerplate info
+        -Added: Compile.bat
+        -New: Change log (everything before this one is considered "lost")
+		-Changed: Compiler from Cygwin to MinGW / Code Blocks
+		

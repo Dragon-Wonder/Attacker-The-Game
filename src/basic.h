@@ -1,34 +1,5 @@
 #ifndef _BASIC_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
 #define _BASIC_H_INCLUDED__
-
-/*
-Made By: Patrick J. Rye
-Purpose: A header to hold functions that are pretty basic and likely won't change very often or at all.
-Current Revision: 2.0
-Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date		Revision	Changed By		Changes
-------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================			
--------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================
-2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
-										-Changed some int to smaller variables because they don't need to be that big.	
-=============================================================================================================================================================
-2015/03/17	1.0.1		Patrick Rye 	-Changed order of elements
-										-Made function that shows bar representing health.
-										-Made function that returns multiplier depending on attacking and defending elements.
-										-Added function which returns string name of element
-										-Added function which returns string name of status
-=============================================================================================================================================================	
-2015/03/17	1.0.2		Patrick Rye 	-Added key amount to stat
-										-Grammar & spelling fixes.
-=============================================================================================================================================================
-2015/07/07	2.0			Patrick Rye		-Changed cout to printf.
-=============================================================================================================================================================
-*/
-
 /*********************************************************************************************************/
 #include <string>
 //Some constant string for different messages that appear as large ASCII text.
@@ -193,7 +164,7 @@ float ElementMulti(unsigned char AttackingElement, unsigned char DefendingElemen
 	  For example a fire attack on an ice monster will be 125% damage, while a fire
 	  attack on fire monster will only do 75% damage. 2 spaces away will do normal damage
 	  And none elements or physical do normal damage as well.*/
-	  
+
 	/*
 				Light
 		Energy			Wind
@@ -215,7 +186,7 @@ float ElementMulti(unsigned char AttackingElement, unsigned char DefendingElemen
 			return 1.125;
 		case 4 :
 			return 1.25;
-		default : 
+		default :
 			return 1;
 	};
 	return 1;
@@ -238,7 +209,7 @@ float DamageHealthPercent(unsigned int CurrentHealth, unsigned int MaximumHealth
 	  The less damage it will do.
 	  The max value it return is about 1.01 or something similar, the min value
 	  is about 0.64 */
-	
+
 	float HealthPercent = CurrentHealth / MaximumHealth;
 	float TempValue = 0;
 	TempValue -= 0.8981 * pow(HealthPercent, 3);
@@ -274,23 +245,23 @@ string StateOfBeing(unsigned int intCurrHealth, unsigned int intMaxHealth)
 	float flHealthPercent = (intCurrHealth * 100)/intMaxHealth;
 	string strState;
 	unsigned char intRandomState;
-	
+
 	const string FullHealthOutput[3] = {"steady","well","healthy"};
 	const string SeventyPHealthOutput[3] = {"wounded","damaged","hurt"};
 	const string FiftyPHealthOutput[3] = {"injured","bleeding","very hurt"};
 	const string TwentyFivePHealthOutput[3] = {"really hurt","in pain","badly damaged"};
 	const string TenPHealthOutput[3] = {"badly wounded","badly hurt","close to dying"};
 	const string FivePHealthOutput[3] = {"to be dying","heavily wounded","gravely wounded"};
-	
+
 	intRandomState = rand() % 3; //0-2
-	
+
 	if (flHealthPercent <= 5) {strState = FivePHealthOutput[intRandomState];}
 	else if (flHealthPercent <= 10) {strState = TenPHealthOutput[intRandomState];}
 	else if (flHealthPercent <= 25) {strState = TwentyFivePHealthOutput[intRandomState];}
 	else if (flHealthPercent <= 50) {strState = FiftyPHealthOutput[intRandomState];}
 	else if (flHealthPercent <= 70) {strState = SeventyPHealthOutput[intRandomState];}
 	else {strState = FullHealthOutput[intRandomState];}
-	
+
 	return strState;
 }
 
@@ -302,7 +273,7 @@ string EndOfEffectString(std::string Target, unsigned char Effect)
 	{
 		switch (Effect)
 		{
-			case effectBlinded : 
+			case effectBlinded :
 				return "Your eyes begin to see again.";
 				break;
 			case effectFrozen :
@@ -333,7 +304,7 @@ string EndOfEffectString(std::string Target, unsigned char Effect)
 	{
 		switch (Effect)
 		{
-			case effectBlinded : 
+			case effectBlinded :
 				TempStr = "The ";
 				TempStr += Target;
 				TempStr += " blinks his eyes and looks right at you.";
@@ -386,7 +357,7 @@ string StartOfEffectString(std::string Target, unsigned char Effect)
 	{
 		switch (Effect)
 		{
-			case effectBlinded : 
+			case effectBlinded :
 				return "Your eyes begin to cloud up, preventing vision.";
 				break;
 			case effectFrozen :
@@ -417,7 +388,7 @@ string StartOfEffectString(std::string Target, unsigned char Effect)
 	{
 		switch (Effect)
 		{
-			case effectBlinded : 
+			case effectBlinded :
 				TempStr = "The ";
 				TempStr += Target;
 				TempStr += " cannot see any more.";

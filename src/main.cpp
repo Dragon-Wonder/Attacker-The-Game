@@ -1,35 +1,3 @@
-/*
-Made By: Patrick J. Rye
-Purpose: A game I made as an attempt to teach myself c++, just super basic, but going to try to keep improving it as my knowledge increases.
-Current Revision: 1.4c
-Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date		Revision	Changed By		Changes
-------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================			
--------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================	
-2015/03/13	1.0c		Patrick Rye		-Move from beta revisions to gamma revisions.
-										-Changed some int to smaller variables because they don't need to be that big.
-										-Fixed bug where new dungeon wasn't generating properly. (This is what happens when you don't play test changes for a while).
-										-Made it so you have to be in debug mode to force a monster (Don't know why you would want this otherwise)
-										-General code improvement.
-=============================================================================================================================================================
-2015/03/17	1.1c		Patrick Rye		-Grammar & spelling fixes.
-										-Updated save.h with more values.
-										-Implemented mana system.
-=============================================================================================================================================================
-2015/03/18	1.2c		Patrick Rye		-Removed unneeded libraries.
-=============================================================================================================================================================
-2015/04/25	1.3c		Patrick Rye		-Attempted to correct my misunderstanding of how headers work, broke everything had to revert back.
-										-Keeping record of attempt for future reference
-=============================================================================================================================================================
-2015/07/06	1.4c		Patrick Rye		-Added locked doors.
-										-Added Keys which can be found randomly on some monsters
-=============================================================================================================================================================				
-*/
-
 /*********************************************************************************************************/
 #include <iostream>
 #include <fstream>
@@ -37,11 +5,13 @@ Date		Revision	Changed By		Changes
 #include <math.h>
 #include <stdio.h>
 #include <cstdlib>
+#include <time.h>
 /*********************************************************************************************************/
 #include "basic.h" //Functions that are simple, referenced many places and/or won't need to be changed very often.
 #include "battle.h" //Functions that deal with battling, levelling up and making a player.
 #include "rooms.h" //Functions that deal with generating a dungeon, and moving through it.
 #include "spells.h" //Functions that deal with spells and magic.
+#include "version.h"
 /*********************************************************************************************************/
 using namespace std;
 Dungeon d; //Define the dungeon class as 'd' so I can use functions in there anywhere later in the code.
@@ -50,7 +20,7 @@ Dungeon d; //Define the dungeon class as 'd' so I can use functions in there any
 unsigned char intMainLevel = 1; //The level of the dungeon.
 unsigned char intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
 bool blDebugMode = false; //If game is in debug mode or not, effects if player has access to debug commands.
-const string CurrentVerison = "1.4c"; //The current version of this program, stored in a save file later on.
+const string CurrentVerison = DEFINED_VER_FULLVERSION_STRING; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 //These functions have to be up here as functions in save.h use them.
 //These values are used to pass values to the save header so that they may be saved.
@@ -77,21 +47,23 @@ int main()
 	char chrPlayerMade = 'F';
 	char chrSaveSuccess = 'N'; //N means that save has not been run.
 	//If game is not already in debug mode, checks if source code exists then put it in debug mode if it does.
-	if (!(blDebugMode)) {blDebugMode = fileexists("main.cpp"); } 
-	//Sets debug mode for rooms.h, battle.h, & spells.h
-	if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true); SetSpellDebugMode(true);}
+	#ifdef DEFINED_BUILD_MODE_PRIVATE
+        blDebugMode = true;
+        //Sets debug mode for rooms.h, battle.h, & spells.h
+        if (blDebugMode) {SetBattleDebugMode(true); SetRoomDebugMode(true); SetSpellDebugMode(true);}
+    #endif
 	ShowOpeningMessage();
 	getchar();
 	cout<<string(50,'\n');
-	
+
 	if (fileexists("save.bif")) //Check if there is a save present.
 	{
 		blOldSave = LoadOldSave();
 		if (blOldSave) {chrPlayerMade = 'T';}
-	//End of if save exists.	
+	//End of if save exists.
 	}
 	else {cout<<string(50, '\n');}
-	
+
 	if(!blOldSave) //If it is not an old save show welcome message.
 	{
 		cout<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
@@ -110,7 +82,7 @@ int main()
 		cout<<endl;
 		if (blOldSave && intMainLevel == intLevelStart) {/*d.playerfind();*/ d.showDungeon();} //If old save and the level of that save, just load old dungeon.
 		else {d.cmain();/*Generates dungeon.*/} //If it is not old game OR a different level of old game, make new dungeon.
-		
+
 		do
 		{
 			cout << string(50, '\n');

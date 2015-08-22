@@ -1,44 +1,8 @@
 #ifndef _BATTLE_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
 #define _BATTLE_H_INCLUDED__
-/*
-Made By: Patrick J. Rye
-Purpose: A header to hold all the functions related to battling, levelling up and player stats.
-Current Revision: 1.1.3
-Change Log---------------------------------------------------------------------------------------------------------------------------------------------------
-Date		Revision	Changed By		Changes
-------  	---------   ------------	---------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================			
--------------------------------------------------------------------------------------------------------------------------------------------------------------									
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MOVED FROM BETA TO GAMMA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================================================
-2015/03/16	1.0			Patrick Rye		-Move from beta revisions to gamma revisions.
-										-Changed some int to smaller variables because they don't need to be that big.
-										-Added simple spell casting.
-											-It is currently quite unbalanced will work to improve later.
-=============================================================================================================================================================
-2015/03/16	1.0.1		Patrick Rye		-Change equation to see if status effect is removed.
-										-Increase status effects turn cut off from 5 to 8.
-=============================================================================================================================================================
-2015/03/17	1.1			Patrick Rye		-Added option to check monster.
-										-More damage for elements that are farther apart.
-=============================================================================================================================================================
-2015/03/17	1.1.1		Patrick Rye 	-Added keys to both player & monsters
-										-Grammar & spelling fixes.
-										-Added health bar for player.
-										-Added help description for cast spell.
-										-Implemented mana system.
-										-Redid how health, stats, status, and inventory is called.
-=============================================================================================================================================================
-2015/04/17	1.1.2		Patrick Rye		-Added more comments
-										-Added ability to get monster name.
-=============================================================================================================================================================
-2015/04/25	1.1.3		Patrick Rye		-Fixed some small bugs.
-=============================================================================================================================================================										
-*/
 /*********************************************************************************************************/
 //Structure for different attacks used
-struct attack {
+struct stcAttack {
 	string name; //Name of attack, kinda useless
 	unsigned char element; //Element of attack, for calc multi later
 	unsigned char basedamage; //Nothing at the moment, just here to try some stuff later.
@@ -52,7 +16,7 @@ struct healthmana {
 };
 
 //Structure for stats
-struct stats {
+struct stcStats {
 	unsigned char str; //Strength (damage)
 	unsigned char cons; //Constitution (health)
 	unsigned char def; //Defence (damage taken)
@@ -61,7 +25,7 @@ struct stats {
 };
 
 //Structure for status
-struct status {
+struct stcStatus {
 	unsigned int effect; //Effect Number based on enum
 	unsigned char counter;//Keeps track of turns with effect for increased chance of it going away.
 };
@@ -87,26 +51,26 @@ struct inventory {
 //Structure for entities such as player and monsters
 struct entity {
 	string name; //Name of entity
-	healthmana health; //Max and Current Health
-	healthmana mana; //Max and Current Mana (only used for players atm)
-	stats stats; //Entity Stats
-	status status; //Entity status
+	struct healthmana health; //Max and Current Health
+	struct healthmana mana; //Max and Current Mana (only used for players atm)
+	struct stcStats stats; //Entity Stats
+	struct stcStatus status; //Entity status
 	unsigned char element; //Element that the monster is. (for player is just physical)
-	attack attack; //Attack that it uses.
+	struct stcAttack attack; //Attack that it uses.
 	unsigned char keys; //Currently does nothing.
 };
 /*********************************************************************************************************/
 //Make constants of all the different attacks.
-const attack sword = {"sword",elementPhysical,10,"cut"};
-const attack claws = {"claws",elementPhysical,8,"swipe"};
-const attack fist = {"fist",elementEarth,5,"punched"};
-const attack magic = {"magic",elementWind,7,"whirlwind"};
-const attack murloc = {"[murloc sound]",elementWater,8,"[murloc sound]"};
-const attack bow = {"bow",elementPhysical,8,"shot"};
-const attack holy = {"holy light",elementLight,10,"shot"};
-const attack ghost = {"ghost touch",elementIce,7,"ghostly things"};
-const attack unholy = {"unholy power",elementDarkness,6,"unholy things"};
-const attack spark = {"spark",elementEnergy,7,"shocked"};
+const stcAttack sword = {"sword",elementPhysical,10,"cut"};
+const stcAttack claws = {"claws",elementPhysical,8,"swipe"};
+const stcAttack fist = {"fist",elementEarth,5,"punched"};
+const stcAttack magic = {"magic",elementWind,7,"whirlwind"};
+const stcAttack murloc = {"[murloc sound]",elementWater,8,"[murloc sound]"};
+const stcAttack bow = {"bow",elementPhysical,8,"shot"};
+const stcAttack holy = {"holy light",elementLight,10,"shot"};
+const stcAttack ghost = {"ghost touch",elementIce,7,"ghostly things"};
+const stcAttack unholy = {"unholy power",elementDarkness,6,"unholy things"};
+const stcAttack spark = {"spark",elementEnergy,7,"shocked"};
 /*********************************************************************************************************/
 /*A quick note on the base stats, a stat cannot be lower than 6, as a modifier might reduce the value by 5 points.
   The base stat point should also add up to be 100. */
@@ -222,7 +186,7 @@ unsigned int CalculateDamage(unsigned char DamageLevel, unsigned char StrStat, u
 		DamageTemp += rand() % (DamageLevel *2);
 		return DamageTemp;
 	}
-	
+
 	return intMinDamage;
 }
 
@@ -316,7 +280,7 @@ bool MonsterAttack(unsigned int MonsterDamage, float MonsterMuli, bool ishealing
 			MonsterEffect = effectBleeding;
 			break;
 	};
-	
+
 	if (monster.status.effect == effectFrozen)
 	{
 		cout<<endl<<"The "<<monster.name<< " is stuck in a block of ice and cannot move!"<<endl;
@@ -327,7 +291,7 @@ bool MonsterAttack(unsigned int MonsterDamage, float MonsterMuli, bool ishealing
 		cout<<endl<<"The "<<monster.name<<" cannot see well.";
 		if(rand() % 101 > 5) {MonsterDamage = 0;}
 	}
-	
+
 	if (MonsterDamage != 0)
 	{
 		if (MonsterMuli > 1){cout<<"The "<<monster.name<<" got a crit on you! ";}
@@ -350,7 +314,7 @@ bool PlayerAttack(unsigned int PlayerDamage, float PlayerMuli)
 	cout<<endl;
 	float ElementalMulti = ElementMulti(player.attack.element,monster.element);
 	PlayerDamage = floor(PlayerDamage * DamageHealthPercent(player.health.current,player.health.max) * ElementalMulti); //Reduce damage based on health.
-	
+
 	if (player.status.effect == effectFrozen)
 	{
 		cout<<endl<<"You are stuck in a block of ice and cannot move!";
@@ -378,9 +342,9 @@ bool PlayerAttack(unsigned int PlayerDamage, float PlayerMuli)
 inline void RandomMonster()
 {
 	//Generates a number 0 - 12 representing the location of a monster in the monster name array
-	//It then places the name and base stats of the monster appropriately. 
+	//It then places the name and base stats of the monster appropriately.
 	unsigned char intRandomMonsterNumber;
-	
+
 	intRandomMonsterNumber = rand() % 13;
 	monster.name = monsters[intRandomMonsterNumber].name;
 	monster.stats.str = monsters[intRandomMonsterNumber].stats.str;
@@ -417,7 +381,7 @@ inline void RandomMonsterModifier()
 	intMRandomNumber = rand() % 20; //0 - 19
 	intPRandomNumber = rand() % 20; //0 - 19
 	intRandomNumber = rand() % 100 + 1; //1 - 100
-	
+
 	if (monster.stats.luk + intMRandomNumber > player.stats.luk+intPRandomNumber)
 	{
 		//Monster has better chance of spawning with a positive effect
@@ -491,7 +455,7 @@ inline void RandomMonsterModifier()
 		else {/*This shouldn't happen but just in case.*/MonsterModifier="";}
 	}
 	else {/*The two stats are equal therefore the monster is a normal monster without any other checks.*/MonsterModifier = "";}
-//End of random monster modifier.	
+//End of random monster modifier.
 }
 
 void LevelUpMonster()
@@ -500,13 +464,13 @@ void LevelUpMonster()
 	char StatUpgradeChance[5] = {0,0,0,0,0};
 	unsigned char intStatPoints = (intBattleLevel - 1) *18; //How many stat points the monster gets.
 	unsigned char intRandomStatChoice = 0;
-	
+
 	StatUpgradeChance[0] = monster.stats.str;
 	StatUpgradeChance[1] = monster.stats.cons + StatUpgradeChance[0];
 	StatUpgradeChance[2] = monster.stats.def + StatUpgradeChance[1];
 	StatUpgradeChance[3] = monster.stats.dex + StatUpgradeChance[2];
 	StatUpgradeChance[4] = monster.stats.luk + StatUpgradeChance[3];
-	
+
 	for (unsigned char i = 0; i < intStatPoints; i++) //Random place points in the different stats.
 	{
 		intRandomStatChoice = rand() % 101;
@@ -540,7 +504,7 @@ void LevelUpFunction()
 	player.status.counter = 0;
 	cout << string(50, '\n');
 	cout<<endl<<"LEVEL UP!"<<endl<<"You can put 20 points in any way you wish."<<endl;
-	
+
 	do
 	{
 		LevelUpChoice:
@@ -549,19 +513,19 @@ void LevelUpFunction()
 		cout<<"DEF: "<<(int)player.stats.def<<endl<<"DEX: "<<(int)player.stats.dex<<endl;
 		cout<<"LUK: "<<(int)player.stats.luk<<endl<<"NONE to not use any points.";
 		cout<<endl<<"Enter the stat you wish to improve."<<endl;
-		
+
 		cout<<"> ";
-		
+
 		cin>>strLevelUpChoice;
 		strLevelUpChoice = ConvertToUpper(strLevelUpChoice); //Capitalize all letters in the string.
-		
+
 		if (!(strLevelUpChoice == "STR" || strLevelUpChoice == "CONS" || strLevelUpChoice == "DEF" || strLevelUpChoice == "DEX" || strLevelUpChoice == "LUK" || strLevelUpChoice == "NONE"))
 		{
 			cout << string(50, '\n');
 			cout<<endl<<"Invalid choice, try again."<<endl;
 			goto LevelUpChoice;
 		}
-		
+
 		if (strLevelUpChoice != "NONE")
 		{
 			LevelUpAmount:
@@ -577,23 +541,23 @@ void LevelUpFunction()
 				cout <<endl<< "Incorrect entry. Try again: ";
 			}
 			intBattleLevelUpAmount = floor(intBattleLevelUpAmount);
-			if (intBattleLevelUpAmount > intPlayerStatPoints || intBattleLevelUpAmount < 0) 
+			if (intBattleLevelUpAmount > intPlayerStatPoints || intBattleLevelUpAmount < 0)
 			{
 				cout << string(50, '\n');
 				cout<<endl<<"You have entered an invalid number, please try again.";
 				goto LevelUpAmount;
 			}
-			
+
 			if (strLevelUpChoice == "STR") {player.stats.str += intBattleLevelUpAmount;}
 			else if (strLevelUpChoice == "CONS") {player.stats.cons += intBattleLevelUpAmount;}
 			else if (strLevelUpChoice == "DEF") {player.stats.def += intBattleLevelUpAmount;}
 			else if (strLevelUpChoice == "DEX") {player.stats.dex += intBattleLevelUpAmount;}
 			else{player.stats.luk += intBattleLevelUpAmount;}
-			
+
 			intPlayerStatPoints -= intBattleLevelUpAmount;
 		}
 		else {intPlayerStatPoints = 0;} //Player chose not to use rest of points so just cause the loop to end.
-		
+
 	} while (intPlayerStatPoints > 0);
 	//Recalculate player's health.
     player.health.max = CalculateHealth(intBattleLevel, player.stats.cons);
@@ -601,9 +565,9 @@ void LevelUpFunction()
 //End of level up function.
 }
 
-char BattleScene() 
+char BattleScene()
 {
-	
+
 	/*
 	Function that holds the battle scene
 	Returns a T, F or E,
@@ -616,7 +580,7 @@ char BattleScene()
 	char chrPlayerBattleChoice;
     BattleGoto:
 	cout << string(10, '\n');
-    float douPlayerCritChance = ((player.stats.luk)/20 + rand() %3) * 4; 
+    float douPlayerCritChance = ((player.stats.luk)/20 + rand() %3) * 4;
     float douMonsterCritChance =((monster.stats.luk)/20 + rand() %3) * 4;
     float douMonsterDamageMuli = 0.85;
     float douPlayerDamageMuli = 1;
@@ -638,7 +602,7 @@ char BattleScene()
 		}
 		else {player.status.counter += 1;}
 	}
-	
+
 	if (monster.status.effect != effectNone)
 	{
 		if (RemoveStatusEffect(monster.stats.luk,monster.status.effect,monster.status.counter))
@@ -649,7 +613,7 @@ char BattleScene()
 		}
 		else {monster.status.counter += 1;}
 	}
-	
+
 	ApplyBleedingDamage();
 	ApplyPoisonDamage();
 	if (player.health.current <= 0) {return 'F';}
@@ -682,7 +646,7 @@ char BattleScene()
     cout<<"> ";
     cin>>chrPlayerBattleChoice;
     chrPlayerBattleChoice = CharConvertToUpper(chrPlayerBattleChoice);
-	
+
     switch(chrPlayerBattleChoice)
     {
         case 'A' : //Attack
@@ -699,7 +663,7 @@ char BattleScene()
 				}
 				else {cout<<endl<<"You were stunned and unable to attack.";}
 			}
-			else 
+			else
 			{
 				//Player attacks first.
 				blMonsterDead = PlayerAttack(intPlayerDamage,douPlayerDamageMuli);
@@ -707,10 +671,10 @@ char BattleScene()
 				if (!StunCheck(player.stats.luk,monster.stats.luk))
 				{
 					blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
-					if (blPlayerDead) {return 'F';}		
+					if (blPlayerDead) {return 'F';}
 				}
 				else {cout<<endl<<"The "<<monster.name<<" was stunned by your hit and unable to attack.";}
-		
+
 			}
 			cout<<endl;
 			getchar();
@@ -723,7 +687,7 @@ char BattleScene()
 				//Monster attacks first
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,true);
 				if (blPlayerDead) {return 'F';}
-				
+
 				if (!StunCheck(monster.stats.luk,player.stats.luk))
 				{
 					if (player.health.current+douPlayerHealAmount > player.health.max) {player.health.current=player.health.max;}
@@ -736,9 +700,9 @@ char BattleScene()
 				//Player heals first
 				if (player.health.current+douPlayerHealAmount > player.health.max) {player.health.current=player.health.max;}
 				else {player.health.current += douPlayerHealAmount;}
-				
+
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,true);
-				if (blPlayerDead) {return 'F';}				
+				if (blPlayerDead) {return 'F';}
 			}
 			getchar();
 			goto BattleGoto;
@@ -772,7 +736,7 @@ char BattleScene()
 			break;
 		case 'R' : //chance to run away.
 			if ((rand() % 101 < ((player.stats.dex + player.stats.luk/6) + rand() % 10)/10) && (player.status.effect != effectConfused) && (player.status.effect != effectFrozen)) {return 'T';}
-			else 
+			else
 			{
 				cout<<"You failed to get away."<<endl;
 				blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
@@ -798,7 +762,7 @@ char BattleScene()
 				}
 				else {cout<<endl<<"You were stunned and unable to attack.";}
 			}
-			else 
+			else
 			{
 				//Player attacks first.
 				init_spell(CastSpell);
@@ -806,7 +770,7 @@ char BattleScene()
 				if (!StunCheck(player.stats.luk,monster.stats.luk))
 				{
 					blPlayerDead = MonsterAttack(intMonsterDamage,douMonsterDamageMuli,false);
-					if (blPlayerDead) {return 'F';}		
+					if (blPlayerDead) {return 'F';}
 				}
 				else {cout<<endl<<"The "<<monster.name<<" was stunned by your hit and unable to attack.";}
 			}
@@ -864,7 +828,7 @@ char BattleScene()
             cout<<endl<<"Invalid choice, please try again.";
             goto PlayerChoice;
 			break;
-	
+
     }
 	goto BattleGoto; //Should not need this but just in case.
 //End of battle scene function.
@@ -888,7 +852,7 @@ char PlayerInitialize()
 	unsigned char intSkillPointsLeft = 100;
 	StatsGoto:
 	cout<<"You have "<< (int)intSkillPointsLeft <<" points to spend however you desire on these five stats, however each stat must have at least 1 point."<<endl;
-	do 
+	do
 	{
 		cout<<endl<<"Enter your stat for your STRENGTH: ";
 		if ( !(cin >> intStr) ) //Checks that value entered is correct
@@ -913,7 +877,7 @@ char PlayerInitialize()
 		return 'F';
 	}
 	cout<<endl<<"You have "<< (int)intSkillPointsLeft <<" points left to spend.";
-	do 
+	do
 	{
 		cout<<endl<<"Enter your stat for your CONSTITUTION: ";
 		if ( !(cin >> intCons) ) //Checks that value entered is correct
@@ -936,7 +900,7 @@ char PlayerInitialize()
 		return 'F';
 	}
 	cout<<endl<<"You have "<< (int)intSkillPointsLeft <<" points left to spend";
-	do 
+	do
 	{
 		cout<<endl<<"Enter your stat for your DEFENCE: ";
 		if ( !(cin >> intDef) ) //Checks that value entered is correct
@@ -959,7 +923,7 @@ char PlayerInitialize()
 		return 'F';
 	}
 	cout<<endl<<"You have "<< (int)intSkillPointsLeft <<" points left to spend";
-	do 
+	do
 	{
 		cout<<endl<<"Enter your stat for your DEXTERITY: ";
 		if ( !(cin >> intDex) ) //Checks that value entered is correct
@@ -1029,7 +993,7 @@ bool startbattle(unsigned char intsLevel)
 	char charBattleSceneEnding;
 	RandomMonster(); //Generate a random monster.
 	LevelUpMonster(); //Level up monster.
-	RandomMonsterModifier(); //Give monster random modifier. 
+	RandomMonsterModifier(); //Give monster random modifier.
 	if (MonsterModifier != "") {monster.name = ConvertToLower(MonsterModifier) + " " + ConvertToLower(monster.name);} //If monster has a modifier change name to include it.
 	else {monster.name = ConvertToLower(monster.name);}
     charBattleSceneEnding = BattleScene();
@@ -1041,7 +1005,7 @@ bool startbattle(unsigned char intsLevel)
 			getchar();
             return true;
 			break;
-		case 'F' : 
+		case 'F' :
 			cout << string(50, '\n');
 			cout<<"You lost..."<<endl<<"You completed "<<(int)(intBattleLevel - 1) <<" dungeons.";
             cout<<endl<<"Press enter to close this game and try again!";

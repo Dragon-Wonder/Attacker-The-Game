@@ -26,3 +26,24 @@
 *.exe
 *.out
 *.app
+
+# Log file
+*.log
+
+# Save Files
+*.bif
+
+# Resource Files
+*.res
+
+# Stackdump
+*.stackdump
+
+# Code Blocks files
+/Project/bin/
+/Project/bin/*
+/Project/obj/
+/Project/obj/*
+*.layout
+*.depend
+
