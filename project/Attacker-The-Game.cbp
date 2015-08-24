@@ -47,17 +47,32 @@
 			<Option compilerVar="WINDRES" />
 			<Option weight="99" />
 		</Unit>
+		<Unit filename="../src/basic.cpp">
+			<Option weight="38" />
+		</Unit>
 		<Unit filename="../src/basic.h" />
+		<Unit filename="../src/battle.cpp" />
 		<Unit filename="../src/battle.h" />
-		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/global.h" />
+		<Unit filename="../src/main.cpp">
+			<Option weight="25" />
+		</Unit>
+		<Unit filename="../src/main.h" />
+		<Unit filename="../src/rooms.cpp" />
 		<Unit filename="../src/rooms.h" />
+		<Unit filename="../src/save.cpp">
+			<Option weight="70" />
+		</Unit>
 		<Unit filename="../src/save.h" />
+		<Unit filename="../src/spells.cpp">
+			<Option weight="61" />
+		</Unit>
 		<Unit filename="../src/spells.h" />
 		<Unit filename="../src/version.h" />
 		<Extensions>
 			<AutoVersioning>
-				<Scheme minor_max="99" build_max="0" rev_max="0" rev_rand_max="999" build_times_to_increment_minor="500" />
-				<Settings autoincrement="1" date_declarations="1" use_define="1" update_manifest="1" do_auto_increment="1" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="..\src\version.h" />
+				<Scheme minor_max="99" build_max="0" rev_max="0" rev_rand_max="999999" build_times_to_increment_minor="500" />
+				<Settings autoincrement="1" date_declarations="1" use_define="1" update_manifest="1" do_auto_increment="1" ask_to_increment="1" language="C++" svn="0" svn_directory="" header_path="..\src\version.h" />
 				<Changes_Log show_changes_editor="1" app_title="Released version %M.%m.%b%t" changeslog_path="..\docs\ChangesLog.txt" />
 				<Code header_guard="__VERSION_HEADER__" namespace="Version" prefix="DEFINED_VER" />
 			</AutoVersioning>
