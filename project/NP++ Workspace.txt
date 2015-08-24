@@ -1,27 +1,27 @@
 <NotepadPlus>
     <Project name="Attacker-The-Game">
         <Folder name="src">
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\main.cpp" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\main.h" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\basic.cpp" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\basic.h" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\battle.cpp" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\battle.h" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\rooms.h" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\save.cpp" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\save.h" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\spells.cpp" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\spells.h" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\src\version.h" />
+            <File name="..\src\main.cpp" />
+            <File name="..\src\main.h" />
+            <File name="..\src\basic.cpp" />
+            <File name="..\src\basic.h" />
+            <File name="..\src\battle.cpp" />
+            <File name="..\src\battle.h" />
+            <File name="..\src\rooms.h" />
+            <File name="..\src\save.cpp" />
+            <File name="..\src\save.h" />
+            <File name="..\src\spells.cpp" />
+            <File name="..\src\spells.h" />
+            <File name="..\src\version.h" />
         </Folder>
         <Folder name="res">
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\res\boilerplate.rc" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\res\my_icon.rc" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\res\Readme.md" />
+            <File name="..\res\boilerplate.rc" />
+            <File name="..\res\my_icon.rc" />
+            <File name="..\res\Readme.md" />
         </Folder>
         <Folder name="docs">
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\docs\ChangesLog.txt" />
-            <File name="C:\Users\Patrick.Rye\Documents\GitHub\Attacker-The-Game\docs\LICENSE" />
+            <File name="..\docs\ChangesLog.txt" />
+            <File name="..\docs\LICENSE" />
         </Folder>
     </Project>
 </NotepadPlus>
