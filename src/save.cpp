@@ -1,12 +1,7 @@
+/*********************************************************************************************************/
 #include "save.h"
 #include "global.h"
-
-string ProgramVerison;
-
-//This function is needed to pass the version of the program (a constant string in main.cpp)
-//and place it in the variable here called Program Version for purposes of calling it in this header.
-void PassProgramVerison(const string Verison) {ProgramVerison = Verison;}
-
+/*********************************************************************************************************/
 unsigned char SanityChecker(unsigned int intValueLocation, int intValueCheck) {
 	/*Checks sanity of load.
 	If load is trying to call a room that doesn't exist, stats that should not be possible
@@ -24,7 +19,7 @@ unsigned char SanityChecker(unsigned int intValueLocation, int intValueCheck) {
 	else {return 1;} //Invalid number on array.
 	return 0; //Value is okay, return 0 for no error found.
 }
-
+/*********************************************************************************************************/
 char savefunction() {
 	/*
 	Testing a possible save function.
@@ -44,7 +39,7 @@ char savefunction() {
 	for (unsigned char i = 0; i < 12; i++) {savefile << arrbattlesave[i] << "\n";}
 	for (unsigned char i = 0; i < 1; i++) {savefile << arrmainsave[i] << "\n";}
 	for (unsigned char y = 0; y < 20; y++) {for (unsigned char x = 0; x < 80; x++) {savefile << arrroomsave[x][y] << "\n";}}
-	savefile << ProgramVerison; //Writes version number at the very bottom of save.
+	savefile << Global::ProgramVerison; //Writes version number at the very bottom of save.
 	if (fileexists("main.cpp") || Global::blnDebugMode) {savefile <<"\n"<<"DEBUG";} //Check if source code is present and write DEBUG at end of save if it does.
 	savefile.close();
 	//Save will now attempt to "load" the save it just made and compare it to the data available.
@@ -68,7 +63,7 @@ char savefunction() {
 	if(intCheckSum >= 1613) {return 'T';} //All of the saved values are correct if it equals 1608.
 	else {return 'F';} //Some of the values are wrong, say that the save failed.
 }
-
+/*********************************************************************************************************/
 bool loadfunction() {
 	ifstream loadfile("save.bif");
 	int arrloadnumbers[1613];
@@ -111,9 +106,8 @@ bool loadfunction() {
 	else {return false;} //Some of the values are wrong, say that the load failed.
 	return false;
 }
-
-bool LoadOldSave()
-{
+/*********************************************************************************************************/
+bool LoadOldSave() {
 	bool blLoadSuccess = false;
 	char chrPlayerChoice;
 	string SaveVerison;
@@ -133,11 +127,11 @@ bool LoadOldSave()
 	switch (chrPlayerChoice) {
 		case 'Y' :
 			//Program does a quick check if the save is the same version as the game.
-			if ((SaveVerison != ProgramVerison)) {
+			if ((SaveVerison != Global::ProgramVerison)) {
 				DifferentVersion:
 				cout <<endl<<"Save version does not match the game version."<<endl;
 				cout<<"I recommend using the same save version as the game, as things could break."<<endl;
-				cout<<"Game version: "<<ProgramVerison<<endl<<"Save version: "<<SaveVerison<<endl;
+				cout<<"Game version: "<<Global::ProgramVerison<<endl<<"Save version: "<<SaveVerison<<endl;
 				cout<<"Do you wish to continue with the loading?"<<endl<<"Y or N"<<endl<<"> ";
 				cin>>chrPlayerChoice;
 				chrPlayerChoice = CharConvertToUpper(chrPlayerChoice);
@@ -174,4 +168,4 @@ bool LoadOldSave()
 	}
 	return false;
 }
-
+/*********************************************************************************************************/

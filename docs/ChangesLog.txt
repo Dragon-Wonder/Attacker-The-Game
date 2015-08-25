@@ -1,3 +1,12 @@
+25 August 2015
+   Released version 1.5.4c
+
+     Change log:
+        -Added: Global Verison
+        -Cleaned: Save.cpp
+        -Fixed: Some Code Block settings
+        -Added: Warning about using Code Block for compiling
+
 24 August 2015
    Released version 1.5.3c
 

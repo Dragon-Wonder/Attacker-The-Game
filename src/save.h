@@ -8,9 +8,6 @@
 /*********************************************************************************************************/
 using namespace std;
 /*********************************************************************************************************/
-//This function is needed to pass the version of the program (a constant string in main.cpp)
-//and place it in the variable here called Program Version for purposes of calling it in this header.
-void PassProgramVerison(const string);
 unsigned char SanityChecker(unsigned int, int );
 char savefunction();
 bool loadfunction();

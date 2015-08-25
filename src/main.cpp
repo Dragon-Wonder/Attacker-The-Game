@@ -6,7 +6,6 @@ using namespace std;
 #include "battle.h" //Functions that deal with battling, leveling up and making a player.
 #include "rooms.h"
 #include "spells.h" //Functions that deal with spells and magic.
-#include "version.h" //holds all the version information
 #include "save.h" //A header to hold functions related to saving and loading.
 /*********************************************************************************************************/
 #include "global.h"
@@ -17,7 +16,6 @@ namespace Global {bool blnDebugMode = false;}
 //Make all the global variables that I need.
 unsigned char intMainLevel = 1; //The level of the dungeon.
 unsigned char intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
-const string CurrentVerison = DEFINED_VER_FULLVERSION_STRING; //The current version of this program, stored in a save file later on.
 /*********************************************************************************************************/
 int getmainvalue(unsigned char intvalue) {
 	if(intvalue == 0 ) {return intMainLevel;}
@@ -28,7 +26,6 @@ void setmainvalue(unsigned char intlocation, unsigned int intvalue) {if (intloca
 /*********************************************************************************************************/
 
 int main() {
-	PassProgramVerison(CurrentVerison); //Pass current program version into the save header.
 	cout << string(48, '\n');
 	char charPlayerDirection;
 	bool blBattleEnding = false;
@@ -110,3 +107,4 @@ int main() {
 	return 0;
 //End of main
 }
+/*********************************************************************************************************/

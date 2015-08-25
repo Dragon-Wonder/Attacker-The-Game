@@ -5,10 +5,15 @@
 		<Option title="Attacker-The-Game" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option show_notes="0">
+			<notes>
+				<![CDATA[It is better to use the compile.bat file provided than Code Blocks (if you have MinGW) because that tends to result in small exe sizes. (Also because when complied on Code Blocks some of the tiles that are printed out are really messed up).]]>
+			</notes>
+		</Option>
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Attacker-The-Game" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/" />
+				<Option output="bin/Attacker-The-Game-PRIVATE" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -23,12 +28,12 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/Attacker-The-Game" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Attacker-The-Game" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-Os" />
 					<Add option="-w" />
 				</Compiler>
 				<Linker>
