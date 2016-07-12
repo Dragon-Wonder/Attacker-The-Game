@@ -1,43 +1,111 @@
-#Abandoned
-As of 2015-07-20 I have decided to abandon this project. I accomplished what I wanted to with this project, which was to learn more about c++. Now the code is at a point where if I want to expand it significantly I would basically have to rewrite it from the beginning. When I do try to do this I run into some many errors and bugs that it is not worth trying to fix it to me. 
-
-This all being said I am going to leave the source code here in case anyone wants to use it. (Not likely since it is pretty crappy). If anyone wants to take over the project (once again why) I'd happily give it to them.
-
-I may still do and update every now and again but because of work and other projects as well as a lack of motivation at the moment, I don't really care to continute this project anymore.
-
-I might start another game at some point, this time a little more focused on the actual game as opposed to learning to code like I did with this one. Maybe in C next time, or C++ or hey maybe I'll learn another language and write it in that. I don't know. What I do know is the next project will be a lot better than this one.
-
-
-
-
 # Attacker: The Game
-A game I am working on as a way to teach myself c++ putting it here mainly to have a version in a central location, but also to get feedback and help if I get any.
 
-This game is super simple, and as I said I am mostly just using it as a way to improve my understanding of c++. I will welcome any tips or ideas for improvements that someone might provide.
+(Check out the gh-pages of this project by going to [http://dragon-wonder.github.io/Attacker-The-Game/]) (WIP)
 
-The game itself is boiled down to the most basic level of a game. There are five stats that you can set up however you wish (but there must be at least 1 skill point in each stat).
+## Introduction
 
-Strength (STR) - How much damage you do.
-
-Constitution (CONS) - Your health.
-
-Dexterity (DEX) - Effects your chance to dodge. (Will do more later).
-
-Defence (DEF) - Effects how much damage you take.
-
-Luck (LUK) - The random chance things will go your way with dodges, crits, and monsters that spawn.
+This is game is a dungeon crawler based game... [ADD MORE LATER]
 
 
+## License and copyright
 
-You must go through 10 randomly generated dungeons fighting monsters along the way.
+All of this project was written from scratch by [GamerMan7799] (https://github.com/GamerMan7799) & [xPUREx](https://github.com/xPUREx) unless otherwise noted.
 
-During each battle you may 'Attack' in which case you and the monster both trade blows. You can 'Heal' for 10% of you maxmium health and the monster does less damage or exit the game.
+That being said all parts of this project we own have been released to the Public Domain. (This does not apply to parts that were noted as being someone else's). 
 
-On each level you are trying to get the the down stairs which is represented by "<". While the player is a "@". Doors are "$" & "!" "$" doors are unlocked and can just be walked through. "!" howvere are locked. You can currently try to break down the door if your strength is greater than 60, pick the lock if your Luck is greater than 60. Or you can use keys which can be found after defeating some monsters.
+As such you may use any and/or all of this project however you wish; Commercially or not; modify it or not. You do not even have to give credit (though we would greatly appreciate it if you did).
 
-Like I said there is not a lot to the game as of right now but that is partly why I'm putting the game here so I can get feedback and ideas on how to improve the game.
+You can read more about the Public Domain Dedication [Here](http://unlicense.org/).
 
-##Goals
+This project uses libraries created by other individuals. Each one of course has a license by their own owner, these can be found under Docs/Library Licenses.
+Please read these licenses before you decide to distribute any copies of this project.
 
-I have a few goals in mind about what I want to do with this but I am always looking for more ideas. Post any you have in issues as a suggestion.
+## Questions, patches, and other feedback
+
+We are pretty novice programmers at best. Part of the reason we made this was to improve our skills. And part of the reason we made it open source is to get feedback.
+
+We are always open to people contributing to the project by giving suggestions, or helping us with improvements. 
+
+If you have any questions or a suggestions or improvement please feel free to leave it as an issue in [this tab] (https://github.com/dragon-wonder/Attacker-The-Game/issues).
+
+## Building the Project
+
+### SDL Library
+
+In order to run the program properly you will need to download SDL2-2.0.3 or higher. 
+You will also need SDL2 TTF library, and SDL2 Images library
+
+A link for SDL2 can be found [here] (https://www.libsdl.org/download-2.0.php).
+
+A link for SDL2 TTF can be found [here] (https://www.libsdl.org/projects/SDL_ttf/).
+
+A link for SDL2 Images can be found [here] (https://www.libsdl.org/projects/SDL_image/).
+
+You will want to download the Runtime Binaries (if you have windows I recommend 32 bit over 64 bit; even if you have a 64 bit computer).
+
+If you are running the version in the release tab you WILL need the 32 bit version because that it how I compile it.
+
+I have also included copies of the 32 bit Runtime binaries in the releases. You can just download these if you don't know what you're doing and you're on Windows.
+
+You will also need to download and extract the Images.zip file provided in the release tab.
+
+When all is said and done you should have the following files in your folder. (Also note that you should be able to put the dll files in your C drive).
+
+```
+FolderName\
+FolderName\Attacker-The-Game.exe
+FolderName\SDL2.dll
+FolderName\SDL2_ttf.dll
+FolderName\SDL2_image.dll
+FolderName\libfreetype-6.dll
+FolderName\zlib1.dll
+FolderName\libpng16-16.dll
+FolderName\Images\tiles.png
+Foldername\Images\splash.png
+```
+
+### Windows
+
+You can download the .exe under the [Releases Tab](https://github.com/dragon-wonder/Attacker-The-Game/releases) you will need the SDL2 runtime binaries (see above).
+
+If you wish to compile it yourself you can use the Compile.bat files if you have MinGW on your computer.
+
+Any other complier you wish will work; these are just the ones I've used and made scripts to help with the compiling.
+	
+### Linux
+
+You should be able to use the Makefile or the Compile.sh script to compile the program. You will also need the SDL library which you can use by enter the following code into your terminal, or downloading from the link above.
+
+Ubuntu, Mint, or Debian
+
+``` 
+sudo apt-get install libsdl2-dev
+sudo apt-get install libsdl2-ttf-dev
+sudo apt-get install libsdl2-image-dev
+```
+
+### IOSX
+
+I don't know you're on your own. Sorry.
+
+## Controls
+
+You can control your charater through the arrow keys or WASD.
+
+"M" or ESC will open up the menu
+
+"Q" will exit the game.
+
+TAB will bring up the console
+
+"I" will open up the inventory
+
+"N" will bring up player status
+
+"H" will heal the player
+
+There are also several debugging controls which will not work in the released version.
+
+
+
 

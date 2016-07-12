@@ -1,22 +1,25 @@
-#include "save.h"
+#include "sound.h"
 /*****************************************************************************/
-clsSave::clsSave() {
+clsSound::clsSound() {
     //ctor
 }
 /*****************************************************************************/
-clsSave::~clsSave() {
+clsSound::~clsSound() {
     //dtor
 }
 /*****************************************************************************/
-void clsSave::doLoad() {
-    //add later
-
+void clsSound::playMusic() {
+    //Add music playing later
     return;
 }
 /*****************************************************************************/
-void clsSave::doSave() {
-    //add later
-
+void clsSound::stopMusic() {
+    //Stop music; add later
+    return;
+}
+/*****************************************************************************/
+void clsSound::playSound(int ID, int volume) {
+    //play sound; add later
     return;
 }
 /*****************************************************************************/

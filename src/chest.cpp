@@ -1,21 +1,16 @@
-#include "save.h"
+#include "chest.h"
 /*****************************************************************************/
-clsSave::clsSave() {
+clsChest::clsChest() {
     //ctor
 }
 /*****************************************************************************/
-clsSave::~clsSave() {
+clsChest::~clsChest() {
     //dtor
 }
 /*****************************************************************************/
-void clsSave::doLoad() {
-    //add later
-
-    return;
-}
-/*****************************************************************************/
-void clsSave::doSave() {
-    //add later
+void clsChest::activate() {
+    //Will do all the stuff with chests.
+    // Add later
 
     return;
 }

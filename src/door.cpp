@@ -1,21 +1,16 @@
-#include "save.h"
+#include "door.h"
 /*****************************************************************************/
-clsSave::clsSave() {
+clsDoor::clsDoor() {
     //ctor
 }
 /*****************************************************************************/
-clsSave::~clsSave() {
+clsDoor::~clsDoor() {
     //dtor
 }
 /*****************************************************************************/
-void clsSave::doLoad() {
-    //add later
-
-    return;
-}
-/*****************************************************************************/
-void clsSave::doSave() {
-    //add later
+void clsDoor::activate() {
+    //Will do all the stuff with locked doors.
+    // Add later
 
     return;
 }

@@ -1,17 +1,15 @@
-#ifndef __SAVE__HEADER__
-#define __SAVE__HEADER__
+#ifndef __CHEST__HEADER__
+#define __CHEST__HEADER__
 /*****************************************************************************/
-class clsSave {
+class clsChest {
     public:
-        clsSave();
-        ~clsSave();
+        clsChest();
+        ~clsChest();
 
-        void doSave(void);
-        void doLoad(void);
-
+        void activate(void);
     protected:
 
     private:
 };
 /*****************************************************************************/
-#endif // __SAVE__HEADER__
+#endif // __CHEST__HEADER__

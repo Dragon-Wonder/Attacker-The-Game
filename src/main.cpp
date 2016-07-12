@@ -1,110 +1,66 @@
-/*********************************************************************************************************/
-using namespace std;
-/*********************************************************************************************************/
-#include "main.h"
-#include "basic.h" //Functions that are simple, referenced many places and/or won't need to be changed very often.
-#include "battle.h" //Functions that deal with battling, leveling up and making a player.
-#include "rooms.h"
-#include "spells.h" //Functions that deal with spells and magic.
-#include "save.h" //A header to hold functions related to saving and loading.
-/*********************************************************************************************************/
-#include "global.h"
-Dungeon d; //Define the dungeon class as 'd' so I can use functions in there anywhere later in the code.
-/*********************************************************************************************************/
-namespace Global {bool blnDebugMode = false;}
-/*********************************************************************************************************/
-//Make all the global variables that I need.
-unsigned char intMainLevel = 1; //The level of the dungeon.
-unsigned char intLevelStart = 1; //The level that the game starts at. Will be 1 unless loading from a save.
-/*********************************************************************************************************/
-int getmainvalue(unsigned char intvalue) {
-	if(intvalue == 0 ) {return intMainLevel;}
-	else if (intvalue == 1) {return intLevelStart;}
-	else {return 1;}
-}
-void setmainvalue(unsigned char intlocation, unsigned int intvalue) {if (intlocation == 0) {intLevelStart = intvalue;}}
-/*********************************************************************************************************/
+/*****************************************************************************/
+/////////////////////////////////////////////////
+/// @file       Main.cpp
+/// @brief      Holds all the main functions.
+/// @author     GamerMan7799
+/// @author     xPUREx
+/// @version    0.9.0-Alpha
+/// @date       2016
+/// @copyright  Public Domain Unlicense.
+/////////////////////////////////////////////////
+/*****************************************************************************/
+//General Todos
+/** \todo (Gamerman7799#9#): Finish Doxygen support */
+/** \todo (Gamerman7799#9#): Add music */
+/*****************************************************************************/
+#include "version.h"
+#include "config.h"
+#include "core.h"
+/*****************************************************************************/
+namespace Global {
+    /** Holds if build is in debug mode, this can happen if
+        DEFINED_BUILD_MODE_PRIVATE is defined in the complier */
+#ifdef DEFINED_BUILD_MODE_PRIVATE
+    const bool blnDebugMode = true;
+#else
+    const bool blnDebugMode = false;
+#endif
+} //end namespace Global
+/*****************************************************************************/
+int main(int argc, char *argv[]) {
+    /////////////////////////////////////////////////
+    /// @brief The main function
+    ///
+    /// @param argc = Something required by SDL
+    /// @param argv = Something required by SDL
+    /// @return 0 for successfully ran, or 1 for an error happened.
+    ///
+    /////////////////////////////////////////////////
 
-int main() {
-	cout << string(48, '\n');
-	char charPlayerDirection;
-	bool blBattleEnding = false;
-	char charExitFind;
-	bool blOldSave = false;
-	char chrPlayerMade = 'F';
-	char chrSaveSuccess = 'N'; //N means that save has not been run.
-	//If game is not already in debug mode, checks if source code exists then put it in debug mode if it does.
-	#ifdef DEFINED_BUILD_MODE_PRIVATE
-        Global::blnDebugMode = true;
-    #endif
-	ShowOpeningMessage();
-	getchar();
-	cout<<string(50,'\n');
+    if ( DEFINED_VER_STATUS_SHORT == "a" ) {
+        printf("This version is an Alpha, meaning that we cannot be sure that it works correctly. ");
+        printf("Any features that you see may or may not be changed/removed later in the developmental cycle.\n\n");
+    } else if ( DEFINED_VER_STATUS_SHORT == "b" ) {
+        printf("This version is a Beta, meaning that while it should work very closely to how we intend it to work, ");
+        printf("there may still be some bugs that can cause the program to crash.\n\n");
+    } else if ( DEFINED_VER_STATUS_SHORT == "rc" ) {
+        printf("This version is a Release Candidate, meaning that it is only a few items away from being an Official ");
+        printf("Release. There shouldn't be very many bugs but let us know if you find any.\n\n");
+    } else if ( DEFINED_VER_STATUS_SHORT == "r" ) {
+        printf("This version is the official release for the game. There should not be any bugs, so if you find any ");
+        printf("please let us know right away so we can work to fix them.\n\n");
+    } else {
+        printf("This version is not properly labeled. There is a mistake in the version.h file.\n\n");
+    }
 
-	if (fileexists("save.bif")) /*Check if there is a save present.*/ {
-		blOldSave = LoadOldSave();
-		if (blOldSave) {chrPlayerMade = 'T';}
-	//End of if save exists.
-	} else {cout<<string(50, '\n');}
 
-	if(!blOldSave) /*If it is not an old save show welcome message.*/ {
-		cout<<endl<<"Your objective is to go through 10 randomly generated dungeons."<<endl;
-		cout<<"You are looking for the stairs down ( > ). While you are represented by @ ."<<endl;
-		cout<<"Every step brings you closer to your goal, but there might be a monster there as well."<<endl;
-		cout<<"Each level is harder than the last, do you have what it takes to win?"<<endl;
-		cout<<"Good luck!"<<endl<<endl<<endl<<endl;
-		while (chrPlayerMade != 'T') {chrPlayerMade = PlayerInitialize();}; //Repeat initialization until player is made.
-	}
+    //Run config stuff
+    clsConfig cnfg;
+    cnfg.initialize();
 
-	for(intMainLevel = intLevelStart; intMainLevel <= 10; intMainLevel++) {
-		//Do level up if new level.
-		if (intMainLevel > intLevelStart) {LevelUpFunction();}
-		charExitFind = 'F';
-		cout<<endl;
-		if (blOldSave && intMainLevel == intLevelStart) {/*d.playerfind();*/ d.showDungeon();} //If old save and the level of that save, just load old dungeon.
-		else {d.cmain();/*Generates dungeon.*/} //If it is not old game OR a different level of old game, make new dungeon.
+    clsCore CCore;
+    CCore.start();
 
-		do {
-			cout << string(50, '\n');
-			d.showDungeon();
-			cout<<"Level "<<(int)intMainLevel<<" of 10."<<endl;
-			cout<<"Please enter a direction you would like to go: "<<endl;
-			cout<<"[N]orth,  [E]ast,  [S]outh,  [W]est  "<<endl;
-			cout<<"E[X]it,   [C]heck your health, [H]eal,   Sa[V]e  "<<endl;
-			if (Global::blnDebugMode) {cout<<"[L]evel up, or [M]onster."<<endl;}
-			cout<<"> ";
-			cin>>charPlayerDirection;
-			charPlayerDirection = CharConvertToUpper(charPlayerDirection);
-			charExitFind = d.PlayerMovement(charPlayerDirection);
-			if (charExitFind == 'E') {return 0;} //If we get an error exit program.
-			if (charExitFind == 'S') {chrSaveSuccess = savefunction();} //Save the game.
-			switch (chrSaveSuccess) {
-				case 'T' :
-					cout<<endl<<"Save succeeded."<<endl;
-					getchar();
-					chrSaveSuccess = 'N'; //Set this back to N, so that player is not spammed with this message.
-					break;
-				case 'F' :
-					cout<<endl<<"Save failed!"<<endl;
-					getchar();
-					chrSaveSuccess = 'N'; //Set this back to N, so that player is not spammed with this message.
-					break;
-			}
-			if (!(charExitFind=='S') && !(charPlayerDirection == 'C')) /*If player did not save or did not check himself, see if player runs into monster.*/ {
-				if(rand() % 101 <= 10 || (charExitFind == 'M' && Global::blnDebugMode)) /*Random chance to encounter monster, or debug code to force monster encounter.*/ {
-					cout << string(50, '\n');
-					blBattleEnding = startbattle(intMainLevel); //Starts battle.
-					setbattlevalue(statKeys,getbattlevalue(statKeys) + getmonstervalue(statKeys)); //Give player a key if monster had one.
-					if(!blBattleEnding) {return 0;} //Player lost battle.
-				}
-			}
-		}while (charExitFind != 'T'); //Repeat until player finds exit.
-	//End of FOR levels.
-	}
-	cout << string(50, '\n');
-	ShowWinningMessage();
-	getchar();
 	return 0;
-//End of main
 }
-/*********************************************************************************************************/
+/*****************************************************************************/

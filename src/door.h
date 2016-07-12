@@ -1,17 +1,15 @@
-#ifndef __SAVE__HEADER__
-#define __SAVE__HEADER__
+#ifndef __DOOR__HEADER__
+#define __DOOR__HEADER__
 /*****************************************************************************/
-class clsSave {
+class clsDoor {
     public:
-        clsSave();
-        ~clsSave();
+        clsDoor();
+        ~clsDoor();
 
-        void doSave(void);
-        void doLoad(void);
-
+        void activate(void);
     protected:
 
     private:
 };
 /*****************************************************************************/
-#endif // __SAVE__HEADER__
+#endif // __DOOR__HEADER__

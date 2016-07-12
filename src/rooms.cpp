@@ -1,15 +1,14 @@
 #include "rooms.h"
-
-int intPlayerX; //Player position in X and Y.
-int intPlayerY;
-int intPlayerNewX; //Player position in X and Y.
-int intPlayerNewY;
+#include "player.h"
+#include "global.h"
+/*****************************************************************************/
 unsigned char intTempTile = 0x6; //Value to hold what the cell that the player is moving into is.
-
-Dungeon::Dungeon()
-{
-	xmax = 80;
-	ymax = 20;
+/*****************************************************************************/
+int* Dungeon::dungeon_map;
+/*****************************************************************************/
+Dungeon::Dungeon() {
+	xmax = DEFINED_MAP_WIDTH;
+	ymax = DEFINED_MAP_HEIGHT;
 
 	xsize = 0;
 	ysize = 0;
@@ -26,15 +25,17 @@ Dungeon::Dungeon()
 	msgHelp = "";
 	msgDetailedHelp = "";
 
-	cmain();
+	//cmain();
 }
-
-
-
+/*****************************************************************************/
 void Dungeon::setCell(int x, int y, int celltype) {dungeon_map[x + xsize * y] = celltype;}
-
+/*****************************************************************************/
 int Dungeon::getCell(int x, int y) {return dungeon_map[x + xsize * y];}
-
+/*****************************************************************************/
+void Dungeon::setCell(LOC l, int celltype) {dungeon_map[l.x + xsize * l.y] = celltype;}
+/*****************************************************************************/
+int Dungeon::getCell(LOC l) {return dungeon_map[l.x + xsize * l.y];}
+/*****************************************************************************/
 int Dungeon::getRand(int min, int max) {
 	time_t seed;
 	seed = time(NULL) + oldseed;
@@ -47,7 +48,7 @@ int Dungeon::getRand(int min, int max) {
 
 	return min + i;
 }
-
+/*****************************************************************************/
 bool Dungeon::makeCorridor(int x, int y, int lenght, int direction) {
 	int len = getRand(2, lenght);
 	int floor = tileCorridor;
@@ -120,7 +121,7 @@ bool Dungeon::makeCorridor(int x, int y, int lenght, int direction) {
 	//woot, we're still here! let's tell the other guys we're done!!
 	return true;
 }
-
+/*****************************************************************************/
 bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 	//define the dimensions of the room, it should be at least 4x4 tiles (2x2 for walking on, the rest is walls)
 	int xlen = getRand(4, xlength);
@@ -228,8 +229,8 @@ bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 	//yay, all done
 	return true;
 }
-
-void Dungeon::showDungeon(){
+/*****************************************************************************/
+/* void Dungeon::showDungeon(){
 	int PlayerStatus = getbattlevalue(statStatus);
 	for (int y = 0; y < ysize; y++){
 		for (int x = 0; x < xsize; x++){
@@ -277,8 +278,8 @@ void Dungeon::showDungeon(){
 		}
 		//if (xsize <= xmax) printf("\n");
 	}
-}
-
+} */
+/*****************************************************************************/
 bool Dungeon::createDungeon(int inx, int iny, int inobj){
 	if (inobj < 1) objects = 10;
 	else objects = inobj;
@@ -457,44 +458,46 @@ bool Dungeon::createDungeon(int inx, int iny, int inobj){
 	}
 	return true;
 }
-
-
-int* Dungeon::make_dungeon()
-{
-	int x = 80;
-	int y = 20;
-	int dungeon_objects = 100;
+/*****************************************************************************/
+int* Dungeon::make_dungeon() {
+    bool f;
+	int x = DEFINED_MAP_WIDTH;
+	int y = DEFINED_MAP_HEIGHT;
+	int dungeon_objects = DEFINED_MAP_OBJECT_LIMIT;
 	dungeon_map = new int[x * y];
 		intTempTile = tileUpStairs;
-		if(createDungeon(x, y, dungeon_objects))
-		showDungeon();
+		f = createDungeon(x, y, dungeon_objects);
+		//showDungeon();
 	return dungeon_map;
 }
-void Dungeon::cmain()
-{
-	int x = 80;
-	int y = 20;
-	int dungeon_objects = 100;
+/*****************************************************************************/
+void Dungeon::cmain() {
+	int x = DEFINED_MAP_WIDTH;
+	int y = DEFINED_MAP_HEIGHT;
+	int dungeon_objects = DEFINED_MAP_OBJECT_LIMIT;
 	dungeon_map = new int[x * y];
-	if(createDungeon(x, y, dungeon_objects)) {showDungeon();}
+	if(createDungeon(x, y, dungeon_objects) && Global::blnDebugMode)
+        {printf("Dungeon created.");}
 	playerfind();
 }
+/*****************************************************************************/
+void Dungeon::playerfind() {
+    clsPlayer player;
 
-
-void Dungeon::playerfind()
-{
-	for (int y2 = 0; y2 < 20; y2++){
-		for (int x2 = 0; x2 < 80; x2++){
+	for (int y2 = 0; y2 < DEFINED_MAP_HEIGHT; y2++){
+		for (int x2 = 0; x2 < DEFINED_MAP_WIDTH; x2++){
 			if (getCell(x2,y2) == tilePlayer){ //Finds where player is.
-				intPlayerX = x2;
-				intPlayerY = y2;
+                LOC newloc;
+                newloc.x = x2;
+                newloc.y = y2;
+                player.setLocation(newloc);
 				//Set x and y to max values so the for loops stop.
-				x2 = 80;
-				y2 = 20;}}}
+				x2 = DEFINED_MAP_WIDTH;
+				y2 = DEFINED_MAP_HEIGHT;}}}
 }
-
-char Dungeon::PlayerMovement(char chrPlayerDirection)
-{
+/*****************************************************************************/
+/*
+char Dungeon::PlayerMovement(char chrPlayerDirection) {
 	unsigned char Status = getbattlevalue(statStatus);
 	const char Dir[4] = {'N','S','E','W'};
 	//If player is confused they move a random direction.
@@ -583,10 +586,10 @@ char Dungeon::PlayerMovement(char chrPlayerDirection)
 			getchar();
 			return 'F';
 			break;
-		/*Debug commands & invalid choice here*/
+		//Debug commands & invalid choice here
 		case 'L' : //Debug code to go straight to stairs.
 			if (Global::blnDebugMode)
-			{for (int y = 0; y < 20; y++){for (int x = 0; x < 80; x++){
+			{for (int y = 0; y < DEFINED_MAP_HEIGHT; y++){for (int x = 0; x < DEFINED_MAP_WIDTH; x++){
 				if (getCell(x,y)==tileDownStairs) //Finds where the down stairs are.
 				{
 					intPlayerNewX = x;
@@ -730,4 +733,6 @@ char Dungeon::PlayerMovement(char chrPlayerDirection)
 	//End of switch based on next cell.
 	}
 //End of PlayerMovement function.
-}
+} */
+/*****************************************************************************/
+
