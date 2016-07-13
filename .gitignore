@@ -44,6 +44,8 @@
 /Project/bin/*
 /Project/obj/
 /Project/obj/*
+/Project/doxygen/html/
+/project/gh-pages/
 *.layout
 *.depend
 

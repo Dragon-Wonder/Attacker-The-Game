@@ -14,7 +14,7 @@ typedef unsigned long ulong;
 /**< Rename unsigned long to ulong because I'm lazy. */
 
 /*****************************************************************************/
-struct stcLocation {
+struct stcXY {
     int x;
     int y;
 };
@@ -37,21 +37,21 @@ struct stcInv {
     int gold;
 };
 
-enum {
-    tileUnused = 0x0, //0
-    tileDirtWall = 0x1, //1
-    tileDirtFloor = 0x2, //2
-    tileStoneWall = 0x3, //3
-    tileCorridor = 0x4, //4
-    tileDoor = 0x5, //5
-    tileUpStairs = 0x6, //6
-    tileDownStairs = 0x7, //7
-    tileChest = 0x8, //8
-    tilePlayer = 0x9, //9
-    tileLockedDoor = 0xA //10
+enum enumTiles {
+    tileUnused = 0, //0
+    tileDirtWall, //1
+    tileDirtFloor, //2
+    tileStoneWall, //3
+    tileCorridor, //4
+    tileDoor, //5
+    tileUpStairs, //6
+    tileDownStairs, //7
+    tileChest, //8
+    tilePlayer, //9
+    tileLockedDoor //10
 };
 
-enum {
+enum enumDirection {
     dirNone = 0,
     dirUp,
     dirDown,
@@ -59,7 +59,7 @@ enum {
     dirRight
 };
 
-enum {
+enum enumStats {
     statStr = 0,
     statCons,
     statDef,
@@ -67,7 +67,7 @@ enum {
     statLuk
 };
 
-enum {
+enum enumElements {
     elementNone = 0,
     elementPhysical,
     elementFire,
@@ -80,18 +80,28 @@ enum {
     elementWater
 };
 
-typedef struct stcLocation LOC;
+enum enumMenu {
+    menuQuit = 0,
+    menuNew,
+    menuLoad,
+    menuSave,
+    menuAbout,
+    menuOptions,
+    menuError
+};
+
+typedef struct stcXY LOC;
 typedef struct stcStats stats;
 typedef struct stcCurrMax healthmana;
 typedef struct stcInv INV;
 /*****************************************************************************/
 /** This defines the Map height, unless a map you are trying to load is more than
     this it should be kept at 20 */
-#define DEFINED_MAP_HEIGHT 20
+#define DEFINED_MAP_HEIGHT 22
 
 /** This defines the Map width, unless a map you are trying to load is more than
     this it should be kept at 80 */
-#define DEFINED_MAP_WIDTH 80
+#define DEFINED_MAP_WIDTH 40
 
 /** This defines the Map object limit, should try at 100 unless you are testing
     something*/
@@ -99,6 +109,10 @@ typedef struct stcInv INV;
 
 /** How many steps out of 100 will spawn a monster */
 #define DEFINED_MONSTER_SPAWN_CHANCE 15
+
+#define DEFINED_MAP_ROOM_CHANCE 75
+
+#define DEFINED_MAP_CORRIDOR_CHANCE 25
 /*****************************************************************************/
 /////////////////////////////////////////////////
 /// @defgroup ChangeableDefines Easily Changeable Defines

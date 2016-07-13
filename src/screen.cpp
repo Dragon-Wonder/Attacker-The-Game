@@ -15,6 +15,15 @@
 /// @brief Holds all of the functions for the Screen Class
 /////////////////////////////////////////////////
 /*****************************************************************************/
+stcWinAtt clsScreen::window;
+bool clsScreen::bln_SDL_started = false;
+SDL_Rect clsScreen::clips[DEFINED_NUM_MAP_TILES];
+clrs clsScreen::colors;
+uint clsScreen::pic_size = DEFINED_PIC_SIZE;
+TEX clsScreen::textures;
+Loaded clsScreen::blnloaded;
+TTF_Font* clsScreen::MessageFont;
+/*****************************************************************************/
 clsScreen::clsScreen() {
 
 }
@@ -32,11 +41,13 @@ clsScreen::~clsScreen() {
     if (Global::blnDebugMode) {printf("SDL quit\n");}
 }
 /*****************************************************************************/
-void clsScreen::ShowMap() {
+void clsScreen::DrawMap() {
     /////////////////////////////////////////////////
     /// @brief Will update the SDL screen based on the map and player / monster locations.
     /// @return void
     /////////////////////////////////////////////////
+    /// @todo (GamerMan7799#1#) Allow map to be offset on the screen.
+
     //clear renderer
     SDL_RenderClear(window.ren);
     //copy sky to cover entire screen.
@@ -44,12 +55,13 @@ void clsScreen::ShowMap() {
     SDL_Rect dst;
     //Set the pic size
     dst.w = dst.h = pic_size;
+    char maptile;
 
     Dungeon Map;
 
     //BPLYR tempPlayer = Global::Enty.getPlayerBase();
-    LOC offset; //how much the screen is offset by
-    LOC place;
+    //LOC offset; //how much the screen is offset by
+    //LOC place;
     //offset.x = (uint) (round( tempPlayer.location.x / window.width ) * window.width);
     //offset.y = (uint) (round( tempPlayer.location.y / window.height) * window.height);
 
@@ -60,11 +72,10 @@ void clsScreen::ShowMap() {
             dst.x = (x * pic_size);
             dst.y = (y * pic_size);
 
-            place.x = x;
-            place.y = y;
+            maptile = Map.getCell(x,y);
 
             //Load the map.
-            switch( Map.getCell(place) ) { //Use this to make sure we aren't try to load a non-existing part
+            switch( maptile ) { //Use this to make sure we aren't try to load a non-existing part
             case tileDirtWall :
             case tileDirtFloor :
             case tileStoneWall :
@@ -75,7 +86,7 @@ void clsScreen::ShowMap() {
             case tileChest :
             case tilePlayer :
             case tileLockedDoor :
-                SDL_RenderCopy(window.ren, textures.maptiles, &clips[Map.getCell(place)], &dst);
+                SDL_RenderCopy(window.ren, textures.maptiles, &clips[maptile], &dst);
                 break;
             default:
                 //Don't know what this is so display an error texture.
@@ -89,12 +100,8 @@ void clsScreen::ShowMap() {
     //dst.y = tempPlayer.location.y - offset.y;
     SDL_RenderCopy(window.ren, textures.maptiles, &clips[tilePlayer], &dst);
 
-    //Write messages only if Message font is loaded.
-    if (blnloaded.blnMessageFont) {
-        writemessage();
-    }
     //show renderer
-    SDL_RenderPresent(window.ren);
+    //SDL_RenderPresent(window.ren);
 }
 /*****************************************************************************/
 void clsScreen::cleanup(void) {
@@ -152,10 +159,7 @@ void clsScreen::error(void) {
     /// @return void
     /////////////////////////////////////////////////
     cleanup();
-    //Global::blnError = true;
-    printf("SDL error: %s\n", SDL_GetError());
-    printf("TTF error: %s\n", TTF_GetError());
-    printf("IMG error: %s\n", IMG_GetError());
+    showErrors();
     bln_SDL_started = false;
 	getchar();
 }
@@ -176,7 +180,7 @@ void clsScreen::loadTextures() {
         printf("Failed to create texture.\n");
         error();
 	} else {
-	    if (Global::blnDebugMode) {printf("Surface to texture successful\n");}
+	    if (Global::blnDebugMode) {printf("Embedded Error texture created.\n");}
 	    blnloaded.blnErrortex = true;
     }
 
@@ -198,89 +202,6 @@ void clsScreen::loadTextures() {
 	    if (Global::blnDebugMode) {printf("Tiles converted to texture successful\n");}
 	    blnloaded.blnMapTiles = true;
     }
-}
-/*****************************************************************************/
-void clsScreen::writemessage(void) {
-    /////////////////////////////////////////////////
-    /// @brief Now work on Making the messages that will appear on the screen
-    ///
-    ///        I imagine that I am doing terrible programing things
-    ///        With how I'm switch between char's and strings but whatever
-    /// @return void
-    /////////////////////////////////////////////////
-
-    // These are char arrays that will act as "Strings" for building the messages to appear
-    /*char strClock[8];
-    char strGenNum[5];
-    char strPlayerNum[4];
-    char strFitness[7];
-
-    std::string message;
-    sprintf(strClock, "%8u", Global::Tick.getClockTime());
-
-    SDL_Surface* surmessage = TTF_RenderText_Solid(MessageFont, strClock, colors.Black);
-    textures.texmessage = (surmessage == nullptr) ? nullptr : SDL_CreateTextureFromSurface(window.ren, surmessage);
-    if (textures.texmessage == nullptr) {
-        printf("Failed to convert message surface to texture.\n");
-        error();
-        return;
-    } else {
-        if (Global::blnDebugMode) {printf("Surface texture successfully created\n");}
-        blnloaded.blnMessage = true;
-    }
-
-    SDL_Rect dst;
-    SDL_QueryTexture(textures.texmessage,NULL,NULL, &dst.w, &dst.h);
-    dst.y = 0;
-    dst.x = width - dst.w;
-    SDL_RenderCopy(window.ren, textures.texmessage, NULL, &dst);
-    if (Global::blnDebugMode) {printf("Clock placed.\n");}
-
-    PLYR tempPlayer = Global::Enty.getPlayer();
-
-    //Covert all the values into their char arrays
-    int valuesscanned;
-
-    //Make the status string
-    //Also make sure that each values has at least 1 values scanned in to avoid an error
-    message = "Generation: ";
-    valuesscanned = sprintf(strGenNum, "%2u", Global::Enty.uchrGenNum);
-    if (valuesscanned >= 1) {
-        strGenNum[4] = '\0'; //Make sure that the char is null terminated or the program crashes.
-        message += std::string(strGenNum);
-    }
-    message += "     Player: ";
-    valuesscanned = sprintf(strPlayerNum, "%3u", Global::Enty.uchrPlayerNum);
-    if (valuesscanned >= 1) {
-        strPlayerNum[3] = '\0'; //Make sure that the char is null terminated or the program crashes.
-        message += std::string(strPlayerNum);
-    }
-    message += "     Fitness: ";
-    valuesscanned = sprintf(strFitness, "%3.2f", tempPlayer.fitness);
-    if (valuesscanned >= 1) {
-        strFitness[6] = '\0'; //Make sure that the char is null terminated or the program crashes.
-        message += std::string(strFitness);
-    }
-    if (Global::blnDebugMode) {printf("Status message made.\n");}
-
-    surmessage = TTF_RenderText_Solid(MessageFont, message.c_str(),colors.Black);
-    textures.texmessage = (surmessage == nullptr) ? nullptr : SDL_CreateTextureFromSurface(window.ren, surmessage);
-    if (textures.texmessage == nullptr) {
-        printf("Failed to convert message surface to texture.\n");
-        blnloaded.blnMessage = false;
-        error();
-        return;
-    } else {
-        if (Global::blnDebugMode) {printf("Surface texture successfully created\n");}
-        blnloaded.blnMessage = true;
-    }
-
-    SDL_QueryTexture(textures.texmessage,NULL,NULL, &dst.w, &dst.h);
-    dst.x = (int)(width - dst.w);
-    dst.y = height - 30;
-
-    SDL_RenderCopy(window.ren, textures.texmessage, NULL, &dst);
-    SDL_FreeSurface(surmessage); */
 }
 /*****************************************************************************/
 void clsScreen::set_clips() {
@@ -408,13 +329,6 @@ void clsScreen::wait(ulong waittime) {
     }
 }
 /*****************************************************************************/
-void clsScreen::ShowMenu() {
-    //This will have the code for the main menu when I add it
-    /// @todo (GamerMan7799#1#): Add main menu
-
-    return;
-}
-/*****************************************************************************/
 void clsScreen::start() {
     /////////////////////////////////////////////////
     /// @brief The default constructor for the SDL screen
@@ -428,7 +342,9 @@ void clsScreen::start() {
 
     clsConfig cnfg;
 
-    window.width = (cnfg.getvalues(cnfgScreenWidth) == 0) ? 35 * pic_size : cnfg.getvalues(cnfgScreenWidth);
+    pic_size = DEFINED_PIC_SIZE;
+
+    window.width = (cnfg.getvalues(cnfgScreenWidth) == 0) ? DEFINED_MAP_WIDTH * pic_size : cnfg.getvalues(cnfgScreenWidth);
     window.height = (cnfg.getvalues(cnfgScreenHeight) == 0) ? DEFINED_MAP_HEIGHT * pic_size : cnfg.getvalues(cnfgScreenHeight);
 
     //Set all the booleans to false
@@ -479,8 +395,8 @@ void clsScreen::start() {
     loadTextures();
     if ( !bln_SDL_started ) {return;}
 
-    MessageFont = TTF_OpenFont(DEFINED_MESSAGE_FONT,16); //Opens font and sets size
-    if (MessageFont == nullptr) {
+    MessageFont = TTF_OpenFont(DEFINED_MESSAGE_FONT,14); //Opens font and sets size
+    if (MessageFont == NULL) {
         printf("Font failed to load, messages will not appear.");
         blnloaded.blnMessageFont = false;
     } else {
@@ -494,5 +410,31 @@ void clsScreen::start() {
     //update();
 }
 /*****************************************************************************/
-
-
+void clsScreen::update() {
+    SDL_RenderPresent(window.ren);
+    return;
+}
+/*****************************************************************************/
+void clsScreen::clearRen() {
+    SDL_RenderClear(window.ren);
+    return;
+}
+/*****************************************************************************/
+stcWinAtt* clsScreen::getWinAtt() {
+    return &window;
+}
+/*****************************************************************************/
+TEX clsScreen::getTextures() {
+    return textures;
+}
+/*****************************************************************************/
+TTF_Font* clsScreen::getFont() {
+    return MessageFont;
+}
+/*****************************************************************************/
+void clsScreen::showErrors() {
+    printf("SDL error: %s\n", SDL_GetError());
+    printf("TTF error: %s\n", TTF_GetError());
+    printf("IMG error: %s\n", IMG_GetError());
+}
+/*****************************************************************************/

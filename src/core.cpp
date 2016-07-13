@@ -13,22 +13,47 @@ clsCore::~clsCore() {
 }
 /*****************************************************************************/
 void clsCore::start() {
+    char menuselection;
     m_quit = false;
     SDL_Event event;
     m_level = 1;
 
-    m_player.initialize();
     m_screen.start();
     //Show start up splash
-    m_screen.ShowStartUp();
-    //Show menu
-    m_screen.ShowMenu();
-    //new dungeon
-    m_Map.cmain();
+    if (!Global::blnDebugMode) {m_screen.ShowStartUp();}
+    //do menu loop
+
     while (!m_quit) {
-        m_screen.ShowMap();
-        if (SDL_PollEvent( &event ) ) { HandleEvent(event); }
-    } //end while not quit
+        menuselection = m_menu.MainMenu();
+
+        switch (menuselection){
+        case menuAbout:
+            m_menu.AboutMenu();
+            break;
+        case menuLoad :
+            m_save.doLoad();
+            doGame();
+            break;
+        case menuNew:
+            //New game
+            m_player.initialize();
+            //new dungeon
+            m_Map.cmain();
+            doGame();
+            break;
+        case menuOptions:
+            m_menu.OptionsMenu();
+            break;
+        case menuError:
+        default:
+            printf("ERROR!!! Now closing everything!\n");
+            m_screen.showErrors();
+        case menuQuit:
+            m_quit = true;
+            break;
+        } //end switch
+    } //end loop
+
     m_screen.~clsScreen();
 	printf("\nDone\n");
 } //end Core Start
@@ -57,25 +82,30 @@ void clsCore::MovePlayer(SDL_Event dirpress ) {
     switch ( dirpress.key.keysym.sym ) {
     case SDLK_UP:
     case SDLK_w:
+        if (Global::blnDebugMode) {printf("Going up!\n");}
         direction = dirUp;
-        temploc.y++;
+        temploc.y--;
         break;
     case SDLK_DOWN :
     case SDLK_s:
+        if (Global::blnDebugMode) {printf("Going down!\n");}
         direction = dirDown;
-        temploc.y--;
+        temploc.y++;
         break;
     case SDLK_LEFT:
     case SDLK_a :
+        if (Global::blnDebugMode) {printf("Going left!\n");}
         direction = dirLeft;
         temploc.x--;
         break;
     case SDLK_RIGHT:
     case SDLK_d:
+        if (Global::blnDebugMode) {printf("Going right!\n");}
         direction = dirRight;
         temploc.x++;
         break;
     default:
+        if (Global::blnDebugMode) {printf("Going nowhere!\n");}
         direction = dirNone;
         m_audio.playSound(soundBump,1);
         return;
@@ -197,5 +227,15 @@ void clsCore::doLevelUp() {
     //add later
 
     return;
+}
+/*****************************************************************************/
+void clsCore::doGame() {
+    SDL_Event event;
+
+    while (!m_quit) {
+        m_screen.DrawMap();
+        m_screen.update();
+        if (SDL_PollEvent( &event ) ) { HandleEvent(event); }
+    } //end while not quit
 }
 /*****************************************************************************/

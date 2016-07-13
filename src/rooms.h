@@ -9,25 +9,20 @@
 #include <iostream>
 #include <time.h>
 /*****************************************************************************/
-using namespace std;
-/*****************************************************************************/
-class Dungeon {
-    int xmax;
-    int ymax;
-    int xsize;
-    int ysize;
+struct stcMapStats {
+    struct stcXY max;
+    struct stcXY size;
     int objects;
     int chanceRoom;
     int chanceCorridor;
-    static int* dungeon_map;
-    long oldseed;
+};
 
-    string msgXSize;
-    string msgYSize;
-    string msgMaxObjects;
-    string msgNumObjects;
-    string msgHelp;
-    string msgDetailedHelp;
+typedef struct stcMapStats MapStc;
+/*****************************************************************************/
+class Dungeon {
+    static MapStc mapstats;
+    static int dungeon_map[DEFINED_MAP_WIDTH * DEFINED_MAP_HEIGHT];
+    long oldseed;
 
 	public:
         Dungeon();

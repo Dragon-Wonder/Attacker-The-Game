@@ -7,10 +7,8 @@
 #include "config.h"
 #include "player.h"
 #include "sound.h"
-/*****************************************************************************/
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include "menu.h"
+#include "save.h"
 /*****************************************************************************/
 class clsCore {
     public:
@@ -25,6 +23,8 @@ class clsCore {
         clsPlayer m_player;
         clsScreen m_screen;
         clsSound m_audio;
+        clsMenu m_menu;
+        clsSave m_save;
         //clsMonster monster;
 
         uint m_level;
@@ -35,6 +35,7 @@ class clsCore {
         void ShowMenu(void);
         void ShowConsole(void);
         void BattleScene(void);
+        void doGame(void);
 
         void doLevelUp(void);
         void HandleEvent( SDL_Event );

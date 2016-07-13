@@ -4,37 +4,31 @@
 /*****************************************************************************/
 unsigned char intTempTile = 0x6; //Value to hold what the cell that the player is moving into is.
 /*****************************************************************************/
-int* Dungeon::dungeon_map;
+//Static members
+int Dungeon::dungeon_map[DEFINED_MAP_WIDTH * DEFINED_MAP_HEIGHT];
+MapStc Dungeon::mapstats;
 /*****************************************************************************/
 Dungeon::Dungeon() {
-	xmax = DEFINED_MAP_WIDTH;
-	ymax = DEFINED_MAP_HEIGHT;
+	mapstats.max.x = DEFINED_MAP_WIDTH;
+	mapstats.max.y = DEFINED_MAP_HEIGHT;
 
-	xsize = 0;
-	ysize = 0;
+	mapstats.size.x = DEFINED_MAP_WIDTH;
+	mapstats.size.y = DEFINED_MAP_HEIGHT;
 
-	objects = 0;
+	mapstats.objects = 0;
 
-	chanceRoom = 75;
-	chanceCorridor = 25;
-
-	msgXSize = "X size of dungeon: \t";
-	msgYSize = "Y size of dungeon: \t";
-	msgMaxObjects = "max # of objects: \t";
-	msgNumObjects = "# of objects made: \t";
-	msgHelp = "";
-	msgDetailedHelp = "";
-
+	mapstats.chanceRoom = DEFINED_MAP_ROOM_CHANCE;
+	mapstats.chanceCorridor = DEFINED_MAP_CORRIDOR_CHANCE;
 	//cmain();
 }
 /*****************************************************************************/
-void Dungeon::setCell(int x, int y, int celltype) {dungeon_map[x + xsize * y] = celltype;}
+void Dungeon::setCell(int x, int y, int celltype) {dungeon_map[x + mapstats.size.x * y] = celltype;}
 /*****************************************************************************/
-int Dungeon::getCell(int x, int y) {return dungeon_map[x + xsize * y];}
+int Dungeon::getCell(int x, int y) {return dungeon_map[x + mapstats.size.x * y];}
 /*****************************************************************************/
-void Dungeon::setCell(LOC l, int celltype) {dungeon_map[l.x + xsize * l.y] = celltype;}
+void Dungeon::setCell(LOC l, int celltype) {dungeon_map[l.x + mapstats.size.x * l.y] = celltype;}
 /*****************************************************************************/
-int Dungeon::getCell(LOC l) {return dungeon_map[l.x + xsize * l.y];}
+int Dungeon::getCell(LOC l) {return dungeon_map[l.x + mapstats.size.x * l.y];}
 /*****************************************************************************/
 int Dungeon::getRand(int min, int max) {
 	time_t seed;
@@ -59,11 +53,11 @@ bool Dungeon::makeCorridor(int x, int y, int lenght, int direction) {
 	switch(dir) {
 		case 0:
 		{
-			if(x < 0 || x > xsize) return false;
+			if(x < 0 || x > mapstats.size.x) return false;
 			else xtemp = x;
 			for(ytemp = y; ytemp > (y-len); ytemp--)
 			{
-				if(ytemp < 0 || ytemp > ysize) return false;
+				if(ytemp < 0 || ytemp > mapstats.size.y) return false;
 				if(getCell(xtemp, ytemp) != tileUnused) return false;
 			}
 			for(ytemp = y; ytemp > (y - len); ytemp--)
@@ -74,12 +68,12 @@ bool Dungeon::makeCorridor(int x, int y, int lenght, int direction) {
 		}
 		case 1:
 		{
-			if(y < 0 || y > ysize) return false;
+			if(y < 0 || y > mapstats.size.y) return false;
 			else ytemp = y;
 
 			for(xtemp = x; xtemp < (x + len); xtemp++)
 			{
-				if(xtemp < 0 || xtemp > xsize) return false;
+				if(xtemp < 0 || xtemp > mapstats.size.x) return false;
 				if(getCell(xtemp, ytemp) != tileUnused) return false;
 			}
 			for(xtemp = x; xtemp < (x + len); xtemp++)
@@ -90,11 +84,11 @@ bool Dungeon::makeCorridor(int x, int y, int lenght, int direction) {
 		}
 		case 2:
 		{
-			if(x < 0 || x > xsize) return false;
+			if(x < 0 || x > mapstats.size.x) return false;
 			else xtemp = x;
 			for(ytemp = y; ytemp < (y + len); ytemp++)
 			{
-				if(ytemp < 0 || ytemp > ysize) return false;
+				if(ytemp < 0 || ytemp > mapstats.size.y) return false;
 				if(getCell(xtemp, ytemp) != tileUnused) return false;
 			}
 			for (ytemp = y; ytemp < (y+len); ytemp++){
@@ -104,11 +98,11 @@ bool Dungeon::makeCorridor(int x, int y, int lenght, int direction) {
 		}
 		case 3:
 		{
-			if (ytemp < 0 || ytemp > ysize) return false;
+			if (ytemp < 0 || ytemp > mapstats.size.y) return false;
 			else ytemp = y;
 
 			for (xtemp = x; xtemp > (x-len); xtemp--){
-				if (xtemp < 0 || xtemp > xsize) return false;
+				if (xtemp < 0 || xtemp > mapstats.size.x) return false;
 				if (getCell(xtemp, ytemp) != tileUnused) return false;
 			}
 
@@ -138,9 +132,9 @@ bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 	//north
 		//Check if there's enough space left for it
 		for (int ytemp = y; ytemp > (y-ylen); ytemp--){
-			if (ytemp < 0 || ytemp > ysize) return false;
+			if (ytemp < 0 || ytemp > mapstats.size.y) return false;
 			for (int xtemp = (x-xlen/2); xtemp < (x+(xlen+1)/2); xtemp++){
-				if (xtemp < 0 || xtemp > xsize) return false;
+				if (xtemp < 0 || xtemp > mapstats.size.x) return false;
 				if (getCell(xtemp, ytemp) != tileUnused) return false; //no space left...
 			}
 		}
@@ -161,9 +155,9 @@ bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 	case 1:
 	//east
 		for (int ytemp = (y-ylen/2); ytemp < (y+(ylen+1)/2); ytemp++){
-			if (ytemp < 0 || ytemp > ysize) return false;
+			if (ytemp < 0 || ytemp > mapstats.size.y) return false;
 			for (int xtemp = x; xtemp < (x+xlen); xtemp++){
-				if (xtemp < 0 || xtemp > xsize) return false;
+				if (xtemp < 0 || xtemp > mapstats.size.x) return false;
 				if (getCell(xtemp, ytemp) != tileUnused) return false;
 			}
 		}
@@ -183,9 +177,9 @@ bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 	case 2:
 	//south
 		for (int ytemp = y; ytemp < (y+ylen); ytemp++){
-			if (ytemp < 0 || ytemp > ysize) return false;
+			if (ytemp < 0 || ytemp > mapstats.size.y) return false;
 			for (int xtemp = (x-xlen/2); xtemp < (x+(xlen+1)/2); xtemp++){
-				if (xtemp < 0 || xtemp > xsize) return false;
+				if (xtemp < 0 || xtemp > mapstats.size.x) return false;
 				if (getCell(xtemp, ytemp) != tileUnused) return false;
 			}
 		}
@@ -205,9 +199,9 @@ bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 	case 3:
 	//west
 		for (int ytemp = (y-ylen/2); ytemp < (y+(ylen+1)/2); ytemp++){
-			if (ytemp < 0 || ytemp > ysize) return false;
+			if (ytemp < 0 || ytemp > mapstats.size.y) return false;
 			for (int xtemp = x; xtemp > (x-xlen); xtemp--){
-				if (xtemp < 0 || xtemp > xsize) return false;
+				if (xtemp < 0 || xtemp > mapstats.size.x) return false;
 				if (getCell(xtemp, ytemp) != tileUnused) return false;
 			}
 		}
@@ -232,8 +226,8 @@ bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 /*****************************************************************************/
 /* void Dungeon::showDungeon(){
 	int PlayerStatus = getbattlevalue(statStatus);
-	for (int y = 0; y < ysize; y++){
-		for (int x = 0; x < xsize; x++){
+	for (int y = 0; y < mapstats.size.y; y++){
+		for (int x = 0; x < mapstats.size.x; x++){
 			//System.out.print(getCell(x, y));
 			switch(getCell(x, y)){
 			case tileUnused:
@@ -276,27 +270,27 @@ bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 				break;
 			};
 		}
-		//if (xsize <= xmax) printf("\n");
+		//if (mapstats.size.x <= mapstats.max.x) printf("\n");
 	}
 } */
 /*****************************************************************************/
 bool Dungeon::createDungeon(int inx, int iny, int inobj){
-	if (inobj < 1) objects = 10;
-	else objects = inobj;
-	if (inx < 3) xsize = 3;
-	else if (inx > xmax) xsize = xmax;
-	else xsize = inx;
-	if (iny < 3) ysize = 3;
-	else if (iny > ymax) ysize = ymax;
-	else ysize = iny;
-	dungeon_map = new int[xsize * ysize];
-	for (int y = 0; y < ysize; y++){
-		for (int x = 0; x < xsize; x++){
+	if (inobj < 1) mapstats.objects = 10;
+	else mapstats.objects = inobj;
+	if (inx < 3) mapstats.size.x = 3;
+	else if (inx > mapstats.max.x) mapstats.size.x = mapstats.max.x;
+	else mapstats.size.x = inx;
+	if (iny < 3) mapstats.size.y = 3;
+	else if (iny > mapstats.max.y) mapstats.size.y = mapstats.max.y;
+	else mapstats.size.y = iny;
+	//dungeon_map = new int[mapstats.size.x * mapstats.size.y];
+	for (int y = 0; y < mapstats.size.y; y++){
+		for (int x = 0; x < mapstats.size.x; x++){
 			//ie, making the borders of unwalkable walls
 			if (y == 0) setCell(x, y, tileStoneWall);
-			else if (y == ysize-1) setCell(x, y, tileStoneWall);
+			else if (y == mapstats.size.y-1) setCell(x, y, tileStoneWall);
 			else if (x == 0) setCell(x, y, tileStoneWall);
-			else if (x == xsize-1) setCell(x, y, tileStoneWall);
+			else if (x == mapstats.size.x-1) setCell(x, y, tileStoneWall);
 			//and fill the rest with dirt
 			else setCell(x, y, tileUnused);
 		}
@@ -306,13 +300,13 @@ bool Dungeon::createDungeon(int inx, int iny, int inobj){
 	And now the code of the random-map-generation-algorithm begins!
 	*******************************************************************************/
 	//start with making a room in the middle, which we can start building upon
-	makeRoom(xsize/2, ysize/2, 8, 6, getRand(0,3)); //getrand saken f????r att slumpa fram riktning p?? rummet
-	//keep count of the number of "objects" we've made
+	makeRoom(mapstats.size.x/2, mapstats.size.y/2, 8, 6, getRand(0,3)); //getrand saken f????r att slumpa fram riktning p?? rummet
+	//keep count of the number of "mapstats.objects" we've made
 	int currentFeatures = 1; //+1 for the first room we just made
 	//then we start the main loop
 	for (int countingTries = 0; countingTries < 1000; countingTries++){
 		//check if we've reached our quota
-		if (currentFeatures == objects){
+		if (currentFeatures == mapstats.objects){
 			break;
 		}
 
@@ -325,8 +319,8 @@ bool Dungeon::createDungeon(int inx, int iny, int inobj){
 		//1000 chances to find a suitable object (room or corridor)..
 		//(yea, i know it's kinda ugly with a for-loop... -_-')
 		for (int testing = 0; testing < 1000; testing++){
-			newx = getRand(1, xsize-1);
-			newy = getRand(1, ysize-1);
+			newx = getRand(1, mapstats.size.x-1);
+			newy = getRand(1, mapstats.size.y-1);
 			validTile = -1;
 			//System.out.println("tempx: " + newx + "\ttempy: " + newy);
 			if (getCell(newx, newy) == tileDirtWall || getCell(newx, newy) == tileCorridor){
@@ -372,7 +366,7 @@ bool Dungeon::createDungeon(int inx, int iny, int inobj){
 		if (validTile > -1){
 			//choose what to build now at our newly found place, and at what direction
 			int feature = getRand(0, 100);
-			if (feature <= chanceRoom){ //a new room
+			if (feature <= mapstats.chanceRoom){ //a new room
 				if (makeRoom((newx+xmod), (newy+ymod), 8, 6, validTile)){
 					currentFeatures++; //add to our quota
 
@@ -384,7 +378,7 @@ bool Dungeon::createDungeon(int inx, int iny, int inobj){
 					setCell((newx+xmod), (newy+ymod), tileDirtFloor);
 				}
 			}
-			else if (feature >= chanceRoom){ //new corridor
+			else if (feature >= mapstats.chanceRoom){ //new corridor
 				if (makeCorridor((newx+xmod), (newy+ymod), 6, validTile)){
 					//same thing here, add to the quota and a door
 					currentFeatures++;
@@ -408,8 +402,8 @@ bool Dungeon::createDungeon(int inx, int iny, int inobj){
 	int state = 0; //the state the loop is in, start with the stairs
 	while (state != 10){
 		for (int testing = 0; testing < 1000; testing++){
-			newx = getRand(1, xsize-1);
-			newy = getRand(1, ysize-2); //cheap bugfix, pulls down newy to 0<y<24, from 0<y<25
+			newx = getRand(1, mapstats.size.x-1);
+			newy = getRand(1, mapstats.size.y-2); //cheap bugfix, pulls down newy to 0<y<24, from 0<y<25
 
 			//System.out.println("x: " + newx + "\ty: " + newy);
 			ways = 4; //the lower the better
@@ -464,10 +458,10 @@ int* Dungeon::make_dungeon() {
 	int x = DEFINED_MAP_WIDTH;
 	int y = DEFINED_MAP_HEIGHT;
 	int dungeon_objects = DEFINED_MAP_OBJECT_LIMIT;
-	dungeon_map = new int[x * y];
+	//dungeon_map = new int[x * y];
 		intTempTile = tileUpStairs;
-		f = createDungeon(x, y, dungeon_objects);
-		//showDungeon();
+	if(createDungeon(x, y, dungeon_objects) && Global::blnDebugMode)
+        {printf("Dungeon created.");}
 	return dungeon_map;
 }
 /*****************************************************************************/
@@ -475,9 +469,9 @@ void Dungeon::cmain() {
 	int x = DEFINED_MAP_WIDTH;
 	int y = DEFINED_MAP_HEIGHT;
 	int dungeon_objects = DEFINED_MAP_OBJECT_LIMIT;
-	dungeon_map = new int[x * y];
+	//dungeon_map = new int[x * y];
 	if(createDungeon(x, y, dungeon_objects) && Global::blnDebugMode)
-        {printf("Dungeon created.");}
+        {printf("Dungeon created.\n");}
 	playerfind();
 }
 /*****************************************************************************/

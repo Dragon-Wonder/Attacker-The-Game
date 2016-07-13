@@ -3,10 +3,23 @@
 All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
-## [0.9.0-Alpha] - 2016-07-12
-### Added
-* Doxygen support
 
+## [0.9.1-Alpha] - 2016-07-13
+### Added
+* Basic menu system (WIP)
+
+### Fixed
+* Error with entering player stats
+* Map not loading correctly
+
+### Added
+* Doxygen file (still needs some tweaking)
+
+### Updated
+* Changed max screen size + map size
+* Changed default font
+
+## [0.9.0-Alpha] - 2016-07-12
 ### Updated
 * Rewrote the program from the ground up
 * Program now uses SDL graphics
@@ -16,8 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ### Notes
 * Reset the verisoning, depracated all earlier versions
 * I wanted to make a new game from stratch but kept coming back to this one, so I just decided to redo this one from the ground up.
-
-
+* This is the first of the rewrites. At the moment it can make a dungeon and allows you to walk around. It is very skeleton like and has a lot of features tagged as "add later"
 
 ## Pre-rewrite change log
 ```
