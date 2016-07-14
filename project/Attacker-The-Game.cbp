@@ -8,7 +8,8 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/attacker-the-game-private" prefix_auto="1" extension_auto="1" />
+				<Option output="../attacker-the-game-private" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -30,7 +31,8 @@
 				</Environment>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/attacker-the-game" prefix_auto="1" extension_auto="1" />
+				<Option output="../attacker-the-game" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -58,6 +60,8 @@
 		<Linker>
 			<Add option="-L..\SDL2Stuff\lib\" />
 			<Add option="-LC:\MinGW\lib\" />
+			<Add library="mingw32" />
+			<Add library="SDL2main" />
 			<Add library="SDL2" />
 			<Add library="SDL2_image" />
 			<Add library="SDL2_ttf" />
@@ -68,6 +72,8 @@
 			<Option weight="97" />
 			<Option compiler="gcc" use="1" buildCommand="$rescomp $file $(BUILD_MODE) -O coff $resource_output" />
 		</Unit>
+		<Unit filename="../src/calculations.cpp" />
+		<Unit filename="../src/calculations.h" />
 		<Unit filename="../src/chest.cpp" />
 		<Unit filename="../src/chest.h" />
 		<Unit filename="../src/config.cpp" />
@@ -78,6 +84,8 @@
 		<Unit filename="../src/door.h" />
 		<Unit filename="../src/global.h" />
 		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/menu.cpp" />
+		<Unit filename="../src/menu.h" />
 		<Unit filename="../src/player.cpp" />
 		<Unit filename="../src/player.h" />
 		<Unit filename="../src/rooms.cpp" />
@@ -95,11 +103,11 @@
 			<debugger />
 			<DoxyBlocks>
 				<comment_style block="2" line="0" />
-				<doxyfile_project />
+				<doxyfile_project project_number="0.9.1-Alpha" output_directory="doxygen" />
 				<doxyfile_build />
 				<doxyfile_warnings />
 				<doxyfile_output />
-				<doxyfile_dot />
+				<doxyfile_dot class_diagrams="1" have_dot="1" />
 				<general use_at_in_tags="1" />
 			</DoxyBlocks>
 		</Extensions>

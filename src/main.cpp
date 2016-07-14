@@ -4,7 +4,7 @@
 /// @brief      Holds all the main functions.
 /// @author     GamerMan7799
 /// @author     xPUREx
-/// @version    0.9.0-Alpha
+/// @version    0.9.2-Alpha
 /// @date       2016
 /// @copyright  Public Domain Unlicense.
 /////////////////////////////////////////////////

@@ -13,77 +13,102 @@ clsCore::~clsCore() {
 }
 /*****************************************************************************/
 void clsCore::start() {
+    char menuselection;
     m_quit = false;
     SDL_Event event;
     m_level = 1;
 
-    m_player.initialize();
     m_screen.start();
     //Show start up splash
     m_screen.ShowStartUp();
-    //Show menu
-    m_screen.ShowMenu();
-    //new dungeon
-    m_Map.cmain();
+    //do menu loop
+
     while (!m_quit) {
-        m_screen.ShowMap();
-        if (SDL_PollEvent( &event ) ) { HandleEvent(event); }
-    } //end while not quit
+        menuselection = m_menu.MainMenu();
+
+        switch (menuselection){
+        case menuAbout:
+            m_menu.AboutMenu();
+            break;
+        case menuLoad :
+            m_save.doLoad();
+            doGame();
+            break;
+        case menuNew:
+            //New game
+            m_player.initialize();
+            //new dungeon
+            m_Map.cmain();
+            doGame();
+            break;
+        case menuOptions:
+            m_menu.OptionsMenu();
+            break;
+        case menuError:
+        default:
+            printf("ERROR!!! Now closing everything!\n");
+            m_screen.showErrors();
+        case menuQuit:
+            m_quit = true;
+            break;
+        } //end switch
+    } //end loop
+
     m_screen.~clsScreen();
 	printf("\nDone\n");
 } //end Core Start
 /*****************************************************************************/
 void clsCore::ShowConsole() {
     //This will be added later
+    /// @todo (GamerMan7799#9#) Add debugging console
     return;
 }
 /*****************************************************************************/
 void clsCore::ShowInventory() {
     //this will be added later
-    return;
-}
-/*****************************************************************************/
-void clsCore::ShowMenu() {
-    //this will be added later
+    /// @todo (GamerMan7799#8#) Add inventory support
     return;
 }
 /*****************************************************************************/
 void clsCore::MovePlayer(SDL_Event dirpress ) {
     //convert key press to enum dir
     char direction;
+    static char lasttile = tileUpStairs;
     LOC temploc, playerloc;
     temploc = playerloc = m_player.getLocation();
 
     switch ( dirpress.key.keysym.sym ) {
     case SDLK_UP:
     case SDLK_w:
+        if (Global::blnDebugMode) {printf("Going up!\n");}
         direction = dirUp;
-        temploc.y++;
+        temploc.y--;
         break;
     case SDLK_DOWN :
     case SDLK_s:
+        if (Global::blnDebugMode) {printf("Going down!\n");}
         direction = dirDown;
-        temploc.y--;
+        temploc.y++;
         break;
     case SDLK_LEFT:
     case SDLK_a :
+        if (Global::blnDebugMode) {printf("Going left!\n");}
         direction = dirLeft;
         temploc.x--;
         break;
     case SDLK_RIGHT:
     case SDLK_d:
+        if (Global::blnDebugMode) {printf("Going right!\n");}
         direction = dirRight;
         temploc.x++;
         break;
     default:
+        if (Global::blnDebugMode) {printf("Going nowhere!\n");}
         direction = dirNone;
         m_audio.playSound(soundBump,1);
         return;
         break;
     } //end case
-
-    /** @todo (GamerMan7799#1#) Get it so tiles return to what they
-        were instead of just Dirt Floor */
 
     //check if player stepping in valid place
     clsDoor door;
@@ -96,8 +121,9 @@ void clsCore::MovePlayer(SDL_Event dirpress ) {
     case tileDoor:
     case tileUpStairs:
         m_audio.playSound(soundStep,1);
+        m_Map.setCell(playerloc, lasttile);
+        lasttile = m_Map.getCell(temploc);
         m_Map.setCell(temploc, tilePlayer);
-        m_Map.setCell(playerloc, tileDirtFloor);
         m_player.setLocation(temploc);
 
         //check if run into monster
@@ -150,7 +176,7 @@ void clsCore::MovePlayer(SDL_Event dirpress ) {
 void clsCore::BattleScene() {
     //battle scence
     //add later
-
+    /// @todo (GamerMan7799#1#) Add battle scene
     return;
 }
 /*****************************************************************************/
@@ -178,7 +204,7 @@ void clsCore::HandleEvent(SDL_Event event) {
             break;
         case SDLK_m:
         case SDLK_ESCAPE:
-            ShowMenu();
+            m_menu.GameMenu();
             break;
         case SDLK_TAB:
             ShowConsole();
@@ -194,8 +220,21 @@ void clsCore::HandleEvent(SDL_Event event) {
 }
 /*****************************************************************************/
 void clsCore::doLevelUp() {
-    //add later
-
+    m_screen.clearRen();
+    m_player.doLevelup();
+    m_Map.cmain();
+    m_screen.DrawMap();
+    m_screen.update();
     return;
+}
+/*****************************************************************************/
+void clsCore::doGame() {
+    SDL_Event event;
+
+    while (!m_quit) {
+        m_screen.DrawMap();
+        m_screen.update();
+        if (SDL_PollEvent( &event ) ) { HandleEvent(event); }
+    } //end while not quit
 }
 /*****************************************************************************/

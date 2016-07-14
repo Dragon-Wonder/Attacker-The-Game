@@ -20,13 +20,13 @@
 
 #if defined(_WIN32) || defined(_WIN64)
     #define DEFINED_DEFAULT_IMAGE_PATH ".\\Images\\"
-    #define DEFINED_MESSAGE_FONT "C:\\Windows\\Fonts\\GARA.ttf"
+    #define DEFINED_MESSAGE_FONT "C:\\Windows\\Fonts\\timesbd.ttf"
 #elif defined(__unix__) || defined(__linux__)
     #define DEFINED_DEFAULT_IMAGE_PATH "./Images/"
     #define DEFINED_MESSAGE_FONT "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
 #elif defined(__CYGWIN__)
     #define DEFINED_DEFAULT_IMAGE_PATH "./Images/"
-    #define DEFINED_MESSAGE_FONT "C:/Windows/Fonts/GARA.ttf"
+    #define DEFINED_MESSAGE_FONT "C:/Windows/Fonts/timesbd.ttf"
 #else
     #define DEFINED_DEFAULT_IMAGE_PATH "OS NOT SUPPORTED!"
     #define DEFINED_MESSAGE_FONT "OS NOT SUPPORTED!"
@@ -83,39 +83,44 @@ class clsScreen {
         ~clsScreen();
 
         void start(void);
-        void ShowMap(void);
+        void DrawMap(void);
         void cleanup(void);
+        void update(void);
+        void clearRen(void);
+        void showErrors(void);
 
         /** If SDL is currently running without issue. */
-        bool bln_SDL_started;
+        static bool bln_SDL_started;
 
         void ShowStartUp(void);
-        void ShowMenu(void);
+        stcWinAtt* getWinAtt(void);
+        TEX getTextures(void);
+        TTF_Font* getFont(void);
+
 
     private:
 
-        stcWinAtt window;
+        static stcWinAtt window;
 
         void loadTextures(void);
 
         /** SDL Rectangles for the location of each of the tiles in tiles.png */
-        SDL_Rect clips[DEFINED_NUM_MAP_TILES];
+        static SDL_Rect clips[DEFINED_NUM_MAP_TILES];
 
         void set_clips(void);
         void error(void);
 
         /** Colors. */
-        clrs colors;
+        static clrs colors;
 
-        uint pic_size; /**< Picture size in pixels */
+        static uint pic_size; /**< Picture size in pixels */
 
-        TEX textures; /**< All the textures. */
+        static TEX textures; /**< All the textures. */
 
-        Loaded blnloaded; /**< All the booleans. */
+        static Loaded blnloaded; /**< All the booleans. */
 
         /** Message font. */
-        TTF_Font *MessageFont;
-        void writemessage(void);
+        static TTF_Font *MessageFont;
 
         void wait(ulong);
 };

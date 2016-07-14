@@ -11,7 +11,7 @@ clsDoor::~clsDoor() {
 void clsDoor::activate() {
     //Will do all the stuff with locked doors.
     // Add later
-
+    /// @todo (GamerMan7799#4#) Add door activiation
     return;
 }
 /*****************************************************************************/

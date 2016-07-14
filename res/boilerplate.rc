@@ -6,7 +6,7 @@ id ICON "Icon_App.ico"
 /**********************************************************************************************************************************************/
 //General stuff that should need to be changed
 #define VER_COMPANYNAME_STR "Dragon Wonder\0"
-#define VER_FILEDESCRIPTION_STR "A simple rougelike game to allow me to learn c++\0"
+#define VER_FILEDESCRIPTION_STR "A simple rougelike game using SDL2 Library\0"
 #define VER_FILENAME_STR "Attacker-The-Game\0"
 #define VER_ORIGINALFILENAME_STR "Attacker-The-Game.exe\0"
 #define VER_LEGALCOPYRIGHT_STR "http://unlicense.org\0"
