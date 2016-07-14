@@ -21,7 +21,6 @@ void clsCore::start() {
     m_screen.start();
     //Show start up splash
     m_screen.ShowStartUp();
-    //do menu loop
 
     while (!m_quit) {
         menuselection = m_menu.MainMenu();
