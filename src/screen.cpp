@@ -21,7 +21,7 @@ clrs clsScreen::colors;
 uint clsScreen::pic_size = DEFINED_PIC_SIZE;
 TEX clsScreen::textures;
 Loaded clsScreen::blnloaded;
-TTF_Font* clsScreen::MessageFont;
+TTF_Font* clsScreen::MessageFont = nullptr;
 /*****************************************************************************/
 clsScreen::clsScreen() {
 
@@ -273,7 +273,7 @@ void clsScreen::ShowStartUp() {
     //opening sequence for the game
     //will show the splash image
     /// @todo (GamerMan7799#9#): get better splash, include name
-    /// @todo (GamerMan7799#9#): Make splash fade, add splash for company
+    /// @todo (GamerMan7799#9#): Make splash in and out
 
     SDL_Surface* temp;
     SDL_Texture* splash;
@@ -301,6 +301,7 @@ void clsScreen::ShowStartUp() {
 
     //Wait so user can see screen
     wait(5000);
+    if (Global::blnDebugMode) {printf("Splash shown.\n");}
 
     //clean stuff up
 
@@ -345,6 +346,7 @@ void clsScreen::start() {
 
     pic_size = DEFINED_PIC_SIZE;
 
+    /// @bug (GamerMan7799#8#) Screen doesn't seem to be set based on config
     window.width = (cnfg.getvalues(cnfgScreenWidth) == 0) ? DEFINED_MAP_WIDTH * pic_size : cnfg.getvalues(cnfgScreenWidth);
     window.height = (cnfg.getvalues(cnfgScreenHeight) == 0) ? DEFINED_MAP_HEIGHT * pic_size : cnfg.getvalues(cnfgScreenHeight);
 
@@ -396,7 +398,7 @@ void clsScreen::start() {
     loadTextures();
     if ( !bln_SDL_started ) {return;}
 
-    MessageFont = TTF_OpenFont(DEFINED_MESSAGE_FONT,14); //Opens font and sets size
+    MessageFont = TTF_OpenFont(DEFINED_MESSAGE_FONT,32); //Opens font and sets size
     if (MessageFont == NULL) {
         printf("Font failed to load, messages will not appear.");
         blnloaded.blnMessageFont = false;

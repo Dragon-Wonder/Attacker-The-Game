@@ -10,7 +10,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = attacker-the-game
-PROJECT_NUMBER         = 0.9.1-Alpha
+PROJECT_NUMBER         = 0.9.3-Alpha
 PROJECT_BRIEF          = "A simple rougelike game using SDL2 Library"
 PROJECT_LOGO           = 
 OUTPUT_DIRECTORY       =
@@ -91,35 +91,17 @@ WARN_IF_UNDOCUMENTED   = NO
 WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "$file:$line: $text"
-WARN_LOGFILE            = "C:\Users\patrick.rye\Documents\My Stuff\Code\Attacker-The-Game\project\gh-pages\doxygen.log"
+WARN_LOGFILE            = ".\doxygen.log"
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = \
-	"..\..\src\config.cpp" \
-	"..\..\src\version.h" \
-	"..\..\src\config.h" \
-	"..\..\src\chest.h" \
-	"..\..\src\rooms.cpp" \
-	"..\..\src\rooms.h" \
-	"..\..\src\door.cpp" \
-	"..\..\src\core.cpp" \
-	"..\..\src\door.h" \
-	"..\..\src\player.h" \
-	"..\..\src\sound.h" \
-	"..\..\src\core.h" \
-	"..\..\src\player.cpp" \
-	"..\..\src\global.h" \
-	"..\..\src\screen.cpp" \
-	"..\..\src\sound.cpp" \
-	"..\..\src\chest.cpp" \
-	"..\..\src\main.cpp" \
-	"..\..\src\save.h" \
-	"..\..\src\screen.h" \
-	"..\..\src\save.cpp" 
+	"..\..\src\" \
+	"..\..\README.md" \
+	"..\..\docs\"
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          =
-RECURSIVE              = NO
+RECURSIVE              = YES
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
@@ -148,7 +130,7 @@ VERBATIM_HEADERS       = YES
 #---------------------------------------------------------------------------
 ALPHABETICAL_INDEX     = YES
 COLS_IN_ALPHA_INDEX    = 5
-IGNORE_PREFIX          =
+IGNORE_PREFIX          = "stc", "cls"
 #---------------------------------------------------------------------------
 # configuration options related to the HTML output
 #---------------------------------------------------------------------------
@@ -158,12 +140,12 @@ HTML_FILE_EXTENSION    = .html
 HTML_HEADER            =
 HTML_FOOTER            =
 HTML_STYLESHEET        =
-HTML_COLORSTYLE_HUE    = 220
-HTML_COLORSTYLE_SAT    = 100
-HTML_COLORSTYLE_GAMMA  = 80
+HTML_COLORSTYLE_HUE    = 210
+HTML_COLORSTYLE_SAT    = 67
+HTML_COLORSTYLE_GAMMA  = 60
 HTML_TIMESTAMP         = YES
 HTML_ALIGN_MEMBERS     = YES
-HTML_DYNAMIC_SECTIONS  = NO
+HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_DOCSET        = NO
 DOCSET_FEEDNAME        = "Doxygen generated docs"
 DOCSET_BUNDLE_ID       = org.doxygen.Project
@@ -288,14 +270,14 @@ TEMPLATE_RELATIONS     = NO
 INCLUDE_GRAPH          = YES
 INCLUDED_BY_GRAPH      = YES
 CALL_GRAPH             = YES
-CALLER_GRAPH           = NO
+CALLER_GRAPH           = YES
 GRAPHICAL_HIERARCHY    = YES
 DIRECTORY_GRAPH        = YES
 DOT_IMAGE_FORMAT       = png
 DOT_PATH           = "C:\Users\patrick.rye\Documents\My Stuff\Doxygen\graphviz-2.38\bin\dot.exe"
 DOTFILE_DIRS           =
 MSCFILE_DIRS           =
-DOT_GRAPH_MAX_NODES    = 50
+DOT_GRAPH_MAX_NODES    = 500
 MAX_DOT_GRAPH_DEPTH    = 0
 DOT_TRANSPARENT        = NO
 DOT_MULTI_TARGETS      = NO

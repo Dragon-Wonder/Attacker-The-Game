@@ -6,6 +6,7 @@
 #include "rooms.h"
 #include "config.h"
 #include "player.h"
+#include "monster.h"
 #include "sound.h"
 #include "menu.h"
 #include "save.h"
@@ -19,16 +20,16 @@ class clsCore {
     protected:
 
     private:
-        Dungeon m_Map;
-        clsPlayer m_player;
-        clsScreen m_screen;
-        clsSound m_audio;
-        clsMenu m_menu;
-        clsSave m_save;
-        //clsMonster monster;
+        Dungeon m_Map;          /**< The Dungeon object */
+        clsPlayer m_player;     /**< The Player object */
+        clsScreen m_screen;     /**< The Screen object */
+        clsSound m_audio;       /**< The Audio object */
+        clsMenu m_menu;         /**< The Menu object */
+        clsSave m_save;         /**< The Save object */
+        clsMonster m_monster;   /**< The Monster object */
 
-        uint m_level;
-        bool m_quit;
+        uint m_level;           /**< Current Level */
+        bool m_quit;            /**< Boolean if game should quit */
 
         void MovePlayer( SDL_Event );
         void ShowInventory(void);
@@ -39,5 +40,15 @@ class clsCore {
         void doLevelUp(void);
         void HandleEvent( SDL_Event );
 };
+/*****************************************************************************/
+/////////////////////////////////////////////////
+/// @class Core core.h "src/core.h"
+/// @brief This class holds the core of the program. Almost all of the code
+///        is run through this class instead of run in main.cpp.
+///        It is run this way because generally it is better practice to keep
+///        functions out of the global space (basically no namespace).
+///        and having it as a class allows me to do that while keeping things
+///        together.
+/////////////////////////////////////////////////
 /*****************************************************************************/
 #endif // __CORE__HEADER__

@@ -1,18 +1,22 @@
-#include "door.h"
 /*****************************************************************************/
-clsDoor::clsDoor() {
+#include "monster.h"
+#include "calculations.h"
+/*****************************************************************************/
+clsMonster::clsMonster() {
     //ctor
 }
 /*****************************************************************************/
-clsDoor::~clsDoor() {
+clsMonster::~clsMonster() {
     //dtor
 }
 /*****************************************************************************/
-void clsDoor::activate() {
+stats clsMonster::getStats() {
     /////////////////////////////////////////////////
-    /// @brief Holds the main actions when activating a chest
+    /// @brief Returns monster stats
+    ///
+    /// @return Stats of the monster
+    ///
     /////////////////////////////////////////////////
-    /// @todo (GamerMan7799#4#) Add door activiation
-    return;
+    return m_stats;
 }
 /*****************************************************************************/

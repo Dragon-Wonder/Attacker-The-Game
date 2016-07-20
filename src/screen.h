@@ -82,6 +82,7 @@ class clsScreen {
         clsScreen();
         ~clsScreen();
 
+        //void destory(void);
         void start(void);
         void DrawMap(void);
         void cleanup(void);

@@ -40,6 +40,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-w" />
+					<Add option="-D__NO_INLINE__" />
 					<Add directory="src/" />
 				</Compiler>
 				<Linker>
@@ -86,6 +87,8 @@
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/menu.cpp" />
 		<Unit filename="../src/menu.h" />
+		<Unit filename="../src/monster.cpp" />
+		<Unit filename="../src/monster.h" />
 		<Unit filename="../src/player.cpp" />
 		<Unit filename="../src/player.h" />
 		<Unit filename="../src/rooms.cpp" />

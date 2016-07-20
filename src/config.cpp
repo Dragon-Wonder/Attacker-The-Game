@@ -81,27 +81,27 @@ char clsConfig::verisonCheck(const char *ConfigVerison) {
     if (DEFINED_VER_STATUS == "Release"){
         //Since the release doesn't have any any ending in the string we have to check this differently
         if (C_SoftwareStatus[0] != ')') {
-            if (Global::blnDebugMode) {printf("Software Status outdated.\n");}
-            return NEWCONFIG;
+            if (Global::blnDebugMode) {printf("Software Status not outdated.\n");}
+            return promptUse;
         }
     } else {
         if ( P_SoftwareStatus[0] != C_SoftwareStatus[0]) {
             if (Global::blnDebugMode) {printf("Software Status outdated.\n");}
-            return NEWCONFIG;
+            return promptNew;
         }
     }
 
     if (DEFINED_VER_MAJOR != C_MajorNum) {
         if (Global::blnDebugMode) {printf("Major number outdated.\n");}
-        return NEWCONFIG;
+        return promptNew;
     } else if (DEFINED_VER_MINOR != C_MinorNum) {
         if (Global::blnDebugMode) {printf("Minor number outdated.\n");}
-        return PROMPTUSER;
+        return promptPrompt;
     } else {
         if (Global::blnDebugMode) {printf("Nothing outdated.\n");}
-        return USECONFIG;
+        return promptUse;
     }
-    return USECONFIG;
+    return promptUse;
 }
 /*****************************************************************************/
 void clsConfig::load(void) {
@@ -159,12 +159,12 @@ void clsConfig::initialize(void) {
 		fgets(chrTempString,50,m_configFile);
 		chrConfigVerison = verisonCheck(chrTempString);
 
-		if (chrConfigVerison == NEWCONFIG) {
+		if (chrConfigVerison == promptNew) {
 			printf("Current config file out of date. Making new one.\n");
 			fclose(m_configFile);
 			make();
 		}
-		else if (chrConfigVerison == PROMPTUSER) {
+		else if (chrConfigVerison == promptPrompt) {
 			printf("\nThe config file you are using has a different Minor Version than the program.\n");
 			printf("The config file should in theory still work with this version but I can't say for sure.\n");
 			printf("Would you like to replace the config file with a new one?\n");

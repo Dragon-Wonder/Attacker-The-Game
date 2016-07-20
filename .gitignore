@@ -50,6 +50,7 @@
 *.depend
 
 # My stuff
+*.bif
 
 # Archived images that don't need to be on Github
 *.zip

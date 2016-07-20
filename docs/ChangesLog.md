@@ -4,6 +4,19 @@ All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
 
+## [0.9.3-Alpha] - 2016-07-19
+### Added
+* Saving / loading
+* More Doxygen info
+* Health Calculations
+* Healing
+
+### Updated
+* Changed how config prompts are handled
+* Changed default map size
+* Improved Doxygen file
+
+
 ## [0.9.2-Alpha] - 2016-07-14
 ### Fixed
 * Walking will no longer replace all tiles with dirt floor
