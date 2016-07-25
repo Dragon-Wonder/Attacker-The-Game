@@ -6,7 +6,11 @@ clsMenu::clsMenu() {
     //ctor
     clsScreen screen;
     m_window = screen.getWinAtt();
+<<<<<<< HEAD
     //m_font = screen.getFont();
+=======
+
+>>>>>>> origin/dev
 }
 /*****************************************************************************/
 clsMenu::~clsMenu() {
@@ -26,15 +30,25 @@ char clsMenu::MainMenu() {
     std::string text;
     SDL_Rect dst;
 
+<<<<<<< HEAD
     //clsScreen screen;
     //m_font = screen.getFont(); //Opens font and sets size
     /*if (m_font == nullptr) {
+=======
+    clsScreen screen;
+    m_font = screen.getFont(); //Opens font and sets size
+    if (m_font == nullptr) {
+>>>>>>> origin/dev
         printf("Font failed to load.");
     } else {
         if(Global::blnDebugMode) {printf("Message font created\n");}
     }
 
+<<<<<<< HEAD
     if (m_font == nullptr) {return menuError;} */
+=======
+    if (m_font == nullptr) {return menuError;}
+>>>>>>> origin/dev
 
     SDL_Surface *surmessage = nullptr;
     SDL_Texture *texmessage = nullptr;
@@ -43,7 +57,11 @@ char clsMenu::MainMenu() {
     SDL_RenderClear(m_window->ren);
 
     text = "Attacker - the Game";
+<<<<<<< HEAD
     surmessage = TTF_RenderText_Solid(m_window->font, text.c_str(),clrblack);
+=======
+    surmessage = TTF_RenderText_Solid(m_font, text.c_str(),clrblack);
+>>>>>>> origin/dev
     texmessage = (surmessage == nullptr) ? nullptr : SDL_CreateTextureFromSurface(m_window->ren, surmessage);
 
     if (texmessage == nullptr) {
@@ -68,7 +86,11 @@ char clsMenu::MainMenu() {
     MainButtons[4] = {menuNew,"New Game",{0,0,0,0}};
 
     for (int i = 0; i < 5; i++) {
+<<<<<<< HEAD
         surmessage = TTF_RenderText_Solid(m_window->font, MainButtons[i].text.c_str(),clrblack);
+=======
+        surmessage = TTF_RenderText_Solid(m_font, MainButtons[i].text.c_str(),clrblack);
+>>>>>>> origin/dev
         texmessage = (surmessage == nullptr) ? nullptr : SDL_CreateTextureFromSurface(m_window->ren, surmessage);
 
         if (texmessage == nullptr) {
@@ -177,19 +199,31 @@ char clsMenu::promptUser(char promptType, std::string message) {
 
     /// @todo (GamerMan7799#9#) Centralize color for this class
 
+<<<<<<< HEAD
     if(m_window->font == nullptr) {return returnError;}
+=======
+    if(m_font == nullptr) {return returnError;}
+>>>>>>> origin/dev
     SDL_RenderClear(m_window->ren);
     SDL_SetRenderDrawColor( m_window->ren, 0xFF, 0xFF, 0xFF, 0x00 );
     SDL_Color clrblack = {0x00, 0x00, 0x00, 0x00}; //Make the color black for font
 
+<<<<<<< HEAD
     SDL_Surface* surmessage = TTF_RenderText_Solid(m_window->font, message.c_str(),
+=======
+    SDL_Surface* surmessage = TTF_RenderText_Solid(m_font, message.c_str(),
+>>>>>>> origin/dev
                                                    clrblack);
     SDL_Texture* texmessage = nullptr;
     texmessage = (surmessage == nullptr) ? nullptr :
                  SDL_CreateTextureFromSurface(m_window->ren,surmessage);
 
     if (texmessage == nullptr) {
+<<<<<<< HEAD
         printf("Message not converted to texture.\n");
+=======
+        printf("Error!\n");
+>>>>>>> origin/dev
         return returnError;
     }
 
@@ -215,7 +249,11 @@ char clsMenu::promptUser(char promptType, std::string message) {
         break;
     }
 
+<<<<<<< HEAD
     surmessage = TTF_RenderText_Solid(m_window->font, message.c_str(), clrblack);
+=======
+    surmessage = TTF_RenderText_Solid(m_font, message.c_str(), clrblack);
+>>>>>>> origin/dev
     texmessage = (surmessage == nullptr) ? nullptr :
                  SDL_CreateTextureFromSurface(m_window->ren,surmessage);
 

@@ -96,6 +96,7 @@ WARN_LOGFILE            = ".\doxygen.log"
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = \
+<<<<<<< HEAD
 	"..\..\src\calculations.cpp" \
 	"..\..\src\calculations.h" \
 	"..\..\src\chest.cpp" \
@@ -128,6 +129,11 @@ INPUT                  = \
 	"..\..\docs\LICENSE.md" \
 	"..\..\docs\ToDo.md" \
 	"..\..\docs\Library Licenses\*"
+=======
+	"..\..\src\" \
+	"..\..\README.md" \
+	"..\..\docs\"
+>>>>>>> origin/dev
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          =
 RECURSIVE              = YES

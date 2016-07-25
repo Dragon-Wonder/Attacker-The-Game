@@ -4,6 +4,7 @@ All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
 
+<<<<<<< HEAD
 ## [0.9.4-Alpha] - 2016-07-25
 ### Fixed
 * Doxygen file
@@ -14,6 +15,8 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 * Monsters
 
 
+=======
+>>>>>>> origin/dev
 ## [0.9.3-Alpha] - 2016-07-19
 ### Added
 * Saving / loading

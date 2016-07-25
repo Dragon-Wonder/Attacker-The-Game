@@ -40,6 +40,10 @@ void clsCore::start() {
             break;
         case menuLoad :
             if (Global::blnDebugMode) {printf("Loading Save\n");}
+<<<<<<< HEAD
+=======
+            /// @bug (gamerman7799#1#) Loading causes SDL screen to close
+>>>>>>> origin/dev
             m_save.doLoad();
             m_Map.playerfind();
             doGame();
