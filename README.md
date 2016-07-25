@@ -1,6 +1,6 @@
 # Attacker: The Game
 
-(Check out the gh-pages of this project by going to [http://dragon-wonder.github.io/Attacker-The-Game/]) (WIP)
+(Check out the gh-pages of this project by going to (here)[http://dragon-wonder.github.io/Attacker-The-Game/]) (WIP)
 
 ## Introduction
 
@@ -109,3 +109,4 @@ There are also several debugging controls which will not work in the released ve
 
 
 
+50 68 69 20 44 65 6C 74 61 20 54 68 65 74 61 20 2D 20 4D 69 63 68 69 67 61 6E 20 44 65 6C 74 61 20 2D 20 42 6F 6E 64 20 23 20 31 32 36 34

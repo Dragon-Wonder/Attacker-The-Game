@@ -8,7 +8,6 @@ id ICON "Icon_App.ico"
 #define VER_COMPANYNAME_STR "Dragon Wonder\0"
 #define VER_FILEDESCRIPTION_STR "A simple rougelike game using SDL2 Library\0"
 #define VER_FILENAME_STR "Attacker-The-Game\0"
-#define VER_ORIGINALFILENAME_STR "Attacker-The-Game.exe\0"
 #define VER_LEGALCOPYRIGHT_STR "http://unlicense.org\0"
 #define VER_COMMENTS_STR "Source Code found at: https://github.com/Dragon-Wonder/Attacker-The-Game\0"
 /**********************************************************************************************************************************************/
@@ -17,10 +16,12 @@ id ICON "Icon_App.ico"
 	#define VER_DEBUG 0
 	#define VER_PRIVATEBUILD 0
 	#define VER_PRERELEASE 0
+	#define VER_ORIGINALFILENAME_STR "Attacker-The-Game.exe\0"
 #else
 	#define VER_DEBUG VS_FF_DEBUG
 	#define VER_PRIVATEBUILD VS_FF_PRIVATEBUILD
 	#define VER_PRERELEASE VS_FF_PRERELEASE
+	#define VER_ORIGINALFILENAME_STR "Attacker-The-Game-private.exe\0"
 #endif
 /**********************************************************************************************************************************************/
 VS_VERSION_INFO VERSIONINFO

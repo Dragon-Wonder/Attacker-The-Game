@@ -3,11 +3,13 @@
 /*********************************************************************************************************/
 #include "global.h"
 /*********************************************************************************************************/
+/** This namespace is used to hold the different calculations of the program. */
 namespace Calculations {
 	uint CalculateHealth(stats);
 	bool DodgeCheck(stats);
 	float ElementMulti(uchar, uchar);
-
+	uint CalculateMana(stats);
+	uint goldAmount(uchar,float);
 };
 /*********************************************************************************************************/
 #endif

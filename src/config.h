@@ -23,12 +23,6 @@ enum configValueSpot {
 
 typedef struct ConfigValues Configures;
 /*****************************************************************************/
-/////////////////////////////////////////////////
-/// @class clsConfig config.h "src/config.h"
-/// @brief This class will hold all of the values and functions related to the
-///        config file.
-/////////////////////////////////////////////////
-
 class clsConfig {
 	//public:
 	private:
@@ -56,5 +50,10 @@ class clsConfig {
 		Configures getvalues(void); //Get all values
 		uint getvalues(uchar); //Get just one value (use enum above to define which one).
 };
+/*****************************************************************************/
+/////////////////////////////////////////////////
+/// @class Config config.h "config.h"
+/// @brief This class holds all the stuff realted to the configure file
+/////////////////////////////////////////////////
 /*****************************************************************************/
 #endif

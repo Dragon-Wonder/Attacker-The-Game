@@ -4,14 +4,10 @@
 /// @brief      Holds all the main functions.
 /// @author     GamerMan7799
 /// @author     xPUREx
-/// @version    0.9.2-Alpha
-/// @date       2016
+/// @version    0.9.4-Alpha
+/// @date       2015-2016
 /// @copyright  Public Domain Unlicense.
 /////////////////////////////////////////////////
-/*****************************************************************************/
-//General Todos
-/** \todo (Gamerman7799#9#): Finish Doxygen support */
-/** \todo (Gamerman7799#9#): Add music */
 /*****************************************************************************/
 #include "version.h"
 #include "config.h"
@@ -29,7 +25,7 @@ namespace Global {
 /*****************************************************************************/
 int main(int argc, char *argv[]) {
     /////////////////////////////////////////////////
-    /// @brief The main function
+    /// @brief The main function. Just runs clsCore.start
     ///
     /// @param argc = Something required by SDL
     /// @param argv = Something required by SDL

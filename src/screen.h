@@ -61,10 +61,11 @@ struct stcTextures {
 };
 
 struct stcWinAtt {
-    SDL_Window *win; /**< Pointer to the window in memory. */
-    SDL_Renderer *ren; /**< Pointer to the renderer in memory. */
-    uint width; /**< Screen width in pixels. */
-    uint height; /**< Screen height in pixels. */
+    SDL_Window *win;    /**< Pointer to the window in memory. */
+    SDL_Renderer *ren;  /**< Pointer to the renderer in memory. */
+    uint width;         /**< Screen width in pixels. */
+    uint height;        /**< Screen height in pixels. */
+    TTF_Font *font;     /**< Screen height in pixels. */
 };
 
 typedef struct stcLoaded Loaded;
@@ -82,6 +83,7 @@ class clsScreen {
         clsScreen();
         ~clsScreen();
 
+        //void destory(void);
         void start(void);
         void DrawMap(void);
         void cleanup(void);
@@ -95,7 +97,6 @@ class clsScreen {
         void ShowStartUp(void);
         stcWinAtt* getWinAtt(void);
         TEX getTextures(void);
-        TTF_Font* getFont(void);
 
 
     private:
@@ -118,9 +119,6 @@ class clsScreen {
         static TEX textures; /**< All the textures. */
 
         static Loaded blnloaded; /**< All the booleans. */
-
-        /** Message font. */
-        static TTF_Font *MessageFont;
 
         void wait(ulong);
 };

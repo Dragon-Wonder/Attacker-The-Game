@@ -15,7 +15,7 @@
 /*****************************************************************************/
 //Date Version Types
 /** The day of the last build of the program, currently not used. */
-#define DEFINED_VER_DATE "14"
+#define DEFINED_VER_DATE "25"
 
 /** The month of the last build of the program, currently not used. */
 #define DEFINED_VER_MONTH "07"
@@ -33,17 +33,17 @@
 #define DEFINED_VER_MINOR  9
 
 /** The Patch number of the version number */
-#define DEFINED_VER_PATCH  1
+#define DEFINED_VER_PATCH  4
 /*****************************************************************************/
 /** The version number in a format used by Boilerplate.rc, It is in the following format
     [MAJOR].[MINOR].[PATCH].[BUILDNUMBER] */
-#define DEFINED_VER_RC_FILEVERSION 0,9,2,64
+#define DEFINED_VER_RC_FILEVERSION 0,9,4,1264
 
 /** Is the same as DEFINED_VER_RC_FILEVERSION but is a null terminated string */
-#define DEFINED_VER_RC_FILEVERSION_STRING "0, 9, 2, 64\0"
+#define DEFINED_VER_RC_FILEVERSION_STRING "0, 9, 4, 1264\0"
 
 /** A more specific string of the file version */
-#define DEFINED_VER_FULLVERSION_STRING  "0.9.2-Alpha\0"
+#define DEFINED_VER_FULLVERSION_STRING  "0.9.4-Alpha\0"
 
 //Software Status
 /**
