@@ -21,10 +21,6 @@ clrs clsScreen::colors;
 uint clsScreen::pic_size = DEFINED_PIC_SIZE;
 TEX clsScreen::textures;
 Loaded clsScreen::blnloaded;
-<<<<<<< HEAD
-=======
-TTF_Font* clsScreen::MessageFont = nullptr;
->>>>>>> origin/dev
 /*****************************************************************************/
 clsScreen::clsScreen() {
 
@@ -350,11 +346,7 @@ void clsScreen::start() {
 
     pic_size = DEFINED_PIC_SIZE;
 
-<<<<<<< HEAD
     /// @todo (GamerMan7799#8#) Fix bug: Screen doesn't seem to be set based on config
-=======
-    /// @bug (GamerMan7799#8#) Screen doesn't seem to be set based on config
->>>>>>> origin/dev
     window.width = (cnfg.getvalues(cnfgScreenWidth) == 0) ? DEFINED_MAP_WIDTH * pic_size : cnfg.getvalues(cnfgScreenWidth);
     window.height = (cnfg.getvalues(cnfgScreenHeight) == 0) ? DEFINED_MAP_HEIGHT * pic_size : cnfg.getvalues(cnfgScreenHeight);
 
@@ -406,13 +398,8 @@ void clsScreen::start() {
     loadTextures();
     if ( !bln_SDL_started ) {return;}
 
-<<<<<<< HEAD
     window.font = TTF_OpenFont(DEFINED_MESSAGE_FONT,32); //Opens font and sets size
     if (window.font == nullptr) {
-=======
-    MessageFont = TTF_OpenFont(DEFINED_MESSAGE_FONT,32); //Opens font and sets size
-    if (MessageFont == NULL) {
->>>>>>> origin/dev
         printf("Font failed to load, messages will not appear.");
         blnloaded.blnMessageFont = false;
     } else {

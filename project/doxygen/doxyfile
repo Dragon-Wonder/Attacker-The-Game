@@ -10,7 +10,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = attacker-the-game
-PROJECT_NUMBER         = 0.9.3-Alpha
+PROJECT_NUMBER         = 0.9.5-Alpha
 PROJECT_BRIEF          = "A simple rougelike game using SDL2 Library"
 PROJECT_LOGO           = 
 OUTPUT_DIRECTORY       =
@@ -96,7 +96,6 @@ WARN_LOGFILE            = ".\doxygen.log"
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = \
-<<<<<<< HEAD
 	"..\..\src\calculations.cpp" \
 	"..\..\src\calculations.h" \
 	"..\..\src\chest.cpp" \
@@ -124,16 +123,12 @@ INPUT                  = \
 	"..\..\src\sound.cpp" \
 	"..\..\src\sound.h" \
 	"..\..\src\version.h" \
+	"..\..\src\*" \
 	"..\..\README.md" \
 	"..\..\docs\ChangesLog.md" \
 	"..\..\docs\LICENSE.md" \
 	"..\..\docs\ToDo.md" \
 	"..\..\docs\Library Licenses\*"
-=======
-	"..\..\src\" \
-	"..\..\README.md" \
-	"..\..\docs\"
->>>>>>> origin/dev
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          =
 RECURSIVE              = YES
@@ -211,7 +206,7 @@ TREEVIEW_WIDTH         = 250
 EXT_LINKS_IN_WINDOW    = NO
 FORMULA_FONTSIZE       = 10
 FORMULA_TRANSPARENT    = YES
-USE_MATHJAX            = NO
+USE_MATHJAX            = YES
 MATHJAX_RELPATH        = http://www.mathjax.org/mathjax
 SEARCHENGINE           = YES
 SERVER_BASED_SEARCH    = NO

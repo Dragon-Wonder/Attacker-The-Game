@@ -118,11 +118,6 @@ void clsSave::doLoad() {
 void clsSave::doSave() {
     char userprompt;
     clsMenu menu;
-
-<<<<<<< HEAD
-    /// @todo (GamerMann7799#1#) Fix sdl screen crashing if save already exists
-=======
->>>>>>> origin/dev
     //check if save exists
     if (exists()) {
         userprompt = menu.promptUser(promptYesNo,"Save already exists. Overwrite?");

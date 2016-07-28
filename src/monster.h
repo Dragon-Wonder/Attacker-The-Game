@@ -2,6 +2,38 @@
 #define __HEADER__MONSTER__
 /*****************************************************************************/
 #include "global.h"
+#include <string>
+/*****************************************************************************/
+#define DEFINED_NUM_OF_MONSTERS 13
+#define DEFINED_NUM_OF_P_MODIFIERS 7
+#define DEFINED_NUM_OF_N_MODIFIERS 6
+/*****************************************************************************/
+enum PosMonsterMods {
+    pmmStrong = 0,
+    pmmLarge,
+    pmmMassive,
+    pmmFast,
+    pmmLucky,
+    pmmSolid,
+    pmmArmoured
+};
+
+enum NegMonsterMods {
+    nmmWeak = 0,
+    nmmSmall,
+    nmmTiny,
+    nmmSlow,
+    nmmUnlucky,
+    nmmSpineless
+};
+/*****************************************************************************/
+struct stcMonster {
+    std::string name;
+    stats stats;
+    float goldLean;
+};
+
+typedef struct stcMonster Mons;
 /*****************************************************************************/
 class clsMonster{
     public:
@@ -10,15 +42,24 @@ class clsMonster{
 
         stats getStats(void);
 
+        void makeMonster(uchar);
+        std::string getName();
+
     protected:
 
     private:
-        stats m_stats;          /**< Monster Stats */
-        healthmana m_health;    /**< Monster health */
-        healthmana m_mana;      /**< Monster mana */
+        static std::string m_name;      /**< Name of the monster */
+        static std::string m_modifier;
+        static stats       m_stats;     /**< Monster Stats */
+        static healthmana  m_health;    /**< Monster health */
+        static healthmana  m_mana;      /**< Monster mana */
+        static float       m_goldLean;  /**< Lean of gold vs xp. ranges from 0 to 1.9 */
+        static INV         m_inv;       /**< Monster inventory */
 
-        INV inv;                /**< Monster inventory */
-
+        void doLevelUp();
+        void ModMonster();
+        void PositiveMod();
+        void NegativeMod();
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////

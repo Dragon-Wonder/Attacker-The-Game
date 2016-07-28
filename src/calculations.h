@@ -10,6 +10,7 @@ namespace Calculations {
 	float ElementMulti(uchar, uchar);
 	uint CalculateMana(stats);
 	uint goldAmount(uchar,float);
+	uint CalculateDamage(stats,stats,uint);
 };
 /*********************************************************************************************************/
 #endif

@@ -23,7 +23,7 @@ void clsCore::start() {
     /////////////////////////////////////////////////
     char menuselection;
     m_quit = false;
-    SDL_Event event;
+    //SDL_Event event;
     m_level = 1;
 
     m_screen.start();
@@ -40,10 +40,6 @@ void clsCore::start() {
             break;
         case menuLoad :
             if (Global::blnDebugMode) {printf("Loading Save\n");}
-<<<<<<< HEAD
-=======
-            /// @bug (gamerman7799#1#) Loading causes SDL screen to close
->>>>>>> origin/dev
             m_save.doLoad();
             m_Map.playerfind();
             doGame();
@@ -206,7 +202,62 @@ void clsCore::BattleScene() {
     /////////////////////////////////////////////////
     /// @brief Will handle everything related to battling
     /////////////////////////////////////////////////
-    /// @todo (GamerMan7799#1#) Add battle scene
+    m_monster.makeMonster(m_level);
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    bool done = false;
+    /// @todo (GamerMan7799#2#) add mana regen (no point till mana is used)
+    stats mstats = m_monster.getStats();
+    stats pstats = m_player.getStats();
+
+    float pCritChance, mCritChance = 0.0;
+    float mDamMuli = 0.85;
+    float pDamMuli = 1.0;
+
+    unit pDamage, mDamage;
+    std::string mob;
+    mob = m_monster.getName();
+
+    healthmana phealth, pmana;
+
+    do {
+        phealth = m_player.getHealth();
+        pmana = m_player.getMana();
+        pCritChance = ((pstats.luk)/20.0 + rand()%3) *4.0;
+        mCritChance = ((mstats.luk)/20.0 + rand()%3) *4.0;
+
+        if(rand()%101 <= pCritChance) {pDamMuli += 0.375;}
+        if(rand()%101 <= mCritChance) {mDamMuli += 0.375;}
+
+        if(Calculations::DodgeCheck(pstats)) {mDamMuli = 0;}
+        if(Calculations::DodgeCheck(mstats)) {pDamMuli = 0;}
+
+        pDamage = (uint)(pDamMuli * Calculations::CalculateDamage(pstats,mstats,50));
+        mDamage = (uint)(mDamMuli * Calculations::CalculateDamage(mstats,pstats,50))
+
+        printf("You are fighting a level %i %s\n",m_level,mob.c_str());
+        ///@todo (GamerMan7799#1#) add state of being
+        printf("It appears to be (WIP)\n\n");
+        printf("Your health: %s\n",BarMarker(phealth).c_str());
+        printf("Your mana: %s\n\n",BarMarker(pmana).c_str());
+        bool valid = false;
+        do {
+            printf("What would you like to do?\n");
+            printf("[A]ttack \t [H]eal \n");
+            printf("E[X]it \t Hel[P] \n");
+            printf("[R]un away \t Cast [S]pell (WIP!)\n");
+            printf("[C]heck scene\n");
+            if (Global::blnDebugMode) {printf("[K]ill monster    [D]ebug values   [F]orce Effect\n");}
+
+
+
+
+
+
+
+        } while (!valid);
+
+        done = true;
+    } while (!done);
     return;
 }
 /*****************************************************************************/
@@ -284,5 +335,18 @@ void clsCore::doGame() {
         m_screen.update();
         if (SDL_PollEvent( &event ) ) { HandleEvent(event); }
     } //end while not quit
+}
+/*****************************************************************************/
+std::string clsCore::BarMarker(healthmana a) {
+	std::string TempHealthBar = "<";
+	int HealthPercent = floor((a.curr * 100)/a.max);
+	for (unsigned char Bar = 0; Bar < 20; Bar++) {
+		if (HealthPercent >= 5) {TempHealthBar += "=";}
+		else {TempHealthBar += " ";}
+		HealthPercent -= 5;
+	}
+	TempHealthBar += ">";
+	//cout<<TempHealthBar<<endl;
+	return TempHealthBar;
 }
 /*****************************************************************************/

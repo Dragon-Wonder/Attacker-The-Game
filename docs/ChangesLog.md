@@ -4,19 +4,29 @@ All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
 
-<<<<<<< HEAD
+## [0.9.5-Alpha] - 2016-07-28
+### Fixed
+* Merge mess up from the last update (I keep forgetting that since I have my code in two places I have to copy the git between them as well)
+
+### Updated
+* Modified equations for Health, Mana and gold
+
+### Added
+* Doxygen equations for health, mana and gold
+* Monsters
+* Started Battle Scene (unfinished)
+* Damage calculating equation
+
 ## [0.9.4-Alpha] - 2016-07-25
 ### Fixed
 * Doxygen file
-* SDL Screen crashing on Load / New 
+* SDL Screen crashing on Load / New / Save
 
 ### Added
 * Level up function for player
 * Monsters
 
 
-=======
->>>>>>> origin/dev
 ## [0.9.3-Alpha] - 2016-07-19
 ### Added
 * Saving / loading
@@ -58,6 +68,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 * Changed max screen size + map size
 * Changed default font
 
+
 ## [0.9.0-Alpha] - 2016-07-12
 ### Updated
 * Rewrote the program from the ground up
@@ -69,6 +80,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 * Reset the verisoning, depracated all earlier versions
 * I wanted to make a new game from stratch but kept coming back to this one, so I just decided to redo this one from the ground up.
 * This is the first of the rewrites. At the moment it can make a dungeon and allows you to walk around. It is very skeleton like and has a lot of features tagged as "add later"
+
 
 ## Pre-rewrite change log
 ```
@@ -122,3 +134,6 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ### New
 * Change log (everything before this one is considered "lost")
 ```
+
+
+50 61 74 72 69 63 6B 20 4A 2E 20 52 79 65 0A 50 68 69 20 44 65 6C 74 61 20 54 68 65 74 61 0A 4D 69 63 68 69 67 61 6E 20 44 65 6C 74 61 0A 42 6F 6E 64 20 23 20 31 32 36 34

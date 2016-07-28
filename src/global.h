@@ -198,6 +198,8 @@ typedef struct stcInv INV;
 /** The name of the config file that will be made / read from. */
 #define DEFINED_CONFIG_FILE_NAME "Config.ini"
 
+/** Chance for a key on the monster */
+#define DEFINED_KEY_SPAWN_CHANCE 25
 /// @}
 /*****************************************************************************/
 //Global namespace

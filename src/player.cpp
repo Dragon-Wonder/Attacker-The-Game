@@ -178,22 +178,14 @@ void clsPlayer::initialize() {
 	m_mana.max = m_mana.curr = Calculations::CalculateMana(tempstats);
 
 
-<<<<<<< HEAD
 } //end player initialize
-=======
-} //end player initazile
->>>>>>> origin/dev
 /*****************************************************************************/
 void clsPlayer::doHeal() {
     /////////////////////////////////////////////////
     /// @brief Heals the Player, 1/10 of Max health
     /////////////////////////////////////////////////
     int temp;
-<<<<<<< HEAD
     temp = (int) m_health.max / 10.0;
-=======
-    temp = (int) m_health.max / 10;
->>>>>>> origin/dev
 
     m_health.curr = (temp + m_health.curr > m_health.max) ? m_health.max :
                     temp + m_health.curr;
@@ -206,8 +198,6 @@ void clsPlayer::doLevelup() {
    /////////////////////////////////////////////////
     /// @brief Holds all the stuff related to leveling up the player
     /////////////////////////////////////////////////
-    /// @todo (GamerMan7799#2#) Add level-up function
-
     m_stats.level++;
     uchar PlayerStatPoints = 20;
     int Amount;

@@ -39,13 +39,7 @@ class clsMenu {
     private:
         stcWinAtt* m_window; /**< Pointer to the main screen */
         bool clickcheck(LOC,SDL_Rect);
-<<<<<<< HEAD
         //TTF_Font *m_font;
-=======
-        TTF_Font *m_font;
-
-
->>>>>>> origin/dev
         //SDL_Texture* MakeMessage(std::string, SDL_Color);
 };
 /*****************************************************************************/

@@ -224,56 +224,6 @@ bool Dungeon::makeRoom(int x, int y, int xlength, int ylength, int direction){
 	return true;
 }
 /*****************************************************************************/
-/* void Dungeon::showDungeon(){
-	int PlayerStatus = getbattlevalue(statStatus);
-	for (int y = 0; y < mapstats.size.y; y++){
-		for (int x = 0; x < mapstats.size.x; x++){
-			//System.out.print(getCell(x, y));
-			switch(getCell(x, y)){
-			case tileUnused:
-				if (PlayerStatus == effectBlinded) {printf(" ");}
-				else {printf("¦");}
-				break;
-			case tileDirtWall:
-				if (PlayerStatus == effectBlinded) {printf(" ");}
-				else {printf("¦");}
-				break;
-			case tileDirtFloor:
-				printf(" ");
-				break;
-			case tileStoneWall:
-				printf("¦");
-				break;
-			case tileCorridor:
-				printf(" ");//¦
-				break;
-			case tileDoor:
-				if (PlayerStatus == effectBlinded) {printf(" ");}
-				else {printf("$");}
-				break;
-			case tileUpStairs:
-				printf("<");
-				break;
-			case tileDownStairs:
-				printf(">");
-				break;
-			case tileChest:
-				if (PlayerStatus == effectBlinded) {printf(" ");}
-				else {printf("#");}
-				break;
-			case tilePlayer:
-				printf("@");
-				break;
-			case tileLockedDoor:
-				if (PlayerStatus == effectBlinded) {printf(" ");}
-				else {printf("!");}
-				break;
-			};
-		}
-		//if (mapstats.size.x <= mapstats.max.x) printf("\n");
-	}
-} */
-/*****************************************************************************/
 bool Dungeon::createDungeon(int inx, int iny, int inobj){
 	if (inobj < 1) mapstats.objects = 10;
 	else mapstats.objects = inobj;
@@ -454,7 +404,7 @@ bool Dungeon::createDungeon(int inx, int iny, int inobj){
 }
 /*****************************************************************************/
 int* Dungeon::make_dungeon() {
-    bool f;
+    //bool f;
 	int x = DEFINED_MAP_WIDTH;
 	int y = DEFINED_MAP_HEIGHT;
 	int dungeon_objects = DEFINED_MAP_OBJECT_LIMIT;
