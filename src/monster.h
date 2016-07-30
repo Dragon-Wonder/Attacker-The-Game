@@ -44,6 +44,8 @@ class clsMonster{
 
         void makeMonster(uchar);
         std::string getName();
+        void setHealth(healthmana);
+        healthmana getHealth(void);
 
     protected:
 

@@ -116,6 +116,7 @@ void clsSave::doLoad() {
 }
 /*****************************************************************************/
 void clsSave::doSave() {
+    ///@todo (gamerMan7799#1#) Fix bug, saving crashes SDL
     char userprompt;
     clsMenu menu;
     //check if save exists

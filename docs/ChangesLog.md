@@ -4,6 +4,20 @@ All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
 
+## [0.9.6-Alpha] - 2016-07-29
+### Added
+* Doxygen stuff for new functions added in last update
+* Some equations that will likely remain unsed for a while
+* Mana regen
+* Messages to SDL screen about when to look at terminal to do stuff.
+
+### Updated
+* Finished battle scene (Note, I still haven't fully tested the balance)
+
+### Fixed
+* Bug with player initalize taking newline for input before it
+
+
 ## [0.9.5-Alpha] - 2016-07-28
 ### Fixed
 * Merge mess up from the last update (I keep forgetting that since I have my code in two places I have to copy the git between them as well)

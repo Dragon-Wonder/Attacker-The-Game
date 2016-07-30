@@ -12,6 +12,7 @@ class clsPlayer {
         LOC getLocation(void);
 
         void doHeal(void);
+        void regenMana(void);
         void showStatus(void);
         void initialize(void);
         stats getStats(void);

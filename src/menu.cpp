@@ -21,12 +21,12 @@ char clsMenu::MainMenu() {
     /// @return Char for what button was pressed
     ///
     /////////////////////////////////////////////////
-    SDL_SetRenderDrawColor( m_window->ren, 0xFF, 0xFF, 0xFF, 0x00 );
-    std::string text;
+    SDL_SetRenderDrawColor( m_window->ren, 0xFF, 0xFF, 0xFF, 0xFF );
+    std::string text = "Attacker - the Game";
     SDL_Rect dst;
     SDL_Surface* surmessage = nullptr;
     SDL_Texture* texmessage = nullptr;
-    SDL_Color clrblack = {0x0,0x0,0x0,0x0};
+    SDL_Color clrblack = {0xFF,0xFF,0xFF,0xFF};
 
 
     surmessage = TTF_RenderText_Solid(m_window->font, text.c_str(),clrblack);

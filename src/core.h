@@ -10,8 +10,11 @@
 #include "sound.h"
 #include "menu.h"
 #include "save.h"
+#include "calculations.h"
 /*****************************************************************************/
 #include <string>
+/*****************************************************************************/
+#include "SDL2/SDL_thread.h"
 /*****************************************************************************/
 class clsCore {
     public:
@@ -41,6 +44,13 @@ class clsCore {
 
         void doLevelUp(void);
         void HandleEvent( SDL_Event );
+
+        int exit_check(void* data);
+
+        void GameOver(void);
+        void Winner(void);
+
+        SDL_Thread *exit_thread;
 
         std::string BarMarker(healthmana);
 };

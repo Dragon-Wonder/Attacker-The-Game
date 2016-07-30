@@ -1,7 +1,7 @@
 #ifndef __HEADER__SOUND__
 #define __HEADER__SOUND__
 /*****************************************************************************/
-enum {
+enum enumSounds {
     soundBump = 0,
     soundHit,
     soundError,

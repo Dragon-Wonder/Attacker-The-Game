@@ -11,6 +11,9 @@ namespace Calculations {
 	uint CalculateMana(stats);
 	uint goldAmount(uchar,float);
 	uint CalculateDamage(stats,stats,uint);
+	float MobTypeMulti(uchar);
+	uint XPtoLevelUp(uchar);
+	uint CalculateXP(uchar, float);
 };
 /*********************************************************************************************************/
 #endif

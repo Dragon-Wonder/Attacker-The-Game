@@ -395,6 +395,8 @@ void clsScreen::start() {
         if (Global::blnDebugMode) {printf("Renderer creation successful\n");}
     }
 
+    SDL_SetRenderDrawColor( window.ren, 0xFF, 0xFF, 0xFF, 0x00 );
+
     loadTextures();
     if ( !bln_SDL_started ) {return;}
 
@@ -420,6 +422,7 @@ void clsScreen::update() {
 /*****************************************************************************/
 void clsScreen::clearRen() {
     SDL_RenderClear(window.ren);
+    SDL_RenderCopy(window.ren,textures.maptiles,&clips[tileUnused],NULL);
     return;
 }
 /*****************************************************************************/

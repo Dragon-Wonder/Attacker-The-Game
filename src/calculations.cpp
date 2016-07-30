@@ -140,11 +140,82 @@ uint Calculations::goldAmount(uchar level, float GoldLean) {
 }
 /*********************************************************************************************************/
 uint Calculations::CalculateDamage(stats attacker, stats defender, uint base) {
+    /////////////////////////////////////////////////
+    /// @brief Returns damage done.
+    ///
+    /// @param attacker = stats of the attacker
+    /// @param defender = stats of the defender
+    /// @param base = base damage of the attack
+    /// @return Damage
+    ///
+    /////////////////////////////////////////////////
+
+    ///@todo (GamerMan7799#9#) vary damage with health? Less health = less damage
+
     float temp = 0;
     temp = 2.0 * (attacker.level / 5.0);
     temp += 2.0;
     temp *= (base / defender.def);
     temp *= attacker.str / 8.0;
+    return (uint)temp;
+}
+/*********************************************************************************************************/
+float Calculations::MobTypeMulti(uchar type) {
+    /////////////////////////////////////////////////
+    /// @brief Returns a multi for Gold/XP based on the type of monster
+    ///         Monster Types are the following:
+    ///| Type   |  Number   |  Multi  |
+    ///|--------|-----------|---------|
+    ///| Normal | 1         | 1       |
+    ///| Elite  | 2         | 2       |
+    ///| Boss   | 3         | 4       |
+    ///         It uses an equation instead of a simple case return so it it can be expanded if I want to
+    ///
+    /// @param type = Monster type
+    /// @return Multiplier for XP/Gold
+    ///
+    /////////////////////////////////////////////////
+
+    float temp;
+    temp = pow(type,2);
+    temp += 15.0 * type;
+    temp--;
+    temp /= 15.0;
+
+    return temp;
+}
+/*********************************************************************************************************/
+uint Calculations::XPtoLevelUp(uchar level) {
+    /////////////////////////////////////////////////
+    /// @brief Returns amount of XP required to level up
+    ///
+    /// @param level = Current Level
+    /// @return XP Amount
+    ///
+    /////////////////////////////////////////////////
+
+    float temp;
+    temp = 110.0;
+    temp *= pow(1.1,level);
+
+    return (uint)temp;
+}
+/*********************************************************************************************************/
+uint Calculations::CalculateXP(uchar level, float goldLean) {
+    /////////////////////////////////////////////////
+    /// @brief Returns amount of XP for a monster
+    ///
+    /// @param level = Current Level
+    /// @return XP Amount
+    ///
+    /////////////////////////////////////////////////
+
+    float temp;
+    temp = 8.0;
+    temp += pow(1.055,level);
+    temp += pow(1.055,pow(level,1.085));
+    temp *= 3.0;
+    temp *= (2.0 - goldLean);
     return (uint)temp;
 }
 /*********************************************************************************************************/

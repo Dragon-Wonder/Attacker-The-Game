@@ -150,10 +150,10 @@ void clsPlayer::initialize() {
             printf("Dexterity: %i\n",tempstats.dex);
             printf("Luck: %i\n",tempstats.luk);
             printf("Do you agree with these stats?\n");
-            /// @todo (GamerMan7799#7#) Fix Bug: takes input from previous line
             printf("Y or N? > ");
 
-            scanf("%c",&Answer);
+            scanf("\n%c",&Answer);
+            //getchar();
             Answer = toupper(Answer);
             switch(Answer) {
                 case 'Y' :
@@ -327,5 +327,15 @@ void clsPlayer::setMana(healthmana newmana) {
     /////////////////////////////////////////////////
     m_mana = newmana;
     return;
+}
+/*****************************************************************************/
+void clsPlayer::regenMana() {
+    /////////////////////////////////////////////////
+    /// @brief Regen some mana
+    /////////////////////////////////////////////////
+    int amount = (int)(m_mana.max / 15.0);
+
+    if(m_mana.curr + amount > m_mana.max) {m_mana.curr = m_mana.max;}
+    else {m_mana.curr += amount;}
 }
 /*****************************************************************************/
