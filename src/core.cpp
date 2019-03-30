@@ -335,7 +335,7 @@ void clsCore::BattleScene() {
 
 
 
-        done = true;
+        //done = true;
     } while (!done);
     return;
 }

@@ -3,6 +3,11 @@
 All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [0.9.7-Alpha] - 2019-03-30
+### Removed
+* Some code left in when debugging
+### Fixed
+* Spelling mistakes
 
 ## [0.9.6-Alpha] - 2016-07-29
 ### Added

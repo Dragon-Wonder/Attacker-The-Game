@@ -114,7 +114,7 @@ void clsMenu::OptionsMenu() {
     ///        * Screen Size (already can with config, and would require restart)
     ///        * Controls (no idea how to do this, so likely won't be able to)
     ///        * Volume
-    ///        * Quality (consider how long quality this already is, if you are having issues you need a new computer)
+    ///        * Quality (consider how low quality this already is, if you are having issues you need a new computer)
     /////////////////////////////////////////////////
     /// @todo (GamerMan7799#9#) Add options menu (possibly unneeded)
     return;
