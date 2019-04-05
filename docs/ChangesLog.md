@@ -3,6 +3,14 @@
 All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [0.9.8-Alpha.1] - 2019-04-04
+### Added
+* Level up support with SDL
+### Removed
+* Excess whitespace
+### Fixed
+* More spelling mistakes
+
 ## [0.9.7-Alpha] - 2019-03-30
 ### Removed
 * Some code left in when debugging
@@ -12,7 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ## [0.9.6-Alpha] - 2016-07-29
 ### Added
 * Doxygen stuff for new functions added in last update
-* Some equations that will likely remain unsed for a while
+* Some equations that will likely remain unused for a while
 * Mana regen
 * Messages to SDL screen about when to look at terminal to do stuff.
 
@@ -20,7 +28,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 * Finished battle scene (Note, I still haven't fully tested the balance)
 
 ### Fixed
-* Bug with player initalize taking newline for input before it
+* Bug with player initialize taking newline for input before it
 
 
 ## [0.9.5-Alpha] - 2016-07-28
@@ -96,8 +104,8 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 * Versioning to be more inline with my other programs
 
 ### Notes
-* Reset the verisoning, depracated all earlier versions
-* I wanted to make a new game from stratch but kept coming back to this one, so I just decided to redo this one from the ground up.
+* Reset the versioning, deprecated all earlier versions
+* I wanted to make a new game from scratch but kept coming back to this one, so I just decided to redo this one from the ground up.
 * This is the first of the rewrites. At the moment it can make a dungeon and allows you to walk around. It is very skeleton like and has a lot of features tagged as "add later"
 
 
@@ -153,6 +161,3 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ### New
 * Change log (everything before this one is considered "lost")
 ```
-
-
-50 61 74 72 69 63 6B 20 4A 2E 20 52 79 65 0A 50 68 69 20 44 65 6C 74 61 20 54 68 65 74 61 0A 4D 69 63 68 69 67 61 6E 20 44 65 6C 74 61 0A 42 6F 6E 64 20 23 20 31 32 36 34

@@ -43,9 +43,13 @@ void clsPlayer::initialize() {
     /////////////////////////////////////////////////
     /// @brief Has user initialization their player stats
     /////////////////////////////////////////////////
-    /// @todo (GamerMan7799#7#) Make iniaialize SDL supported
+    /// @todo (GamerMan7799#7#) Make initialize SDL supported
     stats tempstats;
-	tempstats.level = 1;
+    tempstats.level = 1;
+    
+    
+    
+    /*
     bool loop = false;
     bool done = false;
     bool valid = false;
@@ -173,7 +177,8 @@ void clsPlayer::initialize() {
         } while (!valid);
     } while(!done);
 	m_stats = tempstats;
-
+  */
+  
 	m_health.max = m_health.curr = Calculations::CalculateHealth(tempstats);
 	m_mana.max = m_mana.curr = Calculations::CalculateMana(tempstats);
 
@@ -195,147 +200,147 @@ void clsPlayer::doHeal() {
 }
 /*****************************************************************************/
 void clsPlayer::doLevelup() {
-   /////////////////////////////////////////////////
-    /// @brief Holds all the stuff related to leveling up the player
-    /////////////////////////////////////////////////
-    m_stats.level++;
-    uchar PlayerStatPoints = 20;
-    int Amount;
-    char selection[5];
-    bool done = false;
-    bool valid = false;
-    std::string sel;
+  /////////////////////////////////////////////////
+  /// @brief Holds all the stuff related to leveling up the player
+  /////////////////////////////////////////////////
+  m_stats.level++;
+  uchar PlayerStatPoints = 20;
+  int Amount;
+  char selection[5];
+  bool done = false;
+  bool valid = false;
+  std::string sel;
 
-    printf("LEVEL UP!\n You have 20 points you can spend to upgrade.\n");
+  printf("LEVEL UP!\n You have 20 points you can spend to upgrade.\n");
 
-    do {
-        printf("You are now level: %i\n",m_stats.level);
-        printf("You have %i points left to spend.\n", PlayerStatPoints);
-        printf("STR: %i\nCONS: %i\nDEF: %i\nDEX: %i\nLUK: %i\n",m_stats.str,m_stats.cons,
-               m_stats.def,m_stats.dex,m_stats.luk);
-        printf("NONE to not use any points.\n");
-        printf("Enter the stat you wish to improve.\n");
-        printf("> ");
-        scanf("%5s",&selection);
-        //convert the selection to uppercase
-        for(int i = 0; i < 5; i++) {selection[i] = toupper(selection[i]);} //end for
-        sel = "";
-        for(int i = 0; i < 3; i++) {sel += selection[i];}
+  do {
+    printf("You are now level: %i\n",m_stats.level);
+    printf("You have %i points left to spend.\n", PlayerStatPoints);
+    printf("STR: %i\nCONS: %i\nDEF: %i\nDEX: %i\nLUK: %i\n",m_stats.str,m_stats.cons,
+           m_stats.def,m_stats.dex,m_stats.luk);
+    printf("NONE to not use any points.\n");
+    printf("Enter the stat you wish to improve.\n");
+    printf("> ");
+    scanf("%5s",&selection);
+    //convert the selection to uppercase
+    for(int i = 0; i < 5; i++) {selection[i] = toupper(selection[i]);} //end for
+    sel = "";
+    for(int i = 0; i < 3; i++) {sel += selection[i];}
 
 
-        if(!(sel == "STR" || sel == "CON" ||
-             sel == "DEF" || sel == "DEX" ||
-             sel == "LUK" || sel == "NON")) {
+    if(!(sel == "STR" || sel == "CON" ||
+         sel == "DEF" || sel == "DEX" ||
+         sel == "LUK" || sel == "NON")) {
 
-            printf("\n\nInvalid choice, please try again.\n");
-            done = false;
-        } else {
-            valid = false;
-            if(selection != "NON") {
-                do {
-                    printf("You have chosen to upgrade %s please enter the points you wish to add\n",&selection);
-                    printf("You have %i left to spend\n",PlayerStatPoints);
-                    printf("If you chose the wrong stat just enter 0 to not give it any points.\n\n");
-                    printf("> ");
-                    scanf("%i",&Amount);
+        printf("\n\nInvalid choice, please try again.\n");
+        done = false;
+    } else {
+      valid = false;
+      if(selection != "NON") {
+          do {
+            printf("You have chosen to upgrade %s please enter the points you wish to add\n",&selection);
+            printf("You have %i left to spend\n",PlayerStatPoints);
+            printf("If you chose the wrong stat just enter 0 to not give it any points.\n\n");
+            printf("> ");
+            scanf("%i",&Amount);
 
-                    if (Amount < 0 || Amount > PlayerStatPoints) {
-                        printf("\nYou have entered an invalid number, please try again.\n");
-                        valid = false;
-                    } else {
-                        PlayerStatPoints -= Amount;
-                        if (selection == "STR" ) {m_stats.str += Amount;}
-                        else if (selection == "CON" ){m_stats.cons += Amount;}
-                        else if (selection == "DEF" ){m_stats.def += Amount;}
-                        else if (selection == "DEX" ){m_stats.dex += Amount;}
-                        else if (selection == "LUK" ){m_stats.luk += Amount;}
-                        else {if(Global::blnDebugMode){printf("ERROR!\n");}}
-                        valid = true;
-                    }
-                } while (!valid);
+            if (Amount < 0 || Amount > PlayerStatPoints) {
+              printf("\nYou have entered an invalid number, please try again.\n");
+              valid = false;
             } else {
-                PlayerStatPoints = 0;
-            } //end if not none
-        } //end if valid selection
-        if (PlayerStatPoints == 0) {done = true;}
-    } while (!done);
+              PlayerStatPoints -= Amount;
+              if (selection == "STR" ) {m_stats.str += Amount;}
+              else if (selection == "CON" ){m_stats.cons += Amount;}
+              else if (selection == "DEF" ){m_stats.def += Amount;}
+              else if (selection == "DEX" ){m_stats.dex += Amount;}
+              else if (selection == "LUK" ){m_stats.luk += Amount;}
+              else {if(Global::blnDebugMode){printf("ERROR!\n");}}
+              valid = true;
+            }
+          } while (!valid);
+        } else {
+          PlayerStatPoints = 0;
+        } //end if not none
+    } //end if valid selection
+    if (PlayerStatPoints == 0) {done = true;}
+  } while (!done);
 
-    return;
+  return;
 }
 /*****************************************************************************/
 void clsPlayer::showStatus() {
-    /////////////////////////////////////////////////
-    /// @brief Show Status Menu. Will show:
-    ///        * Level
-    ///        * Status Effects
-    ///        * Health/mana
-    /////////////////////////////////////////////////
-    //add later
-    /// @todo (GamerMan7799#2#) Add status menu
-    return;
+  /////////////////////////////////////////////////
+  /// @brief Show Status Menu. Will show:
+  ///        * Level
+  ///        * Status Effects
+  ///        * Health/mana
+  /////////////////////////////////////////////////
+  //add later
+  /// @todo (GamerMan7799#2#) Add status menu
+  return;
 }
 /*****************************************************************************/
 stats clsPlayer::getStats() {
-    /////////////////////////////////////////////////
-    /// @brief gets player stats
-    /// @return stats of the player
-    /////////////////////////////////////////////////
-    return m_stats;
+  /////////////////////////////////////////////////
+  /// @brief gets player stats
+  /// @return stats of the player
+  /////////////////////////////////////////////////
+  return m_stats;
 }
 /*****************************************************************************/
 void clsPlayer::setStats(stats newstats) {
-    /////////////////////////////////////////////////
-    /// @brief Sets player stats
-    /// @param newstats
-    /////////////////////////////////////////////////
-    m_stats = newstats;
-    //Recalculate Mana & health Max's
-    m_health.max = Calculations::CalculateHealth(m_stats);
-    m_mana.max = Calculations::CalculateMana(m_stats);
-    return;
+  /////////////////////////////////////////////////
+  /// @brief Sets player stats
+  /// @param newstats
+  /////////////////////////////////////////////////
+  m_stats = newstats;
+  //Recalculate Mana & health Max's
+  m_health.max = Calculations::CalculateHealth(m_stats);
+  m_mana.max = Calculations::CalculateMana(m_stats);
+  return;
 }
 /*****************************************************************************/
 healthmana clsPlayer::getHealth() {
-    /////////////////////////////////////////////////
-    /// @brief gets player health
-    /// @return Player health
-    /////////////////////////////////////////////////
-    return m_health;
+  /////////////////////////////////////////////////
+  /// @brief gets player health
+  /// @return Player health
+  /////////////////////////////////////////////////
+  return m_health;
 }
 /*****************************************************************************/
 healthmana clsPlayer::getMana() {
-    /////////////////////////////////////////////////
-    /// @brief gets player health
-    /// @return Player health
-    /////////////////////////////////////////////////
-    return m_mana;
+  /////////////////////////////////////////////////
+  /// @brief gets player health
+  /// @return Player health
+  /////////////////////////////////////////////////
+  return m_mana;
 }
 /*****************************************************************************/
 void clsPlayer::setHealth(healthmana newhealth) {
-    /////////////////////////////////////////////////
-    /// @brief sets player health
-    /// @param newhealth
-    /////////////////////////////////////////////////
-    m_health = newhealth;
-    return;
+  /////////////////////////////////////////////////
+  /// @brief sets player health
+  /// @param newhealth
+  /////////////////////////////////////////////////
+  m_health = newhealth;
+  return;
 }
 /*****************************************************************************/
 void clsPlayer::setMana(healthmana newmana) {
-    /////////////////////////////////////////////////
-    /// @brief sets player mana
-    /// @param newmana
-    /////////////////////////////////////////////////
-    m_mana = newmana;
-    return;
+  /////////////////////////////////////////////////
+  /// @brief sets player mana
+  /// @param newmana
+  /////////////////////////////////////////////////
+  m_mana = newmana;
+  return;
 }
 /*****************************************************************************/
 void clsPlayer::regenMana() {
-    /////////////////////////////////////////////////
-    /// @brief Regen some mana
-    /////////////////////////////////////////////////
-    int amount = (int)(m_mana.max / 15.0);
+  /////////////////////////////////////////////////
+  /// @brief Regen some mana
+  /////////////////////////////////////////////////
+  int amount = (int)(m_mana.max / 15.0);
 
-    if(m_mana.curr + amount > m_mana.max) {m_mana.curr = m_mana.max;}
-    else {m_mana.curr += amount;}
+  if(m_mana.curr + amount > m_mana.max) {m_mana.curr = m_mana.max;}
+  else {m_mana.curr += amount;}
 }
 /*****************************************************************************/

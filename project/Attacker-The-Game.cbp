@@ -15,9 +15,11 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-std=c++14" />
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-DDEFINED_BUILD_MODE_PRIVATE" />
+					<Add option="-D_GLIBCXX_USE_CXX11_ABI 0" />
 					<Add directory="src/" />
 					<Add directory="../SDL2Stuff/include" />
 				</Compiler>

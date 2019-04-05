@@ -9,11 +9,11 @@ clsChest::~clsChest() {
 }
 /*****************************************************************************/
 void clsChest::activate() {
-    /////////////////////////////////////////////////
-    /// @brief Holds the main actions when activating a chest
-    /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
+  /// @brief Holds the main actions when activating a chest
+  /////////////////////////////////////////////////
 
-    /// @todo (GamerMan7799#4#) Add chest activation
-    return;
+  /// @todo (GamerMan7799#4#) Add chest activation
+  return;
 }
 /*****************************************************************************/

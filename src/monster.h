@@ -9,59 +9,59 @@
 #define DEFINED_NUM_OF_N_MODIFIERS 6
 /*****************************************************************************/
 enum PosMonsterMods {
-    pmmStrong = 0,
-    pmmLarge,
-    pmmMassive,
-    pmmFast,
-    pmmLucky,
-    pmmSolid,
-    pmmArmoured
+  pmmStrong = 0,
+  pmmLarge,
+  pmmMassive,
+  pmmFast,
+  pmmLucky,
+  pmmSolid,
+  pmmArmoured
 };
 
 enum NegMonsterMods {
-    nmmWeak = 0,
-    nmmSmall,
-    nmmTiny,
-    nmmSlow,
-    nmmUnlucky,
-    nmmSpineless
+  nmmWeak = 0,
+  nmmSmall,
+  nmmTiny,
+  nmmSlow,
+  nmmUnlucky,
+  nmmSpineless
 };
 /*****************************************************************************/
 struct stcMonster {
-    std::string name;
-    stats stats;
-    float goldLean;
+  std::string name;
+  stats stats;
+  float goldLean;
 };
 
 typedef struct stcMonster Mons;
 /*****************************************************************************/
 class clsMonster{
-    public:
-        clsMonster();
-        ~clsMonster();
+  public:
+    clsMonster();
+    ~clsMonster();
 
-        stats getStats(void);
+    stats getStats(void);
 
-        void makeMonster(uchar);
-        std::string getName();
-        void setHealth(healthmana);
-        healthmana getHealth(void);
+    void makeMonster(uchar);
+    std::string getName();
+    void setHealth(healthmana);
+    healthmana getHealth(void);
 
-    protected:
+  protected:
 
-    private:
-        static std::string m_name;      /**< Name of the monster */
-        static std::string m_modifier;
-        static stats       m_stats;     /**< Monster Stats */
-        static healthmana  m_health;    /**< Monster health */
-        static healthmana  m_mana;      /**< Monster mana */
-        static float       m_goldLean;  /**< Lean of gold vs xp. ranges from 0 to 1.9 */
-        static INV         m_inv;       /**< Monster inventory */
+  private:
+    static std::string m_name;      /**< Name of the monster */
+    static std::string m_modifier;
+    static stats       m_stats;     /**< Monster Stats */
+    static healthmana  m_health;    /**< Monster health */
+    static healthmana  m_mana;      /**< Monster mana */
+    static float       m_goldLean;  /**< Lean of gold vs xp. ranges from 0 to 1.9 */
+    static INV         m_inv;       /**< Monster inventory */
 
-        void doLevelUp();
-        void ModMonster();
-        void PositiveMod();
-        void NegativeMod();
+    void doLevelUp();
+    void ModMonster();
+    void PositiveMod();
+    void NegativeMod();
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////

@@ -10,12 +10,12 @@
 Configures clsConfig::m_values;
 /*****************************************************************************/
 clsConfig::clsConfig() {
-    /////////////////////////////////////////////////
-    /// @brief This is the default constructor for the Config Class, set values as
-    ///        the following defaults before loaded from the file.
-    ///        * Screen Height = 0
-    ///        * Screen Width = 0
-    /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
+  /// @brief This is the default constructor for the Config Class, set values as
+  ///        the following defaults before loaded from the file.
+  ///        * Screen Height = 0
+  ///        * Screen Width = 0
+  /////////////////////////////////////////////////
 
 	//Set the values as some default value.
 	m_values.uintScreenHeight = 0;
@@ -24,10 +24,10 @@ clsConfig::clsConfig() {
 }
 /*****************************************************************************/
 bool clsConfig::exists(void) {
-    /////////////////////////////////////////////////
-    /// @brief Checks if Config.ini already exists
-    /// @return TRUE / FALSE Config file exists
-    /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
+  /// @brief Checks if Config.ini already exists
+  /// @return TRUE / FALSE Config file exists
+  /////////////////////////////////////////////////
 
 	//Returns true or false if config file exists
 	FILE* pTempFile = fopen(m_FileName, "r");
@@ -36,11 +36,11 @@ bool clsConfig::exists(void) {
 }
 /*****************************************************************************/
 void clsConfig::make(void) {
-    /////////////////////////////////////////////////
-    /// @brief Will create a new config file, with all of the defaults set in the
-    ///        constructor.
-    /// @return void
-    /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
+  /// @brief Will create a new config file, with all of the defaults set in the
+  ///        constructor.
+  /// @return void
+  /////////////////////////////////////////////////
 
 	//Makes the config file
 	m_configFile = fopen(m_FileName,"w");

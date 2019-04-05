@@ -10,37 +10,37 @@
 #include <time.h>
 /*****************************************************************************/
 struct stcMapStats {
-    struct stcXY max;
-    struct stcXY size;
-    int objects;
-    int chanceRoom;
-    int chanceCorridor;
+  struct stcXY max;
+  struct stcXY size;
+  int objects;
+  int chanceRoom;
+  int chanceCorridor;
 };
 
 typedef struct stcMapStats MapStc;
 /*****************************************************************************/
 class Dungeon {
-    static MapStc mapstats;
-    static int dungeon_map[DEFINED_MAP_WIDTH * DEFINED_MAP_HEIGHT];
-    long oldseed;
+  static MapStc mapstats;
+  static int dungeon_map[DEFINED_MAP_WIDTH * DEFINED_MAP_HEIGHT];
+  long oldseed;
 
-	public:
-        Dungeon();
-        void setCell(int, int, int);
-        void setCell(LOC, int);
+public:
+    Dungeon();
+    void setCell(int, int, int);
+    void setCell(LOC, int);
 
-        int getCell(int, int);
-        int getCell(LOC);
+    int getCell(int, int);
+    int getCell(LOC);
 
-        int getRand(int, int);
-        bool makeCorridor(int, int, int, int);
-        bool makeRoom(int, int, int, int, int);
-        //void showDungeon();
-        bool createDungeon(int, int, int);
-        int* make_dungeon();
-        void cmain();
-        void playerfind();
-        //char PlayerMovement(char);
+    int getRand(int, int);
+    bool makeCorridor(int, int, int, int);
+    bool makeRoom(int, int, int, int, int);
+    //void showDungeon();
+    bool createDungeon(int, int, int);
+    int* make_dungeon();
+    void cmain();
+    void playerfind();
+    //char PlayerMovement(char);
 };
 /*****************************************************************************/
 #endif

@@ -2,45 +2,59 @@
 #define __MENU__HEADER__
 /*****************************************************************************/
 #include "screen.h"
+#include "global.h"
 #include <string.h>
 /*****************************************************************************/
 /// @addtogroup Structs
 /// @{
 /** @struct stcButton
-    This Structure holds values realated to the menu's buttons*/
+    This Structure holds values related to the menu's buttons */
 struct stcButton {
-    char type;          /**< The type of button it is */
-    std::string text;   /**< Text on the button */
-    SDL_Rect cords;     /**< The SDL Coordinates of the button */
+  char type;          /**< The type of button it is */
+  std::string text;   /**< Text on the button */
+  SDL_Rect cords;     /**< The SDL Coordinates of the button */
+};
+
+/** @struct stcLevelUpBar
+    This Structure holds values related to the level up display */
+struct stcLevelUpBar {
+  SDL_Rect plus;
+  SDL_Rect minus;
+  SDL_Rect text;
+  uchar value;
+  uchar type;
 };
 /// @}
-
 /// @addtogroup TypeDefs
 /// @{
 typedef struct stcButton button;
+typedef struct stcLevelUpBar levelupLine;
 /// @}
 /*****************************************************************************/
 class clsMenu {
-    public:
-        clsMenu();
-        ~clsMenu();
+  public:
+    clsMenu();
+    ~clsMenu();
 
-        char MainMenu(void);
+    char MainMenu(void);
 
-        void AboutMenu(void);
-        void OptionsMenu(void);
+    void AboutMenu(void);
+    void OptionsMenu(void);
 
-        char GameMenu(void);
+    char GameMenu(void);
 
-        char promptUser(char, std::string);
+    char promptUser(char, std::string);
 
-    protected:
+    stats doLevelUp(stats);
 
-    private:
-        stcWinAtt* m_window; /**< Pointer to the main screen */
-        bool clickcheck(LOC,SDL_Rect);
-        //TTF_Font *m_font;
-        //SDL_Texture* MakeMessage(std::string, SDL_Color);
+  protected:
+
+  private:
+    stcWinAtt* m_window; /**< Pointer to the main screen */
+    bool clickcheck(LOC,SDL_Rect);
+    void drawLevelUpBar(levelupLine);
+    //TTF_Font *m_font;
+    //SDL_Texture* MakeMessage(std::string, SDL_Color);
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////

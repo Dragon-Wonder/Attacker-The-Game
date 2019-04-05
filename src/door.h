@@ -2,14 +2,14 @@
 #define __DOOR__HEADER__
 /*****************************************************************************/
 class clsDoor {
-    public:
-        clsDoor();
-        ~clsDoor();
+  public:
+    clsDoor();
+    ~clsDoor();
 
-        void activate(void);
-    protected:
+    void activate(void);
+  protected:
 
-    private:
+  private:
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////

@@ -25,34 +25,34 @@ typedef unsigned long ulong; /**< Rename unsigned long to ulong because I'm lazy
 /** @struct stcXY
     This Structure holds an X and Y location, used for several things */
 struct stcXY {
-    int x; /**< X direction */
-    int y; /**< Y direction */
+  int x; /**< X direction */
+  int y; /**< Y direction */
 };
 
 /** @struct stcStats
     This Structure holds all the player and monster stats */
 struct stcStats {
-	uchar level;    /**< Level from 1 to 10*/
-    uchar str;      /**< Effects how much damage you do when you attack.*/
-    uchar cons;     /**< Effects how much health you have.*/
-    uchar dex;      /**< Effects if your chance to dodge, and if you attack first.*/
-    uchar def;      /**< Effects how much damage you take.*/
-    uchar luk;      /**< The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters.*/
+  uchar level;    /**< Level from 1 to 10*/
+  uchar str;      /**< Effects how much damage you do when you attack.*/
+  uchar cons;     /**< Effects how much health you have.*/
+  uchar dex;      /**< Effects if your chance to dodge, and if you attack first.*/
+  uchar def;      /**< Effects how much damage you take.*/
+  uchar luk;      /**< The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters.*/
 };
 
 /** @struct stcCurrMax
     Holds the current vs max value of something. Used for health and mana */
 struct stcCurrMax {
-    int curr;       /**< Current */
-    int max;        /**< Max*/
+  int curr;       /**< Current */
+  int max;        /**< Max*/
 };
 
 /** @struct stcInv
     This Structure holds a really simplified inventory of just keys and gold.
     Will likely be expanded into another class later on. */
 struct stcInv {
-    int keys;       /**< Keys. Used to open locked doors. Can be found on monsters */
-    int gold;       /**< Gold. Currently does nothing. */
+  int keys;       /**< Keys. Used to open locked doors. Can be found on monsters */
+  int gold;       /**< Gold. Currently does nothing. */
 };
 //End of struct group
 /// @}
@@ -64,56 +64,56 @@ struct stcInv {
 /////////////////////////////////////////////////
 /** Holds all the different tiles that are in tiles.png. */
 enum enumTiles {
-    tileUnused = 0, //0
-    tileDirtWall, //1
-    tileDirtFloor, //2
-    tileStoneWall, //3
-    tileCorridor, //4
-    tileDoor, //5
-    tileUpStairs, //6
-    tileDownStairs, //7
-    tileChest, //8
-    tilePlayer, //9
-    tileLockedDoor, //10
+  tileUnused = 0, //0
+  tileDirtWall, //1
+  tileDirtFloor, //2
+  tileStoneWall, //3
+  tileCorridor, //4
+  tileDoor, //5
+  tileUpStairs, //6
+  tileDownStairs, //7
+  tileChest, //8
+  tilePlayer, //9
+  tileLockedDoor, //10
 };
 
 /** Holds all of the directions. */
 enum enumDirection {
-    dirNone = 0,
-    dirUp,
-    dirDown,
-    dirLeft,
-    dirRight
+  dirNone = 0,
+  dirUp,
+  dirDown,
+  dirLeft,
+  dirRight
 };
 
 /** Holds all of the stats */
 enum enumStats {
-    statStr = 0,
-    statCons,
-    statDef,
-    statDex,
-    statLuk
+  statStr = 0,
+  statCons,
+  statDef,
+  statDex,
+  statLuk
 };
 
 /** Holds all of the different elements (not implemented yet) */
 /// @todo (GamerMan7799#4#) Implement elements
 enum enumElements {
-    elementNone = 0,
-    elementPhysical,
-    elementFire,
-    elementIce,
-    elementLight,
-    elementDark,
-    elementEarth,
-    elementWind,
-    elementEnergy,
-    elementWater
+  elementNone = 0,
+  elementPhysical,
+  elementFire,
+  elementIce,
+  elementLight,
+  elementDark,
+  elementEarth,
+  elementWind,
+  elementEnergy,
+  elementWater
 };
 
 /** Holds all the different status effects (not implements yet) */
 /// @todo (GamerMan7799#4#) Implement status effects
 enum enumEffects {
-    effectNone = 0,
+  effectNone = 0,
 	effectBlinded,
 	effectFrozen,
 	effectBurned,
@@ -127,30 +127,30 @@ enum enumEffects {
 
 /** Holds the different menu selections. */
 enum enumMenu {
-    menuQuit = 0,
-    menuNew,
-    menuLoad,
-    menuSave,
-    menuAbout,
-    menuOptions,
-    menuError
+  menuQuit = 0,
+  menuNew,
+  menuLoad,
+  menuSave,
+  menuAbout,
+  menuOptions,
+  menuError
 };
 
 /** Holds the different prompt types */
 enum promptTypes {
-    promptYesNo = 0,
-    prompOkay,
-    promptNew,
-    promptPrompt,
-    promptUse
+  promptYesNo = 0,
+  prompOkay,
+  promptNew,
+  promptPrompt,
+  promptUse
 };
 
 /** Holds the different returns from a prompt*/
 enum promptReturns {
-    returnYes = 0,
-    returnNo,
-    returnError,
-    returnMaybe
+  returnYes = 0,
+  returnNo,
+  returnError,
+  returnMaybe
 };
 // end enum groups
 /// @}

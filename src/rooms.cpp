@@ -37,9 +37,7 @@ int Dungeon::getRand(int min, int max) {
 	srand(seed);
 	int n = max - min + 1;
 	int i = rand() % n;
-	if(i < 0)
-		i = -i;
-
+	if(i < 0) {i = -i;}
 	return min + i;
 }
 /*****************************************************************************/

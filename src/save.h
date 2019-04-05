@@ -6,17 +6,17 @@
 #define DEFINED_SAVE_FILE_NAME "save.bif"
 /*****************************************************************************/
 class clsSave {
-    public:
-        clsSave();
-        ~clsSave();
+  public:
+    clsSave();
+    ~clsSave();
 
-        void doSave(void);
-        void doLoad(void);
+    void doSave(void);
+    void doLoad(void);
 
-    protected:
+  protected:
 
-    private:
-        bool exists(void);
+  private:
+    bool exists(void);
 };
 /*****************************************************************************/
 #endif // __SAVE__HEADER__
