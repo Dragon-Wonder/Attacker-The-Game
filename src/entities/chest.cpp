@@ -1,4 +1,4 @@
-#include "entities/chest.h"
+#include "chest.h"
 /*****************************************************************************/
 clsChest::clsChest() {
     //ctor

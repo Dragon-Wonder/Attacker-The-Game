@@ -1,6 +1,6 @@
-#include "game/rooms.h"
-#include "entities/player.h"
-#include "global.h"
+#include "rooms.h"
+#include "../entities/player.h"
+#include "../global.h"
 /*****************************************************************************/
 unsigned char intTempTile = 0x6; //Value to hold what the cell that the player is moving into is.
 /*****************************************************************************/

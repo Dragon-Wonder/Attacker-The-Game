@@ -1,7 +1,7 @@
 #ifndef __HEADER__CALCULATIONS__ //Guard the header so if it was already called once it isn't called again.
 #define __HEADER__CALCULATIONS__
 /*********************************************************************************************************/
-#include "global.h"
+#include "../global.h"
 /*********************************************************************************************************/
 /** This namespace is used to hold the different calculations of the program. */
 namespace Calculations {

@@ -1,4 +1,4 @@
-#include "audio/sound.h"
+#include "sound.h"
 /*****************************************************************************/
 clsSound::clsSound() {
   //ctor

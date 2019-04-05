@@ -1,5 +1,5 @@
-#include "entities/player.h"
-#include "game/calculations.h"
+#include "player.h"
+#include "../game/calculations.h"
 #include <cstdio>
 #include <ctype.h>
 #include <string>

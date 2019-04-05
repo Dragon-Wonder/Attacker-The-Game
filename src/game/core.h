@@ -1,15 +1,14 @@
 #ifndef __CORE__HEADER__
 #define __CORE__HEADER__
 /*****************************************************************************/
-#include "global.h"
-#include "ui/screen.h"
-#include "game/rooms.h"
-#include "game/config.h"
-#include "entities/player.h"
-#include "entities/monster.h"
-#include "ui/menu.h"
-#include "game/save.h"
-#include "game/calculations.h"
+#include "../global.h"
+#include "rooms.h"
+#include "config.h"
+#include "../entities/player.h"
+#include "../entities/monster.h"
+#include "../ui/menu.h"
+#include "save.h"
+#include "calculations.h"
 /*****************************************************************************/
 #include <string>
 /*****************************************************************************/
@@ -55,7 +54,7 @@ class clsCore {
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class clsCore core.h "src/core.h"
+/// @class clsCore core.h "src/game/core.h"
 /// @brief This class holds the core of the program. Almost all of the code
 ///        is run through this class instead of run in main.cpp.
 ///        It is run this way because generally it is better practice to keep

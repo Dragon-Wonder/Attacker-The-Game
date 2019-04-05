@@ -3,6 +3,13 @@
 All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [0.9.8-Alpha.3] - 2019-04-05
+### Added
+* Visual Studio Project file
+### Fixed
+* Some files paths being wrong from when I moved stuff into folders
+
+
 ## [0.9.8-Alpha.2] - 2019-04-05
 ### Added
 * More work on the level up support with SDL (still WIP)

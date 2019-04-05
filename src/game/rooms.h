@@ -1,7 +1,7 @@
 #ifndef _ROOMS_H_INCLUDED__ //Guard the header so if it was already called once it isn't called again.
 #define _ROOMS_H_INCLUDED__
 /*****************************************************************************/
-#include "global.h"
+#include "../global.h"
 /*****************************************************************************/
 #include <string.h>
 #include <cstdio>
@@ -44,7 +44,7 @@ public:
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class Dungeon rooms.h "src/rooms.h"
+/// @class Dungeon rooms.h "src/game/rooms.h"
 /// @brief Holds all of the information related to generating the map
 /////////////////////////////////////////////////
 /*****************************************************************************/

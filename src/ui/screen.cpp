@@ -1,8 +1,8 @@
 /*****************************************************************************/
-#include "ui/screen.h"
-#include "game/rooms.h"
-#include "game/config.h"
-#include "res/image_error.xpm"
+#include "screen.h"
+#include "../game/rooms.h"
+#include "../game/config.h"
+#include "image_error.xpm"
 /*****************************************************************************/
 #include <time.h>
 #include <cstdlib>

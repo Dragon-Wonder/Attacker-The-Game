@@ -1,6 +1,6 @@
 /*****************************************************************************/
 #include "monster.h"
-#include "calculations.h"
+#include "../game/calculations.h"
 #include "player.h"
 /*****************************************************************************/
 #include <cstdio>

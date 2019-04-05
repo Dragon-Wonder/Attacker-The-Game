@@ -1,9 +1,10 @@
 #ifndef __MENU__HEADER__
 #define __MENU__HEADER__
 /*****************************************************************************/
-#include "ui/screen.h"
-#include "global.h"
-#include "audio/sound.h"
+#include "screen.h"
+#include "../global.h"
+#include "../audio/sound.h"
+/*****************************************************************************/
 #include <string.h>
 /*****************************************************************************/
 /// @addtogroup Structs
@@ -60,7 +61,7 @@ class clsMenu {
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class clsMenu menu.h "src/menu.h"
+/// @class clsMenu menu.h "src/ui/menu.h"
 /// @brief This class holds all of the different menus.
 ///        It is done this way as some menus need to be referenced from different
 ///        files, and this is easier then trying to copy and maintain the functions

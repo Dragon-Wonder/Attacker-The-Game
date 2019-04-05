@@ -1,4 +1,4 @@
-#include "entities/door.h"
+#include "door.h"
 /*****************************************************************************/
 clsDoor::clsDoor() {
   //ctor

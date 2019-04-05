@@ -1,7 +1,7 @@
 #ifndef __HEADER__MONSTER__
 #define __HEADER__MONSTER__
 /*****************************************************************************/
-#include "global.h"
+#include "../global.h"
 #include <string>
 /*****************************************************************************/
 #define DEFINED_NUM_OF_MONSTERS 13

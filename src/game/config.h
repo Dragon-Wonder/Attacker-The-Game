@@ -3,7 +3,7 @@
 /*****************************************************************************/
 #include <cstdio>
 /*****************************************************************************/
-#include "global.h"
+#include "../global.h"
 /*****************************************************************************/
 /** @struct ConfigValues
     This Structure holds all of the different config values together. */
@@ -52,7 +52,7 @@ class clsConfig {
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class clsConfig config.h "config.h"
+/// @class clsConfig config.h "src/game/config.h"
 /// @brief This class holds all the stuff realted to the configure file
 /////////////////////////////////////////////////
 /*****************************************************************************/

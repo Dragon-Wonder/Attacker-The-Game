@@ -7,7 +7,7 @@
 #include <string>
 #include <cstdio>
 /*****************************************************************************/
-#include "global.h"
+#include "../global.h"
 /*****************************************************************************/
 /** @def DEFINED_DEFAULT_IMAGE_PATH
     All images are stored in a folder called "Images" however, because Linux,

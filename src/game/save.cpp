@@ -1,8 +1,8 @@
 #include "save.h"
-#include "player.h"
+#include "../entities/player.h"
 #include "rooms.h"
-#include "version.h"
-#include "menu.h"
+#include "../version.h"
+#include "../ui/menu.h"
 #include <cstdio>
 /*****************************************************************************/
 clsSave::clsSave() {

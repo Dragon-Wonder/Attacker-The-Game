@@ -1,8 +1,8 @@
 /*****************************************************************************/
-#include "game/core.h"
-#include "entities/chest.h"
-#include "entities/door.h"
-#include "game/save.h"
+#include "core.h"
+#include "../entities/chest.h"
+#include "../entities/door.h"
+#include "save.h"
 /*****************************************************************************/
 // General Todos
 /// @todo (GamerMan7799#9#): Finish Doxygen support

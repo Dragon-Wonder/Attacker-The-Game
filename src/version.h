@@ -43,7 +43,7 @@
 #define DEFINED_VER_RC_FILEVERSION_STRING "0, 9, 8, 3\0"
 
 /** A more specific string of the file version */
-#define DEFINED_VER_FULLVERSION_STRING  "0.9.8-Alpha.2\0"
+#define DEFINED_VER_FULLVERSION_STRING  "0.9.8-Alpha.3\0"
 
 //Software Status
 /**
