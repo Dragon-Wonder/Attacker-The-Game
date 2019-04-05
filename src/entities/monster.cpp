@@ -87,7 +87,7 @@ void clsMonster::doLevelUp() {
   ///        18 points (compared to the player's 20). It will randomly assign
   ///        each point to a different stat with a leaning to towards stats in
   ///        the base form which are higher. For example when leveling up the Golem
-  ///        it is more likely to put a stat into CONS or DEF (both 34 base) than
+  ///        it is more likely to put a stat into CON or DEF (both 34 base) than
   ///        LUK or DEX (both 6 base).
   /////////////////////////////////////////////////
   char upgradeChance[5] = {0,0,0,0,0};
@@ -95,7 +95,7 @@ void clsMonster::doLevelUp() {
   uchar randStat = 0;
 
   upgradeChance[0] = m_stats.str;
-  upgradeChance[1] = m_stats.cons + upgradeChance[0];
+  upgradeChance[1] = m_stats.con + upgradeChance[0];
   upgradeChance[2] = m_stats.def + upgradeChance[1];
   upgradeChance[3] = m_stats.dex + upgradeChance[2];
   upgradeChance[4] = m_stats.luk + upgradeChance[3];
@@ -103,7 +103,7 @@ void clsMonster::doLevelUp() {
   for (int i = 0; i < statPoints; i++) {
     randStat = rand() % 101;
     if (randStat < upgradeChance[0] ) {m_stats.str++;}
-    else if (randStat < upgradeChance[1] ){m_stats.cons++;}
+    else if (randStat < upgradeChance[1] ){m_stats.con++;}
     else if (randStat < upgradeChance[2] ) {m_stats.def++;}
     else if (randStat < upgradeChance[3] ) {m_stats.dex++;}
     else {m_stats.luk++;}
@@ -125,7 +125,7 @@ void clsMonster::ModMonster() {
   clsPlayer player;
   stats pstats;
   pstats = player.getStats();
-  /// @todo (gamerMan7799#7#) make modifiers increase based on level
+  /// @todo (GamerMan7799#7#) make modifiers increase based on level
   if (num < 60) {m_modifier = "";}
   else {
     if(m_stats.luk + rand1 > pstats.luk + rand2) {
@@ -155,7 +155,7 @@ void clsMonster::PositiveMod() {
     break;
   case pmmArmoured:
     m_modifier = "Heavily-Armored";
-    m_stats.cons += 5;
+    m_stats.con += 5;
     m_stats.def += 5;
     m_stats.luk -= 2;
     break;
@@ -165,7 +165,7 @@ void clsMonster::PositiveMod() {
     break;
   case pmmLarge:
     m_modifier = "Large";
-    m_stats.cons += 5;
+    m_stats.con += 5;
     break;
   case pmmLucky:
     m_modifier = "Lucky";
@@ -173,13 +173,13 @@ void clsMonster::PositiveMod() {
     break;
   case pmmMassive:
     m_modifier = "Massive";
-    m_stats.cons += 5;
+    m_stats.con += 5;
     m_stats.str += 5;
     m_stats.dex -= 5;
     break;
   case pmmSolid:
     m_modifier = "Solid";
-    m_stats.cons += 5;
+    m_stats.con += 5;
     break;
   default:
     m_modifier = "";
@@ -202,17 +202,17 @@ void clsMonster::NegativeMod() {
     break;
   case nmmSmall:
     m_modifier = "Small";
-    m_stats.cons -= 5;
+    m_stats.con -= 5;
     break;
   case nmmSpineless:
     m_modifier = "Spineless";
     m_stats.str -= 4;
-    m_stats.cons -= 4;
+    m_stats.con -= 4;
     m_stats.dex += 2;
     break;
   case nmmTiny:
     m_modifier = "Tiny";
-    m_stats.cons -= 5;
+    m_stats.con -= 5;
     break;
   case nmmUnlucky:
     m_modifier = "Unlucky";

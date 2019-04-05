@@ -5,15 +5,15 @@
 /*********************************************************************************************************/
 /** This namespace is used to hold the different calculations of the program. */
 namespace Calculations {
-	uint CalculateHealth(stats);
-	bool DodgeCheck(stats);
-	float ElementMulti(uchar, uchar);
-	uint CalculateMana(stats);
-	uint goldAmount(uchar,float);
-	uint CalculateDamage(stats,stats,uint);
-	float MobTypeMulti(uchar);
-	uint XPtoLevelUp(uchar);
-	uint CalculateXP(uchar, float);
+  uint CalculateHealth(stats);
+  bool DodgeCheck(stats);
+  float ElementMulti(uchar, uchar);
+  uint CalculateMana(stats);
+  uint goldAmount(uchar,float);
+  uint CalculateDamage(stats,stats,uint);
+  float MobTypeMulti(uchar);
+  uint XPtoLevelUp(uchar);
+  uint CalculateXP(uchar, float);
 };
 /*********************************************************************************************************/
 #endif

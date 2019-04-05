@@ -18,7 +18,7 @@
 #define DEFINED_VER_DATE "04"
 
 /** The month of the last build of the program, currently not used. */
-#define DEFINED_VER_MONTH "04"
+#define DEFINED_VER_MONTH "05"
 
 /** The year of the last build of the program, currently not used. */
 #define DEFINED_VER_YEAR "2019"
@@ -33,17 +33,17 @@
 #define DEFINED_VER_MINOR  9
 
 /** The Patch number of the version number */
-#define DEFINED_VER_PATCH  7
+#define DEFINED_VER_PATCH  8
 /*****************************************************************************/
 /** The version number in a format used by Boilerplate.rc, It is in the following format
     [MAJOR].[MINOR].[PATCH].[BUILDNUMBER] */
-#define DEFINED_VER_RC_FILEVERSION 0,9,8,2
+#define DEFINED_VER_RC_FILEVERSION 0,9,8,3
 
 /** Is the same as DEFINED_VER_RC_FILEVERSION but is a null terminated string */
-#define DEFINED_VER_RC_FILEVERSION_STRING "0, 9, 8, 0\0"
+#define DEFINED_VER_RC_FILEVERSION_STRING "0, 9, 8, 3\0"
 
 /** A more specific string of the file version */
-#define DEFINED_VER_FULLVERSION_STRING  "0.9.8-Alpha.1\0"
+#define DEFINED_VER_FULLVERSION_STRING  "0.9.8-Alpha.2\0"
 
 //Software Status
 /**
@@ -55,7 +55,7 @@ Software Status can be the following:
 | Beta | b | This version will compile and / or run but does not work as expected (or crashes often). |
 | Alpha | a | This version does not work at all; it usually won't compile at all or crashes more times than it works; best not to use versions in this state. |
 */
-#define DEFINED_VER_STATUS 	"Alpha"
+#define DEFINED_VER_STATUS   "Alpha"
 
 /** See the table for DEFINED_VER_STATUS */
 #define DEFINED_VER_STATUS_SHORT  "a"

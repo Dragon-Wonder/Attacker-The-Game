@@ -3,9 +3,22 @@
 All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [0.9.8-Alpha.2] - 2019-04-05
+### Added
+* More work on the level up support with SDL (still WIP)
+### Changed
+* Screen won't refresh constantly when displaying an unchanged screen.
+* Changed "cons" stat to "con" to be better in line with the other names
+* Improved Doxygen stuff
+* Splash screen now appears in Non-private releases
+* Moved away from CodeBlocks because things are broken
+* Moved src files to folders to better organize code better
+### Fixed
+* Splash not being correct ratio
+
 ## [0.9.8-Alpha.1] - 2019-04-04
 ### Added
-* Level up support with SDL
+* Level up support with SDL (WIP)
 ### Removed
 * Excess whitespace
 ### Fixed
@@ -145,7 +158,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 
 ## [1.5.0-C] - 2015-09-22
 ### Added
-* Verison.h 
+* Verison.h
 * Code Blocks Support
 * Icon
 * Boilerplate info

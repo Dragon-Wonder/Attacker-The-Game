@@ -34,7 +34,7 @@ struct stcXY {
 struct stcStats {
   uchar level;    /**< Level from 1 to 10*/
   uchar str;      /**< Effects how much damage you do when you attack.*/
-  uchar cons;     /**< Effects how much health you have.*/
+  uchar con;     /**< Effects how much health you have.*/
   uchar dex;      /**< Effects if your chance to dodge, and if you attack first.*/
   uchar def;      /**< Effects how much damage you take.*/
   uchar luk;      /**< The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters.*/
@@ -89,7 +89,7 @@ enum enumDirection {
 /** Holds all of the stats */
 enum enumStats {
   statStr = 0,
-  statCons,
+  statCon,
   statDef,
   statDex,
   statLuk
@@ -114,15 +114,15 @@ enum enumElements {
 /// @todo (GamerMan7799#4#) Implement status effects
 enum enumEffects {
   effectNone = 0,
-	effectBlinded,
-	effectFrozen,
-	effectBurned,
-	effectWet,
-	effectPoison,
-	effectBleeding,
-	effectConfused,
-	effectParalyzed,
-	effectConcussion
+  effectBlinded,
+  effectFrozen,
+  effectBurned,
+  effectWet,
+  effectPoison,
+  effectBleeding,
+  effectConfused,
+  effectParalyzed,
+  effectConcussion
 };
 
 /** Holds the different menu selections. */

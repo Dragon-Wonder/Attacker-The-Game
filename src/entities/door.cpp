@@ -1,19 +1,18 @@
-#include "chest.h"
+#include "entities/door.h"
 /*****************************************************************************/
-clsChest::clsChest() {
-    //ctor
+clsDoor::clsDoor() {
+  //ctor
 }
 /*****************************************************************************/
-clsChest::~clsChest() {
-    //dtor
+clsDoor::~clsDoor() {
+  //dtor
 }
 /*****************************************************************************/
-void clsChest::activate() {
+void clsDoor::activate() {
   /////////////////////////////////////////////////
   /// @brief Holds the main actions when activating a chest
   /////////////////////////////////////////////////
-
-  /// @todo (GamerMan7799#4#) Add chest activation
+  /// @todo (GamerMan7799#4#) Add door activation
   return;
 }
 /*****************************************************************************/

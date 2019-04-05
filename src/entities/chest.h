@@ -13,7 +13,7 @@ class clsChest {
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class chest chest.h "src/chest.h"
+/// @class clsChest chest.h "src/entities/chest.h"
 /// @brief The class to hold the stuff related to opening a chest.
 ///        Currently unimplemented
 /////////////////////////////////////////////////

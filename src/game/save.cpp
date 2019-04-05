@@ -59,44 +59,44 @@ void clsSave::doLoad() {
   //Get STR
   fgets(chrTempString,5,loadfile);
   intValuesScanned = sscanf(chrTempString, "%X", &player_stats.str);
-  if (intValuesScanned < 1) {printf("ERROR!"); player_stats.str = 20;}
-  if (Global::blnDebugMode) {printf("STR\t \t \t %u\n", player_stats.str);}
+  if (intValuesScanned < 1) { printf("ERROR!"); player_stats.str = 20; }
+  if (Global::blnDebugMode) { printf("STR\t \t \t %u\n", player_stats.str); }
 
   //Get CONS
   fgets(chrTempString,5,loadfile);
-  intValuesScanned = sscanf(chrTempString, "%X", &player_stats.cons);
-  if (intValuesScanned < 1) {printf("ERROR!"); player_stats.dex = 20;}
-  if (Global::blnDebugMode) {printf("CONS\t \t \t %u\n", player_stats.cons);}
+  intValuesScanned = sscanf(chrTempString, "%X", &player_stats.con);
+  if (intValuesScanned < 1) { printf("ERROR!"); player_stats.con = 20; }
+  if (Global::blnDebugMode) { printf("CONS\t \t \t %u\n", player_stats.con); }
 
   //Get DEX
   fgets(chrTempString,5,loadfile);
   intValuesScanned = sscanf(chrTempString, "%X", &player_stats.dex);
-  if (intValuesScanned < 1) {printf("ERROR!"); player_stats.dex = 20;}
-  if (Global::blnDebugMode) {printf("DEX\t \t \t %u\n", player_stats.dex);}
+  if (intValuesScanned < 1) { printf("ERROR!"); player_stats.dex = 20; }
+  if (Global::blnDebugMode) { printf("DEX\t \t \t %u\n", player_stats.dex); }
 
   //Get DEF
   fgets(chrTempString,5,loadfile);
   intValuesScanned = sscanf(chrTempString, "%X", &player_stats.def);
-  if (intValuesScanned < 1) {printf("ERROR!"); player_stats.def = 20;}
-  if (Global::blnDebugMode) {printf("DEF\t \t \t %u\n", player_stats.def);}
+  if (intValuesScanned < 1) { printf("ERROR!"); player_stats.def = 20; }
+  if (Global::blnDebugMode) { printf("DEF\t \t \t %u\n", player_stats.def); }
 
   //Get LUK
   fgets(chrTempString,5,loadfile);
   intValuesScanned = sscanf(chrTempString, "%X", &player_stats.luk);
-  if (intValuesScanned < 1) {printf("ERROR!"); player_stats.luk = 20;}
-  if (Global::blnDebugMode) {printf("LUK\t \t \t %u\n", player_stats.luk);}
+  if (intValuesScanned < 1) { printf("ERROR!"); player_stats.luk = 20; }
+  if (Global::blnDebugMode) { printf("LUK\t \t \t %u\n", player_stats.luk); }
 
   //get Health
   fgets(chrTempString,5,loadfile);
   intValuesScanned = sscanf(chrTempString, "%X", &health.curr);
-  if (intValuesScanned < 1) {printf("ERROR!"); health.curr = 255;}
-  if (Global::blnDebugMode) {printf("Health\t \t \t %u\n", health.curr);}
+  if (intValuesScanned < 1) { printf("ERROR!"); health.curr = 255; }
+  if (Global::blnDebugMode) { printf("Health\t \t \t %u\n", health.curr); }
 
   //get mana
   fgets(chrTempString,5,loadfile);
   intValuesScanned = sscanf(chrTempString, "%X", &mana.curr);
-  if (intValuesScanned < 1) {printf("ERROR!"); mana.curr = 255;}
-  if (Global::blnDebugMode) {printf("Mana\t \t \t %u\n", mana.curr);}
+  if (intValuesScanned < 1) { printf("ERROR!"); mana.curr = 255; }
+  if (Global::blnDebugMode) { printf("Mana\t \t \t %u\n", mana.curr); }
 
   char tempTile;
   Dungeon d;
@@ -116,7 +116,7 @@ void clsSave::doLoad() {
 }
 /*****************************************************************************/
 void clsSave::doSave() {
-  ///@todo (gamerMan7799#1#) Fix bug, saving crashes SDL
+  /// @todo (GamerMan7799#1#) Fix bug, saving crashes SDL
   char userprompt;
   clsMenu menu;
   //check if save exists
@@ -150,7 +150,7 @@ void clsSave::doSave() {
   //Add Stats + level
   fprintf(savefile, "%X\n",player_stats.level);
   fprintf(savefile, "%X\n",player_stats.str);
-  fprintf(savefile, "%X\n",player_stats.cons);
+  fprintf(savefile, "%X\n",player_stats.con);
   fprintf(savefile, "%X\n",player_stats.dex);
   fprintf(savefile, "%X\n",player_stats.def);
   fprintf(savefile, "%X\n",player_stats.luk);
@@ -174,8 +174,8 @@ void clsSave::doSave() {
 }
 /*****************************************************************************/
 bool clsSave::exists() {
-	FILE* pTempFile = fopen(DEFINED_SAVE_FILE_NAME, "r");
-	if (pTempFile == NULL) {return false;}
-	else {return true;}
+  FILE* pTempFile = fopen(DEFINED_SAVE_FILE_NAME, "r");
+  if (pTempFile == NULL) {return false;}
+  else {return true;}
 }
 /*****************************************************************************/

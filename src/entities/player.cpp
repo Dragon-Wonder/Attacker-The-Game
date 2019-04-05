@@ -1,5 +1,5 @@
-#include "player.h"
-#include "calculations.h"
+#include "entities/player.h"
+#include "game/calculations.h"
 #include <cstdio>
 #include <ctype.h>
 #include <string>
@@ -46,9 +46,9 @@ void clsPlayer::initialize() {
     /// @todo (GamerMan7799#7#) Make initialize SDL supported
     stats tempstats;
     tempstats.level = 1;
-    
-    
-    
+
+
+
     /*
     bool loop = false;
     bool done = false;
@@ -57,7 +57,7 @@ void clsPlayer::initialize() {
     do {
         printf("In this game there are five stats that effect different elements of the game.\n");
         printf("Strength (STR) - Effects how much damage you do when you attack.\n");
-        printf("Constitution (CONS) - Effects how much health you have.\n");
+        printf("Constitution (CON) - Effects how much health you have.\n");
         printf("Dexterity (DEX) - Effects if your chance to dodge, and if you attack first.\n");
         printf("Defense (DEF) - Effects how much damage you take.\n");
         printf("Luck (LUK) - The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters.\n");
@@ -101,7 +101,7 @@ void clsPlayer::initialize() {
                 loop = true;
             } else {
                 loop = false;
-                tempstats.cons = tempvalue;
+                tempstats.con = tempvalue;
                 chrSkillPointsLeft -= tempvalue;
             } //end if value valid
         }while (loop);
@@ -149,7 +149,7 @@ void clsPlayer::initialize() {
 
             printf("Your current stats are as follows:\n");
             printf("Strength: %i\n",tempstats.str);
-            printf("Constitution: %i\n",tempstats.cons);
+            printf("Constitution: %i\n",tempstats.con);
             printf("Defense: %i\n",tempstats.def);
             printf("Dexterity: %i\n",tempstats.dex);
             printf("Luck: %i\n",tempstats.luk);
@@ -176,11 +176,11 @@ void clsPlayer::initialize() {
             } //end switch
         } while (!valid);
     } while(!done);
-	m_stats = tempstats;
+  m_stats = tempstats;
   */
-  
-	m_health.max = m_health.curr = Calculations::CalculateHealth(tempstats);
-	m_mana.max = m_mana.curr = Calculations::CalculateMana(tempstats);
+
+  m_health.max = m_health.curr = Calculations::CalculateHealth(tempstats);
+  m_mana.max = m_mana.curr = Calculations::CalculateMana(tempstats);
 
 
 } //end player initialize
@@ -216,7 +216,7 @@ void clsPlayer::doLevelup() {
   do {
     printf("You are now level: %i\n",m_stats.level);
     printf("You have %i points left to spend.\n", PlayerStatPoints);
-    printf("STR: %i\nCONS: %i\nDEF: %i\nDEX: %i\nLUK: %i\n",m_stats.str,m_stats.cons,
+    printf("STR: %i\nCON: %i\nDEF: %i\nDEX: %i\nLUK: %i\n",m_stats.str,m_stats.con,
            m_stats.def,m_stats.dex,m_stats.luk);
     printf("NONE to not use any points.\n");
     printf("Enter the stat you wish to improve.\n");
@@ -250,7 +250,7 @@ void clsPlayer::doLevelup() {
             } else {
               PlayerStatPoints -= Amount;
               if (selection == "STR" ) {m_stats.str += Amount;}
-              else if (selection == "CON" ){m_stats.cons += Amount;}
+              else if (selection == "CON" ){m_stats.con += Amount;}
               else if (selection == "DEF" ){m_stats.def += Amount;}
               else if (selection == "DEX" ){m_stats.dex += Amount;}
               else if (selection == "LUK" ){m_stats.luk += Amount;}

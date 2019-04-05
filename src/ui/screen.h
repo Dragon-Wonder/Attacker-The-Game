@@ -72,12 +72,6 @@ typedef struct stcLoaded Loaded;
 typedef struct stcColors clrs;
 typedef struct stcTextures TEX;
 /*****************************************************************************/
-/////////////////////////////////////////////////
-/// @class clsScreen screen.h "src/screen.h"
-/// @brief This class will hold all of the values and functions related to the
-///        the SDL screen..
-/////////////////////////////////////////////////
-
 class clsScreen {
   public:
     clsScreen();
@@ -122,5 +116,11 @@ class clsScreen {
 
     void wait(ulong);
 };
+/*****************************************************************************/
+/////////////////////////////////////////////////
+/// @class clsScreen screen.h "src/ui/screen.h"
+/// @brief This class will hold all of the values and functions related to the
+///        the SDL screen..
+/////////////////////////////////////////////////
 /*****************************************************************************/
 #endif // __MY_SCREEN_HEADER__

@@ -25,4 +25,10 @@ class clsSound {
   private:
 };
 /*****************************************************************************/
+/////////////////////////////////////////////////
+/// @class clsSound sound.h "src/audio/sound.h"
+/// @brief This class holds all of the sound related functions.
+///        Unimplemented at the moment.
+/////////////////////////////////////////////////
+/*****************************************************************************/
 #endif // __HEADER__SOUND__

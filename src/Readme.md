@@ -2,4 +2,4 @@
 
 This will hold all the source files for the program.
 
-Everything was made by me, unless otherwise noted.
+Everything was made by us, unless otherwise noted.

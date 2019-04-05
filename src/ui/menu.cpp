@@ -1,17 +1,19 @@
-#include "menu.h"
+#include "ui/menu.h"
 /*****************************************************************************/
 //TTF_Font* clsMenu::m_font;
 /*****************************************************************************/
 clsMenu::clsMenu() {
-    //ctor
-    clsScreen screen;
-    m_window = screen.getWinAtt();
+  //ctor
+  clsScreen screen;
+  clsSound audio;
+  m_window = screen.getWinAtt();
+  m_audio = audio;
 }
 /*****************************************************************************/
 clsMenu::~clsMenu() {
-    //dtor
+  //dtor
 
-    //TTF_CloseFont(m_font);
+  //TTF_CloseFont(m_font);
 }
 /*****************************************************************************/
 char clsMenu::MainMenu() {
@@ -27,7 +29,6 @@ char clsMenu::MainMenu() {
   SDL_Surface* surmessage = nullptr;
   SDL_Texture* texmessage = nullptr;
   SDL_Color clrblack = {0xFF,0xFF,0xFF,0xFF};
-
 
   surmessage = TTF_RenderText_Solid(m_window->font, text.c_str(),clrblack);
   texmessage = (surmessage == nullptr) ? nullptr : SDL_CreateTextureFromSurface(m_window->ren, surmessage);
@@ -81,8 +82,8 @@ char clsMenu::MainMenu() {
   char buttonpushed = menuError;
 
   bool done = false;
+  SDL_RenderPresent(m_window->ren);
   do {
-    SDL_RenderPresent(m_window->ren);
     SDL_PollEvent(&event);
     if ( event.type == SDL_MOUSEBUTTONUP ){
       LOC mouse_click;
@@ -114,7 +115,7 @@ void clsMenu::OptionsMenu() {
   ///        * Screen Size (already can with config, and would require restart)
   ///        * Controls (no idea how to do this, so likely won't be able to)
   ///        * Volume
-  ///        * Quality (consider how low quality this already is, if you are having issues you need a new computer)
+  ///        * Quality (considering how low quality this already is, if you are having issues you need a new computer)
   /////////////////////////////////////////////////
   /// @todo (GamerMan7799#9#) Add options menu (possibly unneeded)
   return;
@@ -279,10 +280,10 @@ stats clsMenu::doLevelUp(stats currStats) {
     return {0,0,0,0,0,0};
   }
 
-  SDL_RenderClear(m_window->ren);
   SDL_SetRenderDrawColor( m_window->ren, 0xFF, 0xFF, 0xFF, 0x00 );
   SDL_Color clrblack = {0x00, 0x00, 0x00, 0x00}; //Make the color black for font
   stats newStats = currStats;
+  newStats.level += 1;
   char upgradePoints = 20;
   bool finish_level_up = false;
   bool refresh_screen = true;
@@ -296,6 +297,7 @@ stats clsMenu::doLevelUp(stats currStats) {
 
   do {
     if (refresh_screen) {
+      SDL_RenderClear(m_window->ren);
       dst.y = 60;
       message = "LEVEL UP!";
       surmessage = TTF_RenderText_Solid(m_window->font, message.c_str(),
@@ -312,7 +314,7 @@ stats clsMenu::doLevelUp(stats currStats) {
       SDL_RenderCopy(m_window->ren,texmessage, NULL, &dst);
 
       dst.y = 120;
-      message = "Points left : ";
+      message = "Press 'D', when done.\nPoints left : ";
       message += std::to_string(upgradePoints);
       surmessage = TTF_RenderText_Solid(m_window->font, message.c_str(),
                                                  clrblack);
@@ -327,25 +329,129 @@ stats clsMenu::doLevelUp(stats currStats) {
       dst.x = (uint) ((m_window->width / 2) - (dst.w / 2));
       SDL_RenderCopy(m_window->ren,texmessage, NULL, &dst);
 
+      // define initial positions for the bars
+
+
+
+
+
       // draw each level up bar.
-      for (int i = 0; i < 6; ++i) {
+      for (int i = 0; i < 5; ++i) {
+        LevelUpBars.type = (uchar) i;
         drawLevelUpBar(LevelUpBars[i]);
       }
+
+      SDL_RenderPresent(m_window->ren);
+      refresh_screen = false;
     } // end if refresh_screen
 
+    char returnPress;
+    if(SDL_PollEvent( &event )) {
+      refresh_screen = true;
+      if (event.type == SDL_QUIT) {
+        //player wants to quit, leave loop
+        newStats = {0,0,0,0,0,0};
+        finish_level_up = true;
+      } else if (event.type == SDL_KEYDOWN) {
+        switch (event.key.keysym.sym) {
+        case SDLK_q:
+          newStats = {0,0,0,0,0,0};
+          blnStopLoop = true;
+          break;
+        case SDLK_d:
+          // done with level up
+          /// @todo (GamerMan7799#9#) Clean up this section of code, can be made to be more compressed.
+          if (upgradePoints > 0) {
+            // user has points left, prompt if truly done
+            returnPress = promptUser(promptYesNo, "Unspent points remain, are you sure you're done?");
+            if(returnPress == returnYes) {
+              finish_level_up = true;
+            } else {
+              finish_level_up = false;
+            }
+          } else {
+            // prompt to confirm new stats
+            returnPress = promptUser(promptYesNo, "Confirm new Stats?");
+            if(returnPress == returnYes) {
+              finish_level_up = true;
+            } else {
+              finish_level_up = false;
+            }
+            SDL_RenderClear(m_window->ren);
+          }
+          break;
+        } //end switch keypress
+      } else if ( event.type == SDL_MOUSEBUTTONUP ){
+        bool button_clicked = false;
+        char increment_dir = 0;
+        LOC mouse_click;
+        SDL_GetMouseState(&mouse_click.x, &mouse_click.y);
+        for (int i = 0; i < 5; i++ ) {
+          if ( clickcheck(mouse_click, LevelUpBars[i].plus) ) {
+            button_clicked = true;
+            increment_dir = 1;
+          } else if ( clickcheck(mouse_click, LevelUpBars[i].minus) ) {
+            button_clicked = true;
+            increment_dir = -1;
+          } else { button_clicked = false; }
 
+          if (button_clicked) {
+            switch (LevelUpBars[i].type) {
+            case statStr:
+              // check if trying to remove points user already had
+              if (newStats.str + increment_dir <= currStats.str) {
+                m_audio.playSound(soundError,10);
+              } else {
+                upgradePoints -= increment_dir;
+                newStats.str += increment_dir;
+              }
+              break;
+            case statCon:
+              // check if trying to remove points user already had
+              if (newStats.con + increment_dir <= currStats.con) {
+                m_audio.playSound(soundError,10);
+              } else {
+                upgradePoints -= increment_dir;
+                newStats.son += increment_dir;
+              }
+              break;
+            case statDef:
+              // check if trying to remove points user already had
+              if (newStats.def + increment_dir <= currStats.def) {
+                m_audio.playSound(soundError,10);
+              } else {
+                upgradePoints -= increment_dir;
+                newStats.def += increment_dir;
+              }
+              break;
+            case statDex:
+              // check if trying to remove points user already had
+              if (newStats.dex + increment_dir <= currStats.dex) {
+                m_audio.playSound(soundError,10);
+              } else {
+                upgradePoints -= increment_dir;
+                newStats.dex += increment_dir;
+              }
+              break;
+            case statLuk:
+              // check if trying to remove points user already had
+              if (newStats.luk + increment_dir <= currStats.luk) {
+                m_audio.playSound(soundError,10);
+              } else {
+                upgradePoints -= increment_dir;
+                newStats.luk += increment_dir;
+              }
+              break;
+            default:
+              if(global::blnDebugMode) { printf("ERROR in level up, invalid stat.\n"); }
+              break;
+            } //end switch
+          } // end if button_clicked
+        } //end for menu buttons
+      } //end if event
+    } //end if poll event
   } while (!finish_level_up);
-
-
-
-
-
-
-
-
-
-
-
+  return newStats;
 }
 /*****************************************************************************/
 void clsMenu::drawLevelUpBar(levelupLine StatLine) {
@@ -393,7 +499,7 @@ void clsMenu::drawLevelUpBar(levelupLine StatLine) {
   case statStr:
     message = "Strength";
     break;
-  case statCons:
+  case statCon:
     message = "Constitution";
     break;
   case statDef:

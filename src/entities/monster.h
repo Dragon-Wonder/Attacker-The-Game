@@ -65,7 +65,7 @@ class clsMonster{
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class Monster monster.h "src/monster.h"
+/// @class clsMonster monster.h "src/entities/monster.h"
 /// @brief Holds all of the information related to the monsters
 /////////////////////////////////////////////////
 /*****************************************************************************/

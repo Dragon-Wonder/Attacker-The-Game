@@ -1,8 +1,9 @@
 #ifndef __MENU__HEADER__
 #define __MENU__HEADER__
 /*****************************************************************************/
-#include "screen.h"
+#include "ui/screen.h"
 #include "global.h"
+#include "audio/sound.h"
 #include <string.h>
 /*****************************************************************************/
 /// @addtogroup Structs
@@ -51,6 +52,7 @@ class clsMenu {
 
   private:
     stcWinAtt* m_window; /**< Pointer to the main screen */
+    clsSound m_audio;
     bool clickcheck(LOC,SDL_Rect);
     void drawLevelUpBar(levelupLine);
     //TTF_Font *m_font;
@@ -58,7 +60,7 @@ class clsMenu {
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class Menu menu.h "src/menu.h"
+/// @class clsMenu menu.h "src/menu.h"
 /// @brief This class holds all of the different menus.
 ///        It is done this way as some menus need to be referenced from different
 ///        files, and this is easier then trying to copy and maintain the functions

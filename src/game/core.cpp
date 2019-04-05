@@ -1,14 +1,12 @@
 /*****************************************************************************/
-#include "core.h"
-#include "chest.h"
-#include "door.h"
-#include "save.h"
+#include "game/core.h"
+#include "entities/chest.h"
+#include "entities/door.h"
+#include "game/save.h"
 /*****************************************************************************/
-#define _GLIBCXX_USE_CXX11_ABI 0
-/*****************************************************************************/
-//General Todos
-/** \todo (Gamerman7799#9#): Finish Doxygen support */
-/** \todo (Gamerman7799#9#): Add music */
+// General Todos
+/// @todo (GamerMan7799#9#): Finish Doxygen support
+/// @todo (GamerMan7799#9#): Add music
 /*****************************************************************************/
 clsCore::clsCore() {
     //ctor
@@ -32,7 +30,9 @@ void clsCore::start() {
 
     m_screen.start();
     //Show start up splash
-    //m_screen.ShowStartUp();
+#ifndef DEFINED_BUILD_MODE_PRIVATE
+    m_screen.ShowStartUp();
+#endif
 
     //int data = 101;
     //exit_thread = SDL_CreateThread(exit_check, "Exit", NULL);
@@ -78,7 +78,7 @@ void clsCore::start() {
   } //end loop
 
   m_screen.~clsScreen();
-	printf("\nDone\n");
+  printf("\nDone\n");
 } //end Core Start
 /*****************************************************************************/
 void clsCore::ShowConsole() {
@@ -138,7 +138,7 @@ void clsCore::MovePlayer(SDL_Event dirpress ) {
     temploc.x++;
     break;
   default:
-    if (Global::blnDebugMode) {printf("Going nowhere!\n");}
+    if (Global::blnDebugMode) { printf("Going nowhere!\n"); }
     direction = dirNone;
     m_audio.playSound(soundBump,1);
     return;
@@ -165,7 +165,7 @@ void clsCore::MovePlayer(SDL_Event dirpress ) {
     if (rand() % 101 <= DEFINED_MONSTER_SPAWN_CHANCE) {
         m_menu.promptUser(prompOkay,"You encountered a monster! Use the terminal to fight it.");
         BattleScene();
-        if ( m_quit ) {return;} //if player dies in battle
+        if ( m_quit ) { return; } //if player dies in battle
     } //end if monster
     break;
 
@@ -245,13 +245,13 @@ void clsCore::BattleScene() {
     if(Calculations::DodgeCheck(pstats)) {mDamMuli = 0;}
     if(Calculations::DodgeCheck(mstats)) {pDamMuli = 0;}
 
-    /// @todo (gamerMan7799#3#) Implement element damages
+    /// @todo (GamerMan7799#3#) Implement element damages
 
     pDamage = (uint)(pDamMuli * Calculations::CalculateDamage(pstats,mstats,25));
     mDamage = (uint)(mDamMuli * Calculations::CalculateDamage(mstats,pstats,25));
 
     printf("You are fighting a level %i %s\n",m_level,mob.c_str());
-    ///@todo (GamerMan7799#1#) add state of being
+    /// @todo (GamerMan7799#1#) add state of being
     printf("It appears to be (WIP)\n\n");
     printf("Your health: %s\n",BarMarker(phealth).c_str());
     printf("Your mana: %s\n\n",BarMarker(pmana).c_str());
@@ -382,79 +382,79 @@ void clsCore::HandleEvent(SDL_Event event) {
 }
 /*****************************************************************************/
 void clsCore::doLevelUp() {
-    /////////////////////////////////////////////////
-    /// @brief Handles leveling up, ensures the right functions are run together.
-    /////////////////////////////////////////////////
-    stats levelUpStats;
-    //m_menu.promptUser(prompOkay,"Level up! Use the terminal to apply points.");
-    m_screen.clearRen();
-    levelUpStats = m_player.getStats();
-    levelUpStats = m_menu.doLevelUp(levelUpStats);
-    if (levelUpStats.level == 0) {
-      // Error found, kill everything
-      m_screen.cleanup();
-      return;
-    }
-    m_screen.clearRen();
-    m_player.setStats(levelUpStats);
-    //m_player.doLevelup();
-    m_Map.cmain();
-    m_screen.DrawMap();
-    m_screen.update();
+  /////////////////////////////////////////////////
+  /// @brief Handles leveling up, ensures the right functions are run together.
+  /////////////////////////////////////////////////
+  stats levelUpStats;
+  //m_menu.promptUser(prompOkay,"Level up! Use the terminal to apply points.");
+  m_screen.clearRen();
+  levelUpStats = m_player.getStats();
+  levelUpStats = m_menu.doLevelUp(levelUpStats);
+  if (levelUpStats.level == 0) {
+    // Error found, kill everything
+    m_screen.cleanup();
     return;
+  }
+  m_screen.clearRen();
+  m_player.setStats(levelUpStats);
+  //m_player.doLevelup();
+  m_Map.cmain();
+  m_screen.DrawMap();
+  m_screen.update();
+  return;
 }
 /*****************************************************************************/
 void clsCore::doGame() {
-    /////////////////////////////////////////////////
-    /// @brief The main game loop. Draws Map, Updates SDL Screen, and
-    ///        polls for events
-    /////////////////////////////////////////////////
-    SDL_Event event;
-    if(Global::blnDebugMode) {printf("Game started.\n");}
+  /////////////////////////////////////////////////
+  /// @brief The main game loop. Draws Map, Updates SDL Screen, and
+  ///        polls for events
+  /////////////////////////////////////////////////
+  SDL_Event event;
+  if(Global::blnDebugMode) {printf("Game started.\n");}
 
-    while (!m_quit) {
-        m_screen.DrawMap();
-        m_screen.update();
-        if (SDL_PollEvent( &event ) ) { HandleEvent(event); }
-    } //end while not quit
+  while (!m_quit) {
+    m_screen.DrawMap();
+    m_screen.update();
+    if (SDL_PollEvent( &event ) ) { HandleEvent(event); }
+  } //end while not quit
 }
 /*****************************************************************************/
 std::string clsCore::BarMarker(healthmana a) {
-	std::string TempHealthBar = "<";
-	int HealthPercent = (int)((a.curr * 100)/a.max);
-	for (unsigned char Bar = 0; Bar < 20; Bar++) {
-		if (HealthPercent >= 5) {TempHealthBar += "=";}
-		else {TempHealthBar += " ";}
-		HealthPercent -= 5;
-	}
-	TempHealthBar += ">";
-	//cout<<TempHealthBar<<endl;
-	return TempHealthBar;
+  std::string TempHealthBar = "<";
+  int HealthPercent = (int)((a.curr * 100)/a.max);
+  for (unsigned char Bar = 0; Bar < 20; Bar++) {
+    if (HealthPercent >= 5) {TempHealthBar += "=";}
+    else {TempHealthBar += " ";}
+    HealthPercent -= 5;
+  }
+  TempHealthBar += ">";
+  //cout<<TempHealthBar<<endl;
+  return TempHealthBar;
 }
 /*****************************************************************************/
 void clsCore::GameOver() {
-    /// @todo (GamerMan7799#9#) Add better losing message, (add score?)
-    printf("\n\n\n\n\nYou died, thanks for playing.\n");
+  /// @todo (GamerMan7799#9#) Add better losing message, (add score?)
+  printf("\n\n\n\n\nYou died, thanks for playing.\n");
 }
 /*****************************************************************************/
 void clsCore::Winner() {
-    /// @todo (GamerMan7799#9#) Add better winning message, (add score?)
-    printf("\n\n\n\n\n\n\nYou WIN!\n");
+  /// @todo (GamerMan7799#9#) Add better winning message, (add score?)
+  printf("\n\n\n\n\n\n\nYou WIN!\n");
 }
 /*****************************************************************************/
 int clsCore::exit_check(void* data) {
-    SDL_Event event;
-    do {
-        //While there's events to handle
-        while( SDL_PollEvent( &event ) ) {
-            //If the user has Xed out the window
-            if( event.type == SDL_QUIT ) {
-                //Quit the program
-                m_quit = true;
-            }
-        }
-    } while ( !m_quit );
+  SDL_Event event;
+  do {
+    //While there's events to handle
+    while( SDL_PollEvent( &event ) ) {
+      //If the user has Xed out the window
+      if( event.type == SDL_QUIT ) {
+        //Quit the program
+        m_quit = true;
+      }
+    }
+  } while ( !m_quit );
 
-    return 1;
+  return 1;
 }
 /*****************************************************************************/

@@ -19,4 +19,10 @@ class clsSave {
     bool exists(void);
 };
 /*****************************************************************************/
+/////////////////////////////////////////////////
+/// @class clsSave save.h "src/game/save.h"
+/// @brief The class to hold the stuff related to saving.
+///        Currently unimplemented
+/////////////////////////////////////////////////
+/*****************************************************************************/
 #endif // __SAVE__HEADER__

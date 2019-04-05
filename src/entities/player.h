@@ -38,8 +38,8 @@ class clsPlayer {
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class Player player.h "src/player.h"
-/// @brief Holds all of the information related to the monsters
+/// @class clsPlayer player.h "src/entities/player.h"
+/// @brief Holds all of the information related to the player
 /////////////////////////////////////////////////
 /*****************************************************************************/
 #endif // __HEADER__PLAYER__

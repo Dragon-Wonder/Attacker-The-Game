@@ -8,8 +8,8 @@
 /** @struct ConfigValues
     This Structure holds all of the different config values together. */
 struct ConfigValues {
-	uint uintScreenWidth;       /**< Screen width, only used if specifically called. */
-	uint uintScreenHeight;      /**< Screen height, only used if specifically called. */
+  uint uintScreenWidth;       /**< Screen width, only used if specifically called. */
+  uint uintScreenHeight;      /**< Screen height, only used if specifically called. */
 };
 
 /** @enum configValueSpot
@@ -17,42 +17,42 @@ struct ConfigValues {
   * See clsConfig::getvalues
   */
 enum configValueSpot {
-	cnfgScreenWidth = 0,/**< 0: Spot for screen width value. */
-	cnfgScreenHeight    /**< 1: Spot for screen height value. */
+  cnfgScreenWidth = 0,/**< 0: Spot for screen width value. */
+  cnfgScreenHeight    /**< 1: Spot for screen height value. */
 };
 
 typedef struct ConfigValues Configures;
 /*****************************************************************************/
 class clsConfig {
-	//public:
-	private:
-		//Members
-		/** The config file name. */
-		const char* m_FileName = DEFINED_CONFIG_FILE_NAME;
+  //public:
+  private:
+    //Members
+    /** The config file name. */
+    const char* m_FileName = DEFINED_CONFIG_FILE_NAME;
 
-		/** Pointer to the config file open in memory. */
-		FILE* m_configFile;
+    /** Pointer to the config file open in memory. */
+    FILE* m_configFile;
 
-		/** All the config values together. */
-		static Configures m_values;
+    /** All the config values together. */
+    static Configures m_values;
 
-		//Functions
-		char verisonCheck(const char *ConfigVerison);
-		bool exists(void);
-		void make(void);
-		void load(void);
+    //Functions
+    char verisonCheck(const char *ConfigVerison);
+    bool exists(void);
+    void make(void);
+    void load(void);
 
-	public:
-		//Default Constructor
-		clsConfig();
-		//Functions
-		void initialize(void);
-		Configures getvalues(void); //Get all values
-		uint getvalues(uchar); //Get just one value (use enum above to define which one).
+  public:
+    //Default Constructor
+    clsConfig();
+    //Functions
+    void initialize(void);
+    Configures getvalues(void); //Get all values
+    uint getvalues(uchar); //Get just one value (use enum above to define which one).
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class Config config.h "config.h"
+/// @class clsConfig config.h "config.h"
 /// @brief This class holds all the stuff realted to the configure file
 /////////////////////////////////////////////////
 /*****************************************************************************/

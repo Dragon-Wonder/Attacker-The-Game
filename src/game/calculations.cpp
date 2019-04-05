@@ -22,44 +22,44 @@ bool Calculations::DodgeCheck(stats check) {
     ///
     /////////////////////////////////////////////////
     float douDodgeChance = ((check.dex/2)+(check.luk/6)/4);
-	if(rand() % 101 <= douDodgeChance) {return true;}
-	else {return false;}
+  if(rand() % 101 <= douDodgeChance) {return true;}
+  else {return false;}
 }
 /*********************************************************************************************************/
 float Calculations::ElementMulti(uchar AttackingElement, uchar DefendingElement) {
   /////////////////////////////////////////////////
   /// @brief The further away two elements are the more damage that they do to each other.
-	///        For example a fire attack on an ice monster will be 125% damage, while a fire
-	///        attack on fire monster will only do 75% damage. 2 spaces away will do normal damage
-	///        And none elements or physical do normal damage as well.
-	///	    			Light
-	/// 	    Energy			Wind
-	///     Fire					Ice
-	///     	Earth			Water
-	///     			Darkness
+  ///        For example a fire attack on an ice monster will be 125% damage, while a fire
+  ///        attack on fire monster will only do 75% damage. 2 spaces away will do normal damage
+  ///        And none elements or physical do normal damage as well.
+  ///	    			Light
+  /// 	    Energy			Wind
+  ///     Fire					Ice
+  ///     	Earth			Water
+  ///     			Darkness
   ///
   /// @param AttackingElement = Element of the Attack
   /// @param DefendingElement = Element of the Defender
   /// @return Multiplier of the Attack Damage, ranges from 0.75 to 1.25
   ///
   /////////////////////////////////////////////////
-	if (AttackingElement == elementNone || DefendingElement == elementNone) {return 1.0;}
-	if (AttackingElement == elementPhysical || DefendingElement == elementPhysical) {return 1.0;}
-	switch (abs(AttackingElement - DefendingElement)) {
-		case 0 :
-			return 0.75;
-		case 1 :
-			return 0.875;
-		case 2 :
-			return 1;
-		case 3 :
-			return 1.125;
-		case 4 :
-			return 1.25;
-		default :
-			return 1;
-	};
-	return 1;
+  if (AttackingElement == elementNone || DefendingElement == elementNone) {return 1.0;}
+  if (AttackingElement == elementPhysical || DefendingElement == elementPhysical) {return 1.0;}
+  switch (abs(AttackingElement - DefendingElement)) {
+  case 0 :
+  return 0.75;
+  case 1 :
+  return 0.875;
+  case 2 :
+  return 1;
+  case 3 :
+  return 1.125;
+  case 4 :
+  return 1.25;
+  default :
+  return 1;
+  };
+  return 1;
 }
 /*********************************************************************************************************/
 uint Calculations::CalculateHealth(stats check) {
@@ -74,17 +74,17 @@ uint Calculations::CalculateHealth(stats check) {
     /// @return Health
     ///
     /////////////////////////////////////////////////
-	float HealthTemp = 0;
-	float level;
-	float modstat;
-	level = (float)check.level;
-	modstat = (float)check.cons;
+  float HealthTemp = 0;
+  float level;
+  float modstat;
+  level = (float)check.level;
+  modstat = (float)check.con;
   HealthTemp = 120.75;
   HealthTemp += (23.0/16.0) * modstat;
   HealthTemp += 12.9375 * level;
   HealthTemp += 0.094875 * level * modstat;
   HealthTemp += 0.08625 * pow(level,2.0);
-	return floor(HealthTemp);
+  return floor(HealthTemp);
 }
 /*********************************************************************************************************/
 uint Calculations::CalculateMana(stats check) {
@@ -103,16 +103,16 @@ uint Calculations::CalculateMana(stats check) {
     ///
     /////////////////////////////////////////////////
  	float manaTemp = 0;
-	float level;
-	float modstat;
-	level = (float)check.level;
-	modstat = (3.0*(float)check.dex+(float)check.luk)/4.0;
+  float level;
+  float modstat;
+  level = (float)check.level;
+  modstat = (3.0*(float)check.dex+(float)check.luk)/4.0;
 
-	manaTemp = 156.21;
-	manaTemp += 0.25625 * modstat;
-	manaTemp += 9.58375 * level;
-	manaTemp += 0.0169125 * level * modstat;
-	manaTemp += 0.046125 * pow(level,2);
+  manaTemp = 156.21;
+  manaTemp += 0.25625 * modstat;
+  manaTemp += 9.58375 * level;
+  manaTemp += 0.0169125 * level * modstat;
+  manaTemp += 0.046125 * pow(level,2);
 
   return floor(manaTemp);
 }

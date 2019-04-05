@@ -4,7 +4,7 @@
 /// @brief      Holds all the main functions.
 /// @author     GamerMan7799
 /// @author     xPUREx
-/// @version    0.9.8-Alpha
+/// @version    0.9.8-Alpha.2
 /// @date       2015-2019
 /// @copyright  Public Domain Unlicense.
 /////////////////////////////////////////////////
@@ -12,6 +12,8 @@
 #include "version.h"
 #include "config.h"
 #include "core.h"
+/*****************************************************************************/
+#define _GLIBCXX_USE_CXX11_ABI 0
 /*****************************************************************************/
 namespace Global {
     /** Holds if build is in debug mode, this can happen if

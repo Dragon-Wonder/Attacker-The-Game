@@ -13,7 +13,7 @@ class clsDoor {
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////
-/// @class Door door.h "src/door.h"
+/// @class clsDoor door.h "src/entities/door.h"
 /// @brief The class to hold the stuff related to opening a locked door.
 ///        Currently unimplemented.
 /////////////////////////////////////////////////

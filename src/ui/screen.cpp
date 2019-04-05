@@ -1,13 +1,13 @@
 /*****************************************************************************/
-#include "screen.h"
-#include "rooms.h"
-#include "config.h"
-#include "image_error.xpm"
+#include "ui/screen.h"
+#include "game/rooms.h"
+#include "game/config.h"
+#include "res/image_error.xpm"
 /*****************************************************************************/
 #include <time.h>
 #include <cstdlib>
 /*****************************************************************************/
-/** \todo (GamerMan7799#1#): Get better images for the game. */
+/// @todo (GamerMan7799#1#): Get better images for the game.
 /*****************************************************************************/
 /////////////////////////////////////////////////
 /// @file screen.cpp
@@ -46,6 +46,7 @@ void clsScreen::DrawMap() {
   /// @return void
   /////////////////////////////////////////////////
   /// @todo (GamerMan7799#1#) Allow map to be offset on the screen.
+  /// @todo (GamerMan7799#6#) Zoom in map more to focus on player.
 
   //clear renderer
   SDL_RenderClear(window.ren);
@@ -176,19 +177,19 @@ void clsScreen::loadTextures() {
   //Load the error texture first.
   SDL_Surface* temp = IMG_ReadXPMFromArray(image_error_xpm);
   textures.errortex = (temp == nullptr) ? nullptr : SDL_CreateTextureFromSurface(window.ren,temp);
-	if (textures.errortex == nullptr) {
+  if (textures.errortex == nullptr) {
     printf("Failed to create texture.\n");
     error();
-	} else {
+  } else {
     if (Global::blnDebugMode) {printf("Embedded Error texture created.\n");}
     blnloaded.blnErrortex = true;
   }
 
   //Now load the tiles
   temp = IMG_Load(path.c_str());
-	textures.maptiles = (temp == nullptr) ? nullptr : SDL_CreateTextureFromSurface(window.ren,temp);
-	SDL_FreeSurface(temp);
-	if (textures.maptiles == nullptr) {
+  textures.maptiles = (temp == nullptr) ? nullptr : SDL_CreateTextureFromSurface(window.ren,temp);
+  SDL_FreeSurface(temp);
+  if (textures.maptiles == nullptr) {
     //Cannot make texture; replace the clips to be all 0,0
     //and set it to use the error texture instead.
     printf("Tiles could not be converted to texture.\n");
@@ -198,7 +199,7 @@ void clsScreen::loadTextures() {
     }
     blnloaded.blnMapTiles = true;
     return;
-	} else {
+  } else {
     if (Global::blnDebugMode) {printf("Tiles converted to texture successful\n");}
     blnloaded.blnMapTiles = true;
   }
@@ -270,7 +271,7 @@ void clsScreen::ShowStartUp() {
   //opening sequence for the game
   //will show the splash image
   /// @todo (GamerMan7799#9#): get better splash, include name
-  /// @todo (GamerMan7799#9#): Make splash in and out
+  /// @todo (GamerMan7799#9#): Make fade splash in and out
 
   SDL_Surface* temp;
   SDL_Texture* splash;
@@ -278,27 +279,33 @@ void clsScreen::ShowStartUp() {
   std::string path = DEFINED_DEFAULT_IMAGE_PATH;
   path += "splash.png";
 
+  SDL_SetRenderDrawColor( window.ren, 0xFF, 0xFF, 0xFF, 0x00 );
+  SDL_Rect dst;
+  dst.h = window.height;
+  dst.w = dst.w;
+  dst.x = (int) ((window.width - dst.w)/2);
+  dst.y = 0;
 
   //Now load the tiles
   temp = IMG_Load(path.c_str());
-	splash = (temp == nullptr) ? nullptr : SDL_CreateTextureFromSurface(window.ren,temp);
-	SDL_FreeSurface(temp);
-	if (splash == nullptr) {
+  splash = (temp == nullptr) ? nullptr : SDL_CreateTextureFromSurface(window.ren,temp);
+  SDL_FreeSurface(temp);
+  if (splash == nullptr) {
     //Cannot make texture; show error instead
     printf("Splash could not be converted to texture.\n");
     splash = textures.errortex;
-	} else {
+  } else {
     if (Global::blnDebugMode) { printf("Splash converted to texture successful\n"); }
   }
 
   SDL_RenderClear(window.ren);
   //copy splash to cover entire screen.
-  SDL_RenderCopy(window.ren,splash,NULL,NULL);
+  SDL_RenderCopy(window.ren,splash,NULL,&dst);
   SDL_RenderPresent(window.ren);
 
   //Wait so user can see screen
   wait(5000);
-  if (Global::blnDebugMode) { printf("Splash shown.\n"); }
+  //if (Global::blnDebugMode) { printf("Splash shown.\n"); }
 
   //clean stuff up
   SDL_RenderClear(window.ren);
@@ -306,20 +313,20 @@ void clsScreen::ShowStartUp() {
 }
 /*****************************************************************************/
 void clsScreen::wait(ulong waittime) {
-    /////////////////////////////////////////////////
-    /// @brief 	Since sleep is usually an OS specific command I made this function
-	///         to work as a "sleep" but it doesn't function as a true sleep because the
-	///         CPU is still being used, but whatever. It "stops" the program for a bit
-	///         which was its point so its gonna stay until I find something better.
-    /// @return void
-    /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
+  /// @brief   Since sleep is usually an OS specific command I made this function
+  ///         to work as a "sleep" but it doesn't function as a true sleep because the
+  ///         CPU is still being used, but whatever. It "stops" the program for a bit
+  ///         which was its point so its gonna stay until I find something better.
+  /// @return void
+  /////////////////////////////////////////////////
 
-	clock_t now;
-	clock_t timerStart;
+  clock_t now;
+  clock_t timerStart;
   ulong pause;
 
-	pause = waittime * (CLOCKS_PER_SEC/1000);
-	now = timerStart = clock();
+  pause = waittime * (CLOCKS_PER_SEC/1000);
+  now = timerStart = clock();
 
   if ((uint)abs(now - timerStart) < pause) {
     while ( (uint)abs(now - timerStart) < pause) { now = clock(); }
