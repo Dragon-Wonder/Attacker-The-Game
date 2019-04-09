@@ -331,7 +331,8 @@ bool Dungeon::createDungeon(int inx, int iny, int inobj){
           //same thing here, add to the quota and a door
           currentFeatures++;
 
-          if(rand() % 101 <= 15) {setCell(newx, newy, tileLockedDoor);}
+          // set some doors to be locked
+          if(rand() % 101 <= 15) { setCell(newx, newy, tileLockedDoor); }
           else {setCell(newx, newy, tileDoor);}
         }
       }
@@ -409,7 +410,7 @@ int* Dungeon::make_dungeon() {
   //dungeon_map = new int[x * y];
     intTempTile = tileUpStairs;
   if(createDungeon(x, y, dungeon_objects) && Global::blnDebugMode)
-        {printf("Dungeon created.");}
+        { printf("Dungeon created."); }
   return dungeon_map;
 }
 /*****************************************************************************/
@@ -419,7 +420,7 @@ void Dungeon::cmain() {
   int dungeon_objects = DEFINED_MAP_OBJECT_LIMIT;
   //dungeon_map = new int[x * y];
   if(createDungeon(x, y, dungeon_objects) && Global::blnDebugMode)
-        {printf("Dungeon created.\n");}
+        { printf("Dungeon created.\n"); }
   playerfind();
 }
 /*****************************************************************************/

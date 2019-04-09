@@ -34,7 +34,7 @@ struct stcXY {
 struct stcStats {
   uchar level;    /**< Level from 1 to 10*/
   uchar str;      /**< Effects how much damage you do when you attack.*/
-  uchar con;     /**< Effects how much health you have.*/
+  uchar con;      /**< Effects how much health you have.*/
   uchar dex;      /**< Effects if your chance to dodge, and if you attack first.*/
   uchar def;      /**< Effects how much damage you take.*/
   uchar luk;      /**< The random chance things will go your way, with dodges, crits, and rare modifiers that appear on monsters.*/
@@ -176,17 +176,17 @@ typedef struct stcInv INV;
     this it should be kept at 60 */
 #define DEFINED_MAP_WIDTH 60
 
-/** This defines the Map object limit, should try at 100 unless you are testing
-    something*/
+/** This defines the Map object limit, should keep at 100 unless you are testing
+    something */
 #define DEFINED_MAP_OBJECT_LIMIT 100
 
 /** How many steps out of 100 will spawn a monster */
 #define DEFINED_MONSTER_SPAWN_CHANCE 15
 
-/** Chance for a room to spawn when making the map*/
+/** Chance for a room to spawn when making the map */
 #define DEFINED_MAP_ROOM_CHANCE 75
 
-/** Chance for a corridor to spawn when making the map*/
+/** Chance for a corridor to spawn when making the map */
 #define DEFINED_MAP_CORRIDOR_CHANCE 25
 
 /** How many different map tiles there are (used to make the array for clipping). */

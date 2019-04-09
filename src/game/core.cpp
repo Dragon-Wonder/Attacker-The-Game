@@ -115,30 +115,25 @@ void clsCore::MovePlayer(SDL_Event dirpress ) {
   switch ( dirpress.key.keysym.sym ) {
   case SDLK_UP:
   case SDLK_w:
-    //if (Global::blnDebugMode) {printf("Going up!\n");}
     direction = dirUp;
     temploc.y--;
     break;
   case SDLK_DOWN :
   case SDLK_s:
-    //if (Global::blnDebugMode) {printf("Going down!\n");}
     direction = dirDown;
     temploc.y++;
     break;
   case SDLK_LEFT:
   case SDLK_a :
-    //if (Global::blnDebugMode) {printf("Going left!\n");}
     direction = dirLeft;
     temploc.x--;
     break;
   case SDLK_RIGHT:
   case SDLK_d:
-    //if (Global::blnDebugMode) {printf("Going right!\n");}
     direction = dirRight;
     temploc.x++;
     break;
   default:
-    if (Global::blnDebugMode) { printf("Going nowhere!\n"); }
     direction = dirNone;
     m_audio.playSound(soundBump,1);
     return;
@@ -186,12 +181,12 @@ void clsCore::MovePlayer(SDL_Event dirpress ) {
 
     m_audio.playSound(soundStep,1);
     m_Map.setCell(temploc, tilePlayer);
-    m_Map.setCell(playerloc, tileDirtFloor);
+    m_Map.setCell(playerloc, tileDoor);
     m_player.setLocation(temploc);
     break;
 
   case tileDownStairs :
-    m_audio.playSound(soundLevelUp,1);
+    m_audio.playSound(soundLevelUp,5);
     doLevelUp();
     return;
     break;
@@ -239,11 +234,11 @@ void clsCore::BattleScene() {
     pCritChance = ((pstats.luk)/20.0 + rand()%3) *4.0;
     mCritChance = ((mstats.luk)/20.0 + rand()%3) *4.0;
 
-    if(rand()%101 <= pCritChance) {pDamMuli += 0.375;}
-    if(rand()%101 <= mCritChance) {mDamMuli += 0.375;}
+    if(rand()%101 <= pCritChance) { pDamMuli += 0.375; }
+    if(rand()%101 <= mCritChance) { mDamMuli += 0.375; }
 
-    if(Calculations::DodgeCheck(pstats)) {mDamMuli = 0;}
-    if(Calculations::DodgeCheck(mstats)) {pDamMuli = 0;}
+    if(Calculations::DodgeCheck(pstats)) { mDamMuli = 0; }
+    if(Calculations::DodgeCheck(mstats)) { pDamMuli = 0; }
 
     /// @todo (GamerMan7799#3#) Implement element damages
 
@@ -263,7 +258,7 @@ void clsCore::BattleScene() {
       printf("E[X]it \t Hel[P] \n");
       printf("[R]un away \t Cast [S]pell (WIP!)\n");
       printf("[C]heck scene\n");
-      if (Global::blnDebugMode) {printf("[K]ill monster    [D]ebug values\n");}
+      if (Global::blnDebugMode) { printf("[K]ill monster    [D]ebug values\n"); }
       printf("> ");
       scanf("\n%c",&choice);
       printf("\n");
@@ -280,8 +275,8 @@ void clsCore::BattleScene() {
         break;
       case 'K':
       case 'D':
-        if(Global::blnDebugMode) {valid = true;}
-        else {printf("You are not in debug mode, and cannot use these commands.\n");}
+        if(Global::blnDebugMode) { valid = true; }
+        else { printf("You are not in debug mode, and cannot use these commands.\n"); }
         break;
       default :
         valid = false;
@@ -299,15 +294,15 @@ void clsCore::BattleScene() {
       phealth.curr -= mDamage;
 
       /// @todo (GamerMan7799#7#) add better wording for stuff
-      if (pDamage > 0) {printf("You hit the %s for %i damage!\n",mob.c_str(),pDamage);}
-      else {printf("The %s dodged your attack!\n",mob.c_str());}
+      if (pDamage > 0) { printf("You hit the %s for %i damage!\n",mob.c_str(),pDamage); }
+      else {printf("The %s dodged your attack!\n",mob.c_str()); }
 
-      if (pDamMuli > 1.0) {printf("You got a crit!\n");}
+      if (pDamMuli > 1.0) { printf("You got a crit!\n"); }
 
-      if (mDamage > 0) {printf("The %s hits you for %i damage!\n",mob.c_str(),mDamage);}
-      else {printf("You dodged the %s's attack!\n",mob.c_str());}
+      if (mDamage > 0) { printf("The %s hits you for %i damage!\n",mob.c_str(),mDamage); }
+      else { printf("You dodged the %s's attack!\n",mob.c_str()); }
 
-      if (mDamMuli > 0.85) {printf("The %s got a crit on you!\n",mob.c_str());}
+      if (mDamMuli > 0.85) { printf("The %s got a crit on you!\n",mob.c_str()); }
 
       //check if anyone died.
       if (phealth.curr <= 0) {
@@ -410,7 +405,7 @@ void clsCore::doGame() {
   ///        polls for events
   /////////////////////////////////////////////////
   SDL_Event event;
-  if(Global::blnDebugMode) {printf("Game started.\n");}
+  if(Global::blnDebugMode) { printf("Game started.\n"); }
 
   while (!m_quit) {
     m_screen.DrawMap();
@@ -428,7 +423,6 @@ std::string clsCore::BarMarker(healthmana a) {
     HealthPercent -= 5;
   }
   TempHealthBar += ">";
-  //cout<<TempHealthBar<<endl;
   return TempHealthBar;
 }
 /*****************************************************************************/

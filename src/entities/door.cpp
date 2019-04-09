@@ -13,6 +13,15 @@ void clsDoor::activate() {
   /// @brief Holds the main actions when activating a chest
   /////////////////////////////////////////////////
   /// @todo (GamerMan7799#4#) Add door activation
+  setLocked(false);
   return;
 }
+/*****************************************************************************/
+bool clsDoor::getLocked() { return m_locked; }
+/*****************************************************************************/
+void clsDoor::setLocked(bool newStatus) { m_locked = newStatus; }
+/*****************************************************************************/
+LOC clsDoor::getLocation() { return m_location; }
+/*****************************************************************************/
+void clsDoor::setLocation(LOC newLOC) { m_location = newLOC; }
 /*****************************************************************************/

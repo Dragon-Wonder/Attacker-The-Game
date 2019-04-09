@@ -4,7 +4,7 @@
 /// @brief      Holds all the main functions.
 /// @author     GamerMan7799
 /// @author     xPUREx
-/// @version    0.9.8-Alpha.3
+/// @version    0.9.8-Alpha.4
 /// @date       2015-2019
 /// @copyright  Public Domain Unlicense.
 /////////////////////////////////////////////////
@@ -40,8 +40,8 @@ int main(int argc, char *argv[]) {
     printf("This version is a Beta, meaning that while it should work very closely to how we intend it to work, ");
     printf("there may still be some bugs that can cause the program to crash.\n\n");
   } else if ( DEFINED_VER_STATUS_SHORT == "rc" ) {
-    printf("This version is a Release Candidate, meaning that it is only a few items away from being an Official ");
-    printf("Release. There shouldn't be very many bugs but let us know if you find any.\n\n");
+    printf("This version is a Release Candidate, meaning that it is only a few items away from being an official ");
+    printf("release. There shouldn't be very many bugs but let us know if you find any.\n\n");
   } else if ( DEFINED_VER_STATUS_SHORT == "r" ) {
     printf("This version is the official release for the game. There should not be any bugs, so if you find any ");
     printf("please let us know right away so we can work to fix them.\n\n");

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [0.9.8-Alpha.4] - 2019-04-09
+### Changed
+* Updated the Images/readme.md file to have to correct image referenced and correct source paths.
+* More work on the level up
+* Locked door tile now replaced with unlocked door when walked through (aka unlocked)
+* Made src/ui/image_error.xpm simplifier and smaller
+
 ## [0.9.8-Alpha.3] - 2019-04-05
 ### Added
 * Visual Studio Project file

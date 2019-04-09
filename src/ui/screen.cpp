@@ -32,12 +32,12 @@ clsScreen::~clsScreen() {
   ///        clsScreen::cleanup to ensure everything is cleared from memory,
   ///        and then quit SDL.
   /////////////////////////////////////////////////
-  if (Global::blnDebugMode) {printf("Screen deconstructor called.\n");}
+  if (Global::blnDebugMode) { printf("Screen deconstructor called.\n"); }
   cleanup();
   TTF_Quit();
   IMG_Quit();
   SDL_Quit();
-  if (Global::blnDebugMode) {printf("SDL quit\n");}
+  if (Global::blnDebugMode) { printf("SDL quit\n"); }
 }
 /*****************************************************************************/
 void clsScreen::DrawMap() {
@@ -97,7 +97,7 @@ void clsScreen::DrawMap() {
     } //end for x
   } //end for y
 
-  //dst.x = tempPlayer.location.x - offset.x; //Fix this later, doesn't account for screen shifts but I want to work on getting velocity working
+  //dst.x = tempPlayer.location.x - offset.x;
   //dst.y = tempPlayer.location.y - offset.y;
   SDL_RenderCopy(window.ren, textures.maptiles, &clips[tilePlayer], &dst);
 
@@ -181,7 +181,7 @@ void clsScreen::loadTextures() {
     printf("Failed to create texture.\n");
     error();
   } else {
-    if (Global::blnDebugMode) {printf("Embedded Error texture created.\n");}
+    if (Global::blnDebugMode) { printf("Embedded Error texture created.\n"); }
     blnloaded.blnErrortex = true;
   }
 
@@ -200,7 +200,7 @@ void clsScreen::loadTextures() {
     blnloaded.blnMapTiles = true;
     return;
   } else {
-    if (Global::blnDebugMode) {printf("Tiles converted to texture successful\n");}
+    if (Global::blnDebugMode) { printf("Tiles converted to texture successful\n"); }
     blnloaded.blnMapTiles = true;
   }
 }
@@ -349,8 +349,10 @@ void clsScreen::start() {
   pic_size = DEFINED_PIC_SIZE;
 
   /// @todo (GamerMan7799#8#) Fix bug: Screen doesn't seem to be set based on config
-  window.width = (cnfg.getvalues(cnfgScreenWidth) == 0) ? DEFINED_MAP_WIDTH * pic_size : cnfg.getvalues(cnfgScreenWidth);
-  window.height = (cnfg.getvalues(cnfgScreenHeight) == 0) ? DEFINED_MAP_HEIGHT * pic_size : cnfg.getvalues(cnfgScreenHeight);
+  window.width = (cnfg.getvalues(cnfgScreenWidth) == 0) ? DEFINED_MAP_WIDTH *
+                                    pic_size : cnfg.getvalues(cnfgScreenWidth);
+  window.height = (cnfg.getvalues(cnfgScreenHeight) == 0) ? DEFINED_MAP_HEIGHT *
+                                    pic_size : cnfg.getvalues(cnfgScreenHeight);
 
   //Set all the booleans to false
   blnloaded.blnWindow = blnloaded.blnRenderer = false;
@@ -387,7 +389,8 @@ void clsScreen::start() {
   window.win = SDL_CreateWindow("Attacker The Game",100, 100, window.width,
                                 window.height, SDL_WINDOW_SHOWN);
   window.ren = (window.win == nullptr) ? nullptr :
-                  SDL_CreateRenderer(window.win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+                  SDL_CreateRenderer(window.win, -1, SDL_RENDERER_ACCELERATED
+                                                  | SDL_RENDERER_PRESENTVSYNC);
   if (window.ren == nullptr) {
     printf("SDL Failed to create renderer.\n");
     error();

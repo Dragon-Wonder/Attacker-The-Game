@@ -68,7 +68,7 @@ char clsMenu::MainMenu() {
     SDL_QueryTexture(texmessage,NULL,NULL, &dst.w, &dst.h);
     dst.x = (int) ((m_window->width - dst.w)/2);
     dst.y = (i==0) ? (m_window->height - dst.h - 30) :
-                      (MainButtons[i-1].cords.y -dst.h - 30);
+                      (MainButtons[i-1].cords.y - dst.h - 30);
 
     SDL_SetRenderDrawColor( m_window->ren, 0x33, 0x66, 0x99, 0xFF );
     SDL_RenderDrawRect( m_window->ren, &dst );
@@ -289,6 +289,13 @@ stats clsMenu::doLevelUp(stats currStats) {
   bool refresh_screen = true;
   levelupLine LevelUpBars[5];
 
+  int seperator_size = (m_window->height - 30)/5;
+  LevelUpBars[0].text.y = m_window->height - 30 - seperator_size;
+
+  for( int i = 1; i < 5; ++i) {
+    LevelUpBars[i].text.y = LevelUpBars[i].text.y - seperator_size;
+  }
+
   SDL_Rect dst;
   SDL_Surface* surmessage = nullptr;
   SDL_Texture* texmessage = nullptr;
@@ -363,7 +370,8 @@ stats clsMenu::doLevelUp(stats currStats) {
           /// @todo (GamerMan7799#9#) Clean up this section of code, can be made to be more compressed.
           if (upgradePoints > 0) {
             // user has points left, prompt if truly done
-            returnPress = promptUser(promptYesNo, "Unspent points remain, are you sure you're done?");
+            returnPress = promptUser(promptYesNo,
+                          "Unspent points remain, are you sure you're done?");
             if(returnPress == returnYes) {
               finish_level_up = true;
             } else {
@@ -400,7 +408,7 @@ stats clsMenu::doLevelUp(stats currStats) {
             case statStr:
               // check if trying to remove points user already had
               if (newStats.str + increment_dir <= currStats.str) {
-                m_audio.playSound(soundError,10);
+                m_audio.playSound(soundError,2);
               } else {
                 upgradePoints -= increment_dir;
                 newStats.str += increment_dir;
@@ -409,7 +417,7 @@ stats clsMenu::doLevelUp(stats currStats) {
             case statCon:
               // check if trying to remove points user already had
               if (newStats.con + increment_dir <= currStats.con) {
-                m_audio.playSound(soundError,10);
+                m_audio.playSound(soundError,2);
               } else {
                 upgradePoints -= increment_dir;
                 newStats.son += increment_dir;
@@ -418,7 +426,7 @@ stats clsMenu::doLevelUp(stats currStats) {
             case statDef:
               // check if trying to remove points user already had
               if (newStats.def + increment_dir <= currStats.def) {
-                m_audio.playSound(soundError,10);
+                m_audio.playSound(soundError,2);
               } else {
                 upgradePoints -= increment_dir;
                 newStats.def += increment_dir;
@@ -427,7 +435,7 @@ stats clsMenu::doLevelUp(stats currStats) {
             case statDex:
               // check if trying to remove points user already had
               if (newStats.dex + increment_dir <= currStats.dex) {
-                m_audio.playSound(soundError,10);
+                m_audio.playSound(soundError,2);
               } else {
                 upgradePoints -= increment_dir;
                 newStats.dex += increment_dir;
@@ -436,14 +444,16 @@ stats clsMenu::doLevelUp(stats currStats) {
             case statLuk:
               // check if trying to remove points user already had
               if (newStats.luk + increment_dir <= currStats.luk) {
-                m_audio.playSound(soundError,10);
+                m_audio.playSound(soundError,2);
               } else {
                 upgradePoints -= increment_dir;
                 newStats.luk += increment_dir;
               }
               break;
             default:
-              if(global::blnDebugMode) { printf("ERROR in level up, invalid stat.\n"); }
+              if(global::blnDebugMode) {
+                printf("ERROR in level up, invalid stat.\n");
+              }
               break;
             } //end switch
           } // end if button_clicked
@@ -466,6 +476,9 @@ void clsMenu::drawLevelUpBar(levelupLine StatLine) {
   SDL_SetRenderDrawColor(m_window->ren,0x00, 0x00, 0x00, 0x00);
   SDL_Color clrblack = {0x00, 0x00, 0x00, 0x00}; //Make the color black for font
   SDL_Rect dst;
+  StatLine.plus.y = StatLine.text.y;
+  StatLine.minus.y = StatLine.text.y;
+
   std::string message = "+";
 
   dst = StatLine.plus;
@@ -523,9 +536,11 @@ void clsMenu::drawLevelUpBar(levelupLine StatLine) {
                SDL_CreateTextureFromSurface(m_window->ren,surmessage);
 
   if (texmessage == nullptr) { return; }
+  dst = StateLine.text;
 
   SDL_QueryTexture(texmessage, NULL, NULL, &dst.w, &dst.h);
 
+  // Name of stat should appear above the value of it
   dst.y = (uint) (dst.y - dst.h);
   dst.x = (uint) ((m_window->width / 2) - (dst.w / 2));
   SDL_RenderCopy(m_window->ren,texmessage,NULL,&dst);
