@@ -9,6 +9,7 @@ stats clsPlayer::m_stats;
 healthmana clsPlayer::m_health;
 healthmana clsPlayer::m_mana;
 INV clsPlayer::m_inv;
+uchar clsPlayer::m_element;
 /*****************************************************************************/
 clsPlayer::clsPlayer() {
     //ctor
@@ -43,13 +44,11 @@ void clsPlayer::initialize() {
     /////////////////////////////////////////////////
     /// @brief Has user initialization their player stats
     /////////////////////////////////////////////////
-    /// @todo (GamerMan7799#7#) Make initialize SDL supported
+    /// @todo (GamerMan7799#1#) Make initialize SDL supported
     stats tempstats;
     tempstats.level = 1;
+    m_element = elementPhysical;
 
-
-
-    /*
     bool loop = false;
     bool done = false;
     bool valid = false;
@@ -177,11 +176,9 @@ void clsPlayer::initialize() {
         } while (!valid);
     } while(!done);
   m_stats = tempstats;
-  */
 
   m_health.max = m_health.curr = Calculations::CalculateHealth(tempstats);
   m_mana.max = m_mana.curr = Calculations::CalculateMana(tempstats);
-
 
 } //end player initialize
 /*****************************************************************************/
@@ -343,4 +340,8 @@ void clsPlayer::regenMana() {
   if(m_mana.curr + amount > m_mana.max) {m_mana.curr = m_mana.max;}
   else {m_mana.curr += amount;}
 }
+/*****************************************************************************/
+void clsPlayer::setElement(uchar newE) { m_element = newE; }
+/*****************************************************************************/
+uchar clsPlayer::getElement() { return m_element; }
 /*****************************************************************************/

@@ -109,14 +109,14 @@ void clsSave::doLoad() {
       d.setCell(x,y,tempTile);
     }
   }
-  if (Global::blnDebugMode) {printf("Room tiles loaded.\n");}
+  if (Global::blnDebugMode) { printf("Room tiles loaded.\n"); }
   /// @todo (GamerMan7799#9#) Allow program debug set from file?
   fclose(loadfile);
   return;
 }
 /*****************************************************************************/
 void clsSave::doSave() {
-  /// @todo (GamerMan7799#1#) Fix bug, saving crashes SDL
+  /// @bug (GamerMan7799#1#) Fix bug, saving crashes SDL
   char userprompt;
   clsMenu menu;
   //check if save exists
@@ -161,21 +161,23 @@ void clsSave::doSave() {
   fprintf(savefile,"%X\n",mana.curr);
 
   uchar level;
-  for (int x = 0; x < DEFINED_MAP_WIDTH; x++) {
-    for (int y = 0; y < DEFINED_MAP_HEIGHT; y++) {
+  for (int x = 0; x < DEFINED_MAP_WIDTH; ++x) {
+    for (int y = 0; y < DEFINED_MAP_HEIGHT; ++y) {
       fprintf(savefile,"%X\n",d.getCell(x,y));
     }
   }
 
   if (Global::blnDebugMode) { fprintf(savefile,"DEBUG"); }
   fclose(savefile);
-  if(exists() && Global::blnDebugMode) {printf("Save created.\n");}
+  if(exists() && Global::blnDebugMode) { printf("Save created.\n"); }
+  if(exists()) { menu.promptUser(promptOkay,"Save created successfully.") }
+  else { menu.promptUser(promptOkay,"Save creation failed.") }
   return;
 }
 /*****************************************************************************/
 bool clsSave::exists() {
   FILE* pTempFile = fopen(DEFINED_SAVE_FILE_NAME, "r");
-  if (pTempFile == NULL) {return false;}
-  else {return true;}
+  if (pTempFile == NULL) { return false; }
+  else { return true; }
 }
 /*****************************************************************************/

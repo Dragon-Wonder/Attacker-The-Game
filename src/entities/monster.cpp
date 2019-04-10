@@ -13,25 +13,25 @@ healthmana  clsMonster::m_health    = {100,100};
 healthmana  clsMonster::m_mana      = {0,0};
 float       clsMonster::m_goldLean  = 0.0;
 INV         clsMonster::m_inv       = {25,1};
+uchar       clsMonster::m_element   = elementPhysical;
 /*****************************************************************************/
 /*A quick note on the base stats, a stat cannot be lower than 6, as a modifier might reduce the value by 5 points.
   The base stat point should also add up to be 100. */
-const Mons monsters[DEFINED_NUM_OF_MONSTERS] = {
-  {"Zombie",          {1,25,25,10,25,15}, 1.2},
-  {"Skeleton",        {1,35,18,6,25,6},   1.5},
-  {"Witch",           {1,15,15,20,20,30}, 1.5},
-  {"Imp",             {1,15,15,15,40,15}, 1.4},
-  {"Golem",           {1,20,34,34,6,6},   1.0},
-  {"Murloc",          {1,20,20,20,20,20}, 0.8},
-  {"Demon",           {1,25,25,20,20,10}, 0.9},
-  {"Angel",           {1,15,15,20,20,30}, 0.9},
-  {"Harpy",           {1,10,10,10,35,35}, 0.7},
-  {"Elf",             {1,20,20,20,20,20}, 1.6},
-  {"Ghost",           {1,20,20,20,20,20}, 0.5},
-  {"Undead Mutant",   {1,34,34,20,6,6},   0.8},
-  {"Thunder Spider",  {1,20,8,15,33,24},  1.0}
+const Mons clsMonster::monsters[DEFINED_NUM_OF_MONSTERS] = {
+  {"Zombie",          {1,25,25,10,25,15}, 1.2, elementPhysical},
+  {"Skeleton",        {1,35,18,6,25,6},   1.5, elementPhysical},
+  {"Witch",           {1,15,15,20,20,30}, 1.5, elementWater},
+  {"Imp",             {1,15,15,15,40,15}, 1.4, elementFire},
+  {"Golem",           {1,20,34,34,6,6},   1.0, elementEarth},
+  {"Murloc",          {1,20,20,20,20,20}, 0.8, elementWater},
+  {"Demon",           {1,25,25,20,20,10}, 0.9, elementDark},
+  {"Angel",           {1,15,15,20,20,30}, 0.9, elementLight},
+  {"Harpy",           {1,10,10,10,35,35}, 0.7, elementWind},
+  {"Elf",             {1,20,20,20,20,20}, 1.6, elementPhysical},
+  {"Ghost",           {1,20,20,20,20,20}, 0.5, elementDark},
+  {"Undead Mutant",   {1,34,34,20,6,6},   0.8, elementPhysical},
+  {"Thunder Spider",  {1,20,8,15,33,24},  1.0, elementEnergy}
 };
-
 /*****************************************************************************/
 clsMonster::clsMonster() {
     //ctor
@@ -68,6 +68,7 @@ void clsMonster::makeMonster(uchar level) {
   m_stats = monsters[num].stats;
   m_goldLean = monsters[num].goldLean;
   m_stats.level = level;
+  m_element = monsters[num].element;
 
   m_inv.gold = Calculations::goldAmount(level, m_goldLean);
   if(rand() % 101 <= DEFINED_KEY_SPAWN_CHANCE) { m_inv.keys = 1; }
@@ -245,16 +246,9 @@ std::string clsMonster::getName() {
   }
 }
 /*****************************************************************************/
-void clsMonster::setHealth(healthmana a) {
-  /////////////////////////////////////////////////
-  /// @brief Sets the health of the monster
-  ///
-  /// @param a = new health
-  /////////////////////////////////////////////////
-  m_health = a;
-}
+void clsMonster::setHealth(healthmana a) { m_health = a; }
 /*****************************************************************************/
-healthmana clsMonster::getHealth() {
-  return m_health;
-}
+healthmana clsMonster::getHealth() { return m_health; }
+/*****************************************************************************/
+uchar clsMonster::getElement() { return m_element; }
 /*****************************************************************************/

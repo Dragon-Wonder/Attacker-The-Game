@@ -25,16 +25,20 @@ class clsPlayer {
 
     void doLevelup(void);
 
+    void setElement(uchar);
+    uchar getElement(void);
+
   protected:
 
   private:
-    static LOC m_loc;           /**< Location of the player */
+    static LOC        m_loc;           /**< Location of the player */
 
-    static stats m_stats;       /**< Player's stats */
-    static healthmana m_health; /**< Player's health */
-    static healthmana m_mana;   /**< Player's mana */
+    static stats      m_stats;         /**< Player's stats */
+    static healthmana m_health;        /**< Player's health */
+    static healthmana m_mana;          /**< Player's mana */
 
-    static INV m_inv;           /**< Player's inventory */
+    static INV        m_inv;           /**< Player's inventory */
+    static uchar	    m_element; /**< Player's element type */
 };
 /*****************************************************************************/
 /////////////////////////////////////////////////

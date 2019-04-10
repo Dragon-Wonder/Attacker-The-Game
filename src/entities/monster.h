@@ -31,6 +31,7 @@ struct stcMonster {
   std::string name;
   stats stats;
   float goldLean;
+  uchar element;
 };
 
 typedef struct stcMonster Mons;
@@ -46,6 +47,7 @@ class clsMonster{
     std::string getName();
     void setHealth(healthmana);
     healthmana getHealth(void);
+    uchar getElement(void);
 
   protected:
 
@@ -57,6 +59,8 @@ class clsMonster{
     static healthmana  m_mana;      /**< Monster mana */
     static float       m_goldLean;  /**< Lean of gold vs xp. ranges from 0 to 1.9 */
     static INV         m_inv;       /**< Monster inventory */
+    static uchar       m_element;   /**< Monster element type */
+    static const Mons monsters[DEFINED_NUM_OF_MONSTERS]; 
 
     void doLevelUp();
     void ModMonster();

@@ -1,5 +1,5 @@
 /* XPM */
-static char * C:\Users\DZRJCW\Documents\My Files\Attacker_The_Game_dev\src\ui\image_error_xpm[] = {
+static char * image_error_xpm[] = {
 "24 24 53 1",
 " 	c None",
 ".	c #000000",

@@ -1,3 +1,4 @@
+
 #ifndef __VERSION_HEADER__
 #define __VERSION_HEADER__
 /*****************************************************************************/
@@ -18,7 +19,7 @@
 #define DEFINED_VER_DATE "04"
 
 /** The month of the last build of the program, currently not used. */
-#define DEFINED_VER_MONTH "09"
+#define DEFINED_VER_MONTH "10"
 
 /** The year of the last build of the program, currently not used. */
 #define DEFINED_VER_YEAR "2019"
@@ -37,13 +38,13 @@
 /*****************************************************************************/
 /** The version number in a format used by Boilerplate.rc, It is in the following format
     [MAJOR].[MINOR].[PATCH].[BUILDNUMBER] */
-#define DEFINED_VER_RC_FILEVERSION 0,9,8,4
+#define DEFINED_VER_RC_FILEVERSION 0,9,8,5
 
 /** Is the same as DEFINED_VER_RC_FILEVERSION but is a null terminated string */
-#define DEFINED_VER_RC_FILEVERSION_STRING "0, 9, 8, 4\0"
+#define DEFINED_VER_RC_FILEVERSION_STRING "0, 9, 8, 5\0"
 
 /** A more specific string of the file version */
-#define DEFINED_VER_FULLVERSION_STRING  "0.9.8-Alpha.4\0"
+#define DEFINED_VER_FULLVERSION_STRING  "0.9.8-Alpha.5\0"
 
 //Software Status
 /**

@@ -1,8 +1,5 @@
 #include "rooms.h"
 #include "../entities/player.h"
-#include "../global.h"
-/*****************************************************************************/
-unsigned char intTempTile = 0x6; //Value to hold what the cell that the player is moving into is.
 /*****************************************************************************/
 //Static members
 int Dungeon::dungeon_map[DEFINED_MAP_WIDTH * DEFINED_MAP_HEIGHT];
@@ -16,6 +13,9 @@ Dungeon::Dungeon() {
   mapstats.size.y = DEFINED_MAP_HEIGHT;
 
   mapstats.objects = 0;
+
+  Dungeon::intTempTile =
+      0x6;  // Value to hold what the cell that the player is moving into is.
 
   mapstats.chanceRoom = DEFINED_MAP_ROOM_CHANCE;
   mapstats.chanceCorridor = DEFINED_MAP_CORRIDOR_CHANCE;

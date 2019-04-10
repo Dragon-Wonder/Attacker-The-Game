@@ -34,8 +34,15 @@ void clsCore::start() {
     m_screen.ShowStartUp();
 #endif
 
-    //int data = 101;
-    //exit_thread = SDL_CreateThread(exit_check, "Exit", NULL);
+  /*
+  exit_thread = SDL_CreateThread(exit_check, "Exit", (void *)NULL);
+
+  if (exit_thread == NULL && Global::blnDebugMode) {
+    printf("SDL_CreateThread failed.\n");
+    m_quit = true;
+    m_screen.showErrors();
+  }
+  */
 
   while (!m_quit) {
     menuselection = m_menu.MainMenu();
@@ -188,7 +195,6 @@ void clsCore::MovePlayer(SDL_Event dirpress ) {
   case tileDownStairs :
     m_audio.playSound(soundLevelUp,5);
     doLevelUp();
-    return;
     break;
 
   //Tiles you can't walk through
@@ -211,6 +217,8 @@ void clsCore::BattleScene() {
   m_monster.makeMonster(m_level);
   printf("\n\n\n\n\n\n\n\n\n\n\n\n\n");
   bool done = false;
+  uchar monster_element = m_monster.getElement();
+  uchar player_element = m_player.getElement();
 
   char choice;
   stats mstats = m_monster.getStats();
@@ -231,6 +239,12 @@ void clsCore::BattleScene() {
     phealth = m_player.getHealth();
     pmana = m_player.getMana();
     mhealth = m_monster.getHealth();
+
+    // I might eventually allow the element type to change mid battle
+    // so update the element type. Currently does nothing.
+    monster_element = m_monster.getElement();
+    player_element = m_player.getElement();
+
     pCritChance = ((pstats.luk)/20.0 + rand()%3) *4.0;
     mCritChance = ((mstats.luk)/20.0 + rand()%3) *4.0;
 
@@ -240,7 +254,8 @@ void clsCore::BattleScene() {
     if(Calculations::DodgeCheck(pstats)) { mDamMuli = 0; }
     if(Calculations::DodgeCheck(mstats)) { pDamMuli = 0; }
 
-    /// @todo (GamerMan7799#3#) Implement element damages
+    pDamMuli *= Calculations::ElementMulti(player_element,monster_element);
+    mDamMuli *= Calculations::ElementMulti(monster_element,player_element);
 
     pDamage = (uint)(pDamMuli * Calculations::CalculateDamage(pstats,mstats,25));
     mDamage = (uint)(mDamMuli * Calculations::CalculateDamage(mstats,pstats,25));
@@ -256,7 +271,7 @@ void clsCore::BattleScene() {
       printf("What would you like to do?\n");
       printf("[A]ttack \t [H]eal \n");
       printf("E[X]it \t Hel[P] \n");
-      printf("[R]un away \t Cast [S]pell (WIP!)\n");
+      printf("[R]un away \t Cast [S]pell (WIP)\n");
       printf("[C]heck scene\n");
       if (Global::blnDebugMode) { printf("[K]ill monster    [D]ebug values\n"); }
       printf("> ");
@@ -270,6 +285,7 @@ void clsCore::BattleScene() {
       case 'P':
       case 'R':
       case 'S':
+      /// @todo (GamerMan7799#7#) re-Implement spell casting system
       case 'C':
         valid = true;
         break;
@@ -295,7 +311,7 @@ void clsCore::BattleScene() {
 
       /// @todo (GamerMan7799#7#) add better wording for stuff
       if (pDamage > 0) { printf("You hit the %s for %i damage!\n",mob.c_str(),pDamage); }
-      else {printf("The %s dodged your attack!\n",mob.c_str()); }
+      else { printf("The %s dodged your attack!\n",mob.c_str()); }
 
       if (pDamMuli > 1.0) { printf("You got a crit!\n"); }
 
@@ -306,17 +322,17 @@ void clsCore::BattleScene() {
 
       //check if anyone died.
       if (phealth.curr <= 0) {
-          //player died
-          GameOver();
-          done = true;
-          m_quit = true;
+        //player died
+        GameOver();
+        done = true;
+        m_quit = true;
       } else if (mhealth.curr <= 0) {
-          //Monster dead
-          done = true;
+        //Monster dead
+        done = true;
       } else {
-          //nobody died set new health amounts
-          m_monster.setHealth(mhealth);
-          m_player.setHealth(phealth);
+        //nobody died set new health amounts
+        m_monster.setHealth(mhealth);
+        m_player.setHealth(phealth);
       }
       break;
     case 'H':
@@ -333,7 +349,7 @@ void clsCore::HandleEvent(SDL_Event event) {
   ///
   /// @param event = Event that occurred
   /////////////////////////////////////////////////
-  if (event.type == SDL_QUIT) {m_quit = true;}
+  if (event.type == SDL_QUIT) { m_quit = true; }
   else if (event.type == SDL_KEYDOWN) {
     //Key has been pressed figure out what to do
     switch (event.key.keysym.sym) {
@@ -415,11 +431,17 @@ void clsCore::doGame() {
 }
 /*****************************************************************************/
 std::string clsCore::BarMarker(healthmana a) {
+  /////////////////////////////////////////////////
+  /// @brief Makes a bar showing current health/mana out of maxium
+  ///
+  /// @param a = Health or mana
+  /// @return String displaying the bar.
+  /////////////////////////////////////////////////
   std::string TempHealthBar = "<";
   int HealthPercent = (int)((a.curr * 100)/a.max);
-  for (unsigned char Bar = 0; Bar < 20; Bar++) {
-    if (HealthPercent >= 5) {TempHealthBar += "=";}
-    else {TempHealthBar += " ";}
+  for (uchar Bar = 0; Bar < 20; ++Bar) {
+    if (HealthPercent >= 5) { TempHealthBar += "="; }
+    else { TempHealthBar += " "; }
     HealthPercent -= 5;
   }
   TempHealthBar += ">";
@@ -427,15 +449,24 @@ std::string clsCore::BarMarker(healthmana a) {
 }
 /*****************************************************************************/
 void clsCore::GameOver() {
+  /////////////////////////////////////////////////
+  /// @brief Handles all of the game over actions. Currently just displays game over.
+  /////////////////////////////////////////////////
   /// @todo (GamerMan7799#9#) Add better losing message, (add score?)
+  m_screen.promptUser(prompOkay,"You died!");
   printf("\n\n\n\n\nYou died, thanks for playing.\n");
 }
 /*****************************************************************************/
 void clsCore::Winner() {
+  /////////////////////////////////////////////////
+  /// @brief Handles all of the winning actions. Currently just displays "You won".
+  /////////////////////////////////////////////////
   /// @todo (GamerMan7799#9#) Add better winning message, (add score?)
+  m_screen.promptUser(prompOkay,"You win!");
   printf("\n\n\n\n\n\n\nYou WIN!\n");
 }
 /*****************************************************************************/
+/*
 int clsCore::exit_check(void* data) {
   SDL_Event event;
   do {
@@ -451,4 +482,5 @@ int clsCore::exit_check(void* data) {
 
   return 1;
 }
+*/
 /*****************************************************************************/

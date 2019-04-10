@@ -49,7 +49,7 @@ void clsConfig::make(void) {
   fprintf(m_configFile,"Config File for the program.\n");
   fprintf(m_configFile,"%s\n",DEFINED_VER_FULLVERSION_STRING);
 
-    //Write the config with the default values defined when the object was created.
+  //Write the config with the default values defined when the object was created.
   fprintf(m_configFile, "Only define these if the default screen size doesn't work for you, otherwise leave blank.\n");
   fprintf(m_configFile, "Screen Height: 0\n");
   fprintf(m_configFile, "Screen Width: 0\n");
@@ -57,61 +57,61 @@ void clsConfig::make(void) {
 }
 /*****************************************************************************/
 char clsConfig::verisonCheck(const char *ConfigVerison) {
-    /////////////////////////////////////////////////
-    /// @brief   This checks the version number written at the top of the config file
+  /////////////////////////////////////////////////
+  /// @brief   This checks the version number written at the top of the config file
   ///         against the internal version number of the program.
   ///         If it finds a difference in Software status or a Major revision change the config HAS to be replaced.
   ///         A Minor revision will result in a prompt to the user about if it should be replaced.
   ///         And if only a patch change is found then it will just use the old config
   ///         Lastly if no change is found then use the config of course.
-    ///
-    /// @param ConfigVersion = The Version number loaded from the config file
-    /// @return NEWCONFIG / USECONFIG / PROMPTUSER
-    /////////////////////////////////////////////////
+  ///
+  /// @param ConfigVersion = The Version number loaded from the config file
+  /// @return NEWCONFIG / USECONFIG / PROMPTUSER
+  /////////////////////////////////////////////////
 
   uint C_MajorNum, C_MinorNum, C_PatchNum;
   char C_SoftwareStatus[15], P_SoftwareStatus[15];
   sscanf(ConfigVerison,"%u.%u.%u-%s",&C_MajorNum,&C_MinorNum,&C_PatchNum,&C_SoftwareStatus);
   sscanf(DEFINED_VER_FULLVERSION_STRING,"%*u.%*u.%*u-%s", &P_SoftwareStatus);
   if (Global::blnDebugMode) {
-        printf("Config: v %u %u %u %s\n",C_MajorNum,C_MinorNum,C_PatchNum,C_SoftwareStatus);
-        printf("Program: v %u %u %u %s\n",DEFINED_VER_MAJOR, DEFINED_VER_MINOR, DEFINED_VER_PATCH, P_SoftwareStatus);
-    }
+    printf("Config: v %u %u %u %s\n",C_MajorNum,C_MinorNum,C_PatchNum,C_SoftwareStatus);
+    printf("Program: v %u %u %u %s\n",DEFINED_VER_MAJOR, DEFINED_VER_MINOR, DEFINED_VER_PATCH, P_SoftwareStatus);
+  }
 
-    if (DEFINED_VER_STATUS == "Release"){
-        //Since the release doesn't have any any ending in the string we have to check this differently
-        if (C_SoftwareStatus[0] != ')') {
-            if (Global::blnDebugMode) {printf("Software Status not outdated.\n");}
-            return promptUse;
-        }
-    } else {
-        if ( P_SoftwareStatus[0] != C_SoftwareStatus[0]) {
-            if (Global::blnDebugMode) {printf("Software Status outdated.\n");}
-            return promptNew;
-        }
+  if (DEFINED_VER_STATUS == "Release"){
+    //Since the release doesn't have any any ending in the string we have to check this differently
+    if (C_SoftwareStatus[0] != ')') {
+      if (Global::blnDebugMode) { printf("Software Status not outdated.\n"); }
+      return promptUse;
     }
+  } else {
+    if ( P_SoftwareStatus[0] != C_SoftwareStatus[0]) {
+      if (Global::blnDebugMode) { printf("Software Status outdated.\n"); }
+      return promptNew;
+    }
+  }
 
-    if (DEFINED_VER_MAJOR != C_MajorNum) {
-        if (Global::blnDebugMode) {printf("Major number outdated.\n");}
-        return promptNew;
-    } else if (DEFINED_VER_MINOR != C_MinorNum) {
-        if (Global::blnDebugMode) {printf("Minor number outdated.\n");}
-        return promptPrompt;
-    } else {
-        if (Global::blnDebugMode) {printf("Nothing outdated.\n");}
-        return promptUse;
-    }
+  if (DEFINED_VER_MAJOR != C_MajorNum) {
+    if (Global::blnDebugMode) { printf("Major number outdated.\n"); }
+    return promptNew;
+  } else if (DEFINED_VER_MINOR != C_MinorNum) {
+    if (Global::blnDebugMode) { printf("Minor number outdated.\n"); }
+    return promptPrompt;
+  } else {
+    if (Global::blnDebugMode) { printf("Nothing outdated.\n"); }
     return promptUse;
+  }
+  return promptUse;
 }
 /*****************************************************************************/
 void clsConfig::load(void) {
-    /////////////////////////////////////////////////
-    /// @brief Loads all of the values from the config file and places them where
-    ///        they need to go. Will also check these values can if they are not what they
-    ///        should be (A floating point on an int value) it will set them back to default.
-    /// @return void
-    /////////////////////////////////////////////////
-    int intValuesScanned;
+  /////////////////////////////////////////////////
+  /// @brief Loads all of the values from the config file and places them where
+  ///        they need to go. Will also check these values can if they are not what they
+  ///        should be (A floating point on an int value) it will set them back to default.
+  /// @return void
+  /////////////////////////////////////////////////
+  int intValuesScanned;
   char chrTempString[50];
 
   //Get blank line explaining screen sizes
@@ -121,15 +121,15 @@ void clsConfig::load(void) {
 
   //Get Screen Height
   fgets(chrTempString,50,m_configFile);
-    intValuesScanned = sscanf(chrTempString, "%*s %*s %u", &m_values.uintScreenHeight);
-    if (intValuesScanned < 1) {printf("ERROR!"); m_values.uintScreenHeight = 0;}
-    if (Global::blnDebugMode) {printf("Screen Height \t \t \t %u\n", m_values.uintScreenHeight);}
+  intValuesScanned = sscanf(chrTempString, "%*s %*s %u", &m_values.uintScreenHeight);
+  if (intValuesScanned < 1) { printf("ERROR!"); m_values.uintScreenHeight = 0; }
+  if (Global::blnDebugMode) { printf("Screen Height \t \t \t %u\n", m_values.uintScreenHeight); }
 
-    //Get Screen Width
-    fgets(chrTempString,50,m_configFile);
-    intValuesScanned = sscanf(chrTempString, "%*s %*s %u", &m_values.uintScreenWidth);
-    if (intValuesScanned < 1) {printf("ERROR!"); m_values.uintScreenWidth = 0;}
-    if (Global::blnDebugMode) {printf("Screen Width \t \t \t %u\n", m_values.uintScreenWidth);}
+  //Get Screen Width
+  fgets(chrTempString,50,m_configFile);
+  intValuesScanned = sscanf(chrTempString, "%*s %*s %u", &m_values.uintScreenWidth);
+  if (intValuesScanned < 1) { printf("ERROR!"); m_values.uintScreenWidth = 0; }
+  if (Global::blnDebugMode) { printf("Screen Width \t \t \t %u\n", m_values.uintScreenWidth); }
 
 
   fclose(m_configFile);
@@ -159,12 +159,13 @@ void clsConfig::initialize(void) {
     fgets(chrTempString,50,m_configFile);
     chrConfigVerison = verisonCheck(chrTempString);
 
-    if (chrConfigVerison == promptNew) {
+    switch (chrConfigVerison) {
+    case promptNew :
       printf("Current config file out of date. Making new one.\n");
       fclose(m_configFile);
       make();
-    }
-    else if (chrConfigVerison == promptPrompt) {
+      break;
+    case promptPrompt :
       printf("\nThe config file you are using has a different Minor Version than the program.\n");
       printf("The config file should in theory still work with this version but I can't say for sure.\n");
       printf("Would you like to replace the config file with a new one?\n");
@@ -190,7 +191,11 @@ void clsConfig::initialize(void) {
             break;
         }; //end switch
       } while (!blnAnswered);
-    } else { load(); }
+      break;
+    default :
+      load();
+      break;
+    } // end switch prompt return
   } //end if exists
 }
 /*****************************************************************************/

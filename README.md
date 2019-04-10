@@ -1,6 +1,6 @@
 # Attacker: The Game
 
-(Check out the gh-pages of this project by going to (here)[http://dragon-wonder.github.io/Attacker-The-Game/]) (WIP)
+(Check out the gh-pages of this project by going to [here](http://dragon-wonder.github.io/Attacker-The-Game/)) (WIP)
 
 ## Introduction
 
@@ -9,9 +9,9 @@ This is game is a dungeon crawler based game... [ADD MORE LATER]
 
 ## License and copyright
 
-All of this project was written from scratch by [GamerMan7799] (https://github.com/GamerMan7799) & [xPUREx](https://github.com/xPUREx) unless otherwise noted.
+All of this project was written from scratch by [GamerMan7799](https://github.com/GamerMan7799) & [xPUREx](https://github.com/xPUREx) unless otherwise noted.
 
-That being said all parts of this project we own have been released to the Public Domain. (This does not apply to parts that were noted as being someone else's). 
+That being said all parts of this project we own have been released to the Public Domain. (This does not apply to parts that were noted as being someone else's).
 
 As such you may use any and/or all of this project however you wish; Commercially or not; modify it or not. You do not even have to give credit (though we would greatly appreciate it if you did).
 
@@ -24,22 +24,22 @@ Please read these licenses before you decide to distribute any copies of this pr
 
 We are pretty novice programmers at best. Part of the reason we made this was to improve our skills. And part of the reason we made it open source is to get feedback.
 
-We are always open to people contributing to the project by giving suggestions, or helping us with improvements. 
+We are always open to people contributing to the project by giving suggestions, or helping us with improvements.
 
-If you have any questions or a suggestions or improvement please feel free to leave it as an issue in [this tab] (https://github.com/dragon-wonder/Attacker-The-Game/issues).
+If you have any questions or a suggestions or improvement please feel free to leave it as an issue in [this tab](https://github.com/dragon-wonder/Attacker-The-Game/issues).
 
 ## Building the Project
 
 ### SDL Library
 
-In order to run the program properly you will need to download SDL2-2.0.3 or higher. 
+In order to run the program properly you will need to download SDL2-2.0.3 or higher.
 You will also need SDL2 TTF library, and SDL2 Images library
 
-A link for SDL2 can be found [here] (https://www.libsdl.org/download-2.0.php).
+A link for SDL2 can be found [here](https://www.libsdl.org/download-2.0.php).
 
-A link for SDL2 TTF can be found [here] (https://www.libsdl.org/projects/SDL_ttf/).
+A link for SDL2 TTF can be found [here](https://www.libsdl.org/projects/SDL_ttf/).
 
-A link for SDL2 Images can be found [here] (https://www.libsdl.org/projects/SDL_image/).
+A link for SDL2 Images can be found [here](https://www.libsdl.org/projects/SDL_image/).
 
 You will want to download the Runtime Binaries (if you have windows I recommend 32 bit over 64 bit; even if you have a 64 bit computer).
 
@@ -71,14 +71,14 @@ You can download the .exe under the [Releases Tab](https://github.com/dragon-won
 If you wish to compile it yourself you can use the Compile.bat files if you have MinGW on your computer.
 
 Any other complier you wish will work; these are just the ones I've used and made scripts to help with the compiling.
-	
+
 ### Linux
 
 You should be able to use the Makefile or the Compile.sh script to compile the program. You will also need the SDL library which you can use by enter the following code into your terminal, or downloading from the link above.
 
-Ubuntu, Mint, or Debian
+#### Ubuntu, Mint, or Debian
 
-``` 
+```
 sudo apt-get install libsdl2-dev
 sudo apt-get install libsdl2-ttf-dev
 sudo apt-get install libsdl2-image-dev
@@ -90,18 +90,23 @@ I don't know you're on your own. Sorry.
 
 ## Controls
 
-You can control your charater through the arrow keys or WASD.
+You can control your character through the arrow keys or WASD.
 
-"M" or ESC will open up the menu
+| Key             | Action                   |
+|-----------------|--------------------------|
+| WASD/Arrow Keys | Movement                 |
+| "M"/ESC         | Open menu (WIP)          |
+| "Q"             | Quit game                |
+| TAB             | Open Console (WIP)       |
+| "I"             | Open Inventory (WIP)     |
+| "N"             | Show Player status (WIP) |
+| "H"             | Heal                     |
+| "V"             | Save                     |
 
-"Q" will exit the game.
+### Debugging Controls
 
-TAB will bring up the console
+These controls are only enabled on debug versions of the game. They are used to test new functions.
 
-"I" will open up the inventory
-
-"N" will bring up player status
-
-"H" will heal the player
-
-There are also several debugging controls which will not work in the released version.
+| Key | Action         |
+|-----|----------------|
+| "L" | Force level up |

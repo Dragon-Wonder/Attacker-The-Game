@@ -40,6 +40,8 @@ public:
     int* make_dungeon();
     void cmain();
     void playerfind();
+
+	uchar intTempTile;
     //char PlayerMovement(char);
 };
 /*****************************************************************************/

@@ -96,7 +96,6 @@ enum enumStats {
 };
 
 /** Holds all of the different elements (not implemented yet) */
-/// @todo (GamerMan7799#4#) Implement elements
 enum enumElements {
   elementNone = 0,
   elementPhysical,

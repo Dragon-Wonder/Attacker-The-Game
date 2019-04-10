@@ -70,6 +70,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>E:\Patrick Rye\Documents\GitHub\Attacker-The-Game\SDL2Stuff\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;DEFINED_BUILD_MODE_PRIVATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -106,39 +109,103 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\audio\sound.cpp" />
-    <ClCompile Include="..\src\entities\chest.cpp" />
-    <ClCompile Include="..\src\entities\door.cpp" />
-    <ClCompile Include="..\src\entities\monster.cpp" />
-    <ClCompile Include="..\src\entities\player.cpp" />
-    <ClCompile Include="..\src\game\calculations.cpp" />
-    <ClCompile Include="..\src\game\config.cpp" />
-    <ClCompile Include="..\src\game\core.cpp" />
-    <ClCompile Include="..\src\game\rooms.cpp" />
-    <ClCompile Include="..\src\game\save.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\ui\menu.cpp" />
-    <ClCompile Include="..\src\ui\screen.cpp" />
+    <ClCompile Include="..\src\audio\sound.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\chest.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\door.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\monster.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\player.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\game\calculations.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\game\config.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\game\core.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\game\rooms.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\game\save.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\ui\menu.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\ui\screen.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\audio\sound.h" />
-    <ClInclude Include="..\src\entities\chest.h" />
-    <ClInclude Include="..\src\entities\door.h" />
-    <ClInclude Include="..\src\entities\monster.h" />
-    <ClInclude Include="..\src\entities\player.h" />
-    <ClInclude Include="..\src\game\calculations.h" />
-    <ClInclude Include="..\src\game\config.h" />
-    <ClInclude Include="..\src\game\core.h" />
-    <ClInclude Include="..\src\game\rooms.h" />
-    <ClInclude Include="..\src\game\save.h" />
-    <ClInclude Include="..\src\global.h" />
-    <ClInclude Include="..\src\ui\menu.h" />
-    <ClInclude Include="..\src\ui\screen.h" />
-    <ClInclude Include="..\src\version.h" />
+    <ClInclude Include="..\src\audio\sound.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\chest.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\door.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\monster.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\player.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\game\calculations.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\game\config.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\game\core.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\game\rooms.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\game\save.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\global.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\ui\menu.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\ui\screen.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="..\src\version.h">
+      <DeploymentContent>true</DeploymentContent>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\res\boilerplate.rc" />
+    <ResourceCompile Include="..\res\boilerplate.rc">
+      <DeploymentContent>true</DeploymentContent>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

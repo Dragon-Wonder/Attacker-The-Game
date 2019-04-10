@@ -3,6 +3,19 @@
 All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [0.9.8-Alpha.5] - 2019-04-10
+### Updated
+* Readme.md with some additional controls
+
+### Added
+* SDL display to the winning/losing message
+* Element types to monsters
+* Element types to spells
+* Modifier to damage based on elements (Suggestion: #14, partially implemented)
+
+### Fixed
+* src/ui/image_error.xpm variable name including file path
+
 ## [0.9.8-Alpha.4] - 2019-04-09
 ### Changed
 * Updated the Images/readme.md file to have to correct image referenced and correct source paths.
@@ -13,6 +26,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ## [0.9.8-Alpha.3] - 2019-04-05
 ### Added
 * Visual Studio Project file
+
 ### Fixed
 * Some files paths being wrong from when I moved stuff into folders
 
@@ -20,6 +34,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ## [0.9.8-Alpha.2] - 2019-04-05
 ### Added
 * More work on the level up support with SDL (still WIP)
+
 ### Changed
 * Screen won't refresh constantly when displaying an unchanged screen.
 * Changed "cons" stat to "con" to be better in line with the other names
@@ -27,20 +42,24 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 * Splash screen now appears in Non-private releases
 * Moved away from CodeBlocks because things are broken
 * Moved src files to folders to better organize code better
+
 ### Fixed
 * Splash not being correct ratio
 
 ## [0.9.8-Alpha.1] - 2019-04-04
 ### Added
 * Level up support with SDL (WIP)
+
 ### Removed
 * Excess whitespace
+
 ### Fixed
 * More spelling mistakes
 
 ## [0.9.7-Alpha] - 2019-03-30
 ### Removed
 * Some code left in when debugging
+
 ### Fixed
 * Spelling mistakes
 
@@ -127,8 +146,8 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ### Updated
 * Rewrote the program from the ground up
 * Program now uses SDL graphics
-* Change log to be more inline with my other programs
-* Versioning to be more inline with my other programs
+* Change log to be more in line with my other programs
+* Versioning to be more in line with my other programs
 
 ### Notes
 * Reset the versioning, deprecated all earlier versions

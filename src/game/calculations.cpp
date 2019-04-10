@@ -22,8 +22,8 @@ bool Calculations::DodgeCheck(stats check) {
     ///
     /////////////////////////////////////////////////
     float douDodgeChance = ((check.dex/2)+(check.luk/6)/4);
-  if(rand() % 101 <= douDodgeChance) {return true;}
-  else {return false;}
+  if(rand() % 101 <= douDodgeChance) { return true; }
+  else { return false; }
 }
 /*********************************************************************************************************/
 float Calculations::ElementMulti(uchar AttackingElement, uchar DefendingElement) {
@@ -43,23 +43,23 @@ float Calculations::ElementMulti(uchar AttackingElement, uchar DefendingElement)
   /// @return Multiplier of the Attack Damage, ranges from 0.75 to 1.25
   ///
   /////////////////////////////////////////////////
-  if (AttackingElement == elementNone || DefendingElement == elementNone) {return 1.0;}
-  if (AttackingElement == elementPhysical || DefendingElement == elementPhysical) {return 1.0;}
+  if (AttackingElement == elementNone || DefendingElement == elementNone) { return 1.0; }
+  if (AttackingElement == elementPhysical || DefendingElement == elementPhysical) { return 1.0; }
   switch (abs(AttackingElement - DefendingElement)) {
   case 0 :
-  return 0.75;
+    return 0.750;
   case 1 :
-  return 0.875;
+    return 0.8750;
   case 2 :
-  return 1;
+    return 1.000;
   case 3 :
-  return 1.125;
+    return 1.1250;
   case 4 :
-  return 1.25;
+    return 1.250;
   default :
-  return 1;
+    return 1.000;
   };
-  return 1;
+  return 1.000;
 }
 /*********************************************************************************************************/
 uint Calculations::CalculateHealth(stats check) {
@@ -102,7 +102,7 @@ uint Calculations::CalculateMana(stats check) {
     /// @return Mana
     ///
     /////////////////////////////////////////////////
- 	float manaTemp = 0;
+ 	float manaTemp;
   float level;
   float modstat;
   level = (float)check.level;
@@ -152,7 +152,7 @@ uint Calculations::CalculateDamage(stats attacker, stats defender, uint base) {
 
   ///@todo (GamerMan7799#9#) vary damage with health? Less health = less damage
 
-  float temp = 0;
+  float temp;
   temp = 2.0 * (attacker.level / 5.0);
   temp += 2.0;
   temp *= (base / defender.def);
