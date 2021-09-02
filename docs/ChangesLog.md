@@ -3,6 +3,17 @@
 All notable changes to this project will be documented here.
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [0.9.8-Alpha.6] - 2021-09-02
+### Added
+* More monsters
+
+### Updated
+* Reduced monster skill points per level from 18 -> 15
+* Changed Mana modifying state to be based on DEF, DEX, and LUK
+
+## Fixed
+* Modifier calculator being off and not recalculating
+
 ## [0.9.8-Alpha.5] - 2019-04-10
 ### Updated
 * Readme.md with some additional controls

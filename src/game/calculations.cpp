@@ -93,7 +93,7 @@ uint Calculations::CalculateMana(stats check) {
     ///     \f$ 156.21 + 0.25625 * M + 9.58375 * L + 0.0169125 * L * M + 0.046125 * L^2 \f$
     ///
     /// L = Level
-    /// M = Modifying Stat \f$ M = \frac {3*DEX + LUK}(4} \f$
+    /// M = Modifying Stat \f$ M = \frac {2*LUK + DEX + DEF}(4} \f$
     /// The reason that the modifying stat is calculated this way is because there isn't (currently) a stat
     /// that most sense to base Mana off of (such as Wisdom). I might add one later but until then this is
     /// how this will be calculated.
@@ -106,7 +106,7 @@ uint Calculations::CalculateMana(stats check) {
   float level;
   float modstat;
   level = (float)check.level;
-  modstat = (3.0*(float)check.dex+(float)check.luk)/4.0;
+  modstat = (2.0*(float)check.luk+(float)check.dex+(float)check.def)/4.0;
 
   manaTemp = 156.21;
   manaTemp += 0.25625 * modstat;

@@ -30,7 +30,11 @@ const Mons clsMonster::monsters[DEFINED_NUM_OF_MONSTERS] = {
   {"Elf",             {1,20,20,20,20,20}, 1.6, elementPhysical},
   {"Ghost",           {1,20,20,20,20,20}, 0.5, elementDark},
   {"Undead Mutant",   {1,34,34,20,6,6},   0.8, elementPhysical},
-  {"Thunder Spider",  {1,20,8,15,33,24},  1.0, elementEnergy}
+  {"Thunder Spider",  {1,20,8,15,33,24},  1.0, elementEnergy},
+  {"Undine",          {1,8,20,33,24,15},  1.6, elementWater},
+  {"Ifrit",           {1,30,30,10,25,5},  1.0, elementFire},
+  {"Oread",           {1,30,30,10,25,5},  1.0, elementEarth},
+  {"Sylph",           {1,8,20,33,24,15},  1.0, elementWind}
 };
 /*****************************************************************************/
 clsMonster::clsMonster() {
@@ -85,14 +89,14 @@ void clsMonster::makeMonster(uchar level) {
 void clsMonster::doLevelUp() {
   /////////////////////////////////////////////////
   /// @brief Levels up the monster. For every level the monster is given
-  ///        18 points (compared to the player's 20). It will randomly assign
+  ///        15 points (compared to the player's 20). It will randomly assign
   ///        each point to a different stat with a leaning to towards stats in
   ///        the base form which are higher. For example when leveling up the Golem
   ///        it is more likely to put a stat into CON or DEF (both 34 base) than
   ///        LUK or DEX (both 6 base).
   /////////////////////////////////////////////////
   char upgradeChance[5] = {0,0,0,0,0};
-  int statPoints = (m_stats.level - 1) * 18;
+  int statPoints = (m_stats.level - 1) * 15;
   uchar randStat = 0;
 
   upgradeChance[0] = m_stats.str;
@@ -127,8 +131,9 @@ void clsMonster::ModMonster() {
   stats pstats;
   pstats = player.getStats();
   /// @todo (GamerMan7799#7#) make modifiers increase based on level
-  if (num < 60) {m_modifier = "";}
+  if (num < 60) { m_modifier = ""; }
   else {
+    num = rand() % 101 + 1; //1-100
     if(m_stats.luk + rand1 > pstats.luk + rand2) {
     //Monster has better chance of spawning with a positive effect
       if (num < 90) { PositiveMod(); }
